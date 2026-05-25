@@ -1,37 +1,20 @@
-Calibration Methodology
+# Calibration Framework
 
-Overview
+## Purpose
 
-This directory documents the calibration activities conducted throughout the development of the AI-Assisted Vulnerability Detection in LLM-Generated Code framework.
+The calibration phase is conducted before formal experimentation and serves as the primary mechanism for refining the framework architecture, improving reliability, and documenting evidence-driven design decisions.
 
-The purpose of calibration is to systematically evaluate and refine architectural components before large-scale experimental evaluation. Rather than treating architectural decisions as fixed assumptions, the project adopts an iterative evidence-driven process in which observations, hypotheses, adjustments, and evaluation outcomes guide architectural evolution.
+Calibration is not intended to maximize benchmark performance through repeated trial-and-error. Instead, it provides a structured methodology for understanding system behavior, identifying weaknesses, evaluating architectural modifications, and documenting decisions that influence subsequent experimentation.
 
-Calibration serves two primary purposes:
+The outcome of calibration is a stable framework configuration that can be evaluated through controlled experiments.
 
-Improve the effectiveness, consistency, and explainability of vulnerability analysis.
-Provide empirical justification for architectural decisions investigated throughout the project.
+---
 
-The calibration process directly supports RQ1 – Architectural Calibration and Evolution, which investigates how orchestration-oriented components contribute to the effectiveness of LLM-based vulnerability analysis.
+## Calibration Philosophy
 
-Calibration Philosophy
+The project adopts an evidence-driven calibration methodology based on iterative observation and refinement.
 
-The framework is based on the principle that vulnerability-analysis performance depends not only on model capability, but also on the quality of contextual information, retrieval mechanisms, validation strategies, workflow design, and architectural coordination.
-
-As a result, architectural components are continuously evaluated and refined prior to expanded experimentation.
-
-Calibration therefore focuses on understanding:
-
-Which architectural components contribute meaningful value
-Which configurations improve reliability
-Which design choices reduce instability
-Which modifications improve contextual reasoning
-Which adjustments improve explainability and remediation quality
-
-The objective is not to optimize for a single benchmark result, but rather to improve the overall robustness and transparency of the framework.
-
-Calibration Process
-
-All calibration activities follow the same evidence-driven methodology:
+Each calibration cycle follows the process:
 
 Observation
 ↓
@@ -42,257 +25,196 @@ Adjustment
 Evaluation
 ↓
 Decision
-Observation
 
-A limitation, inconsistency, weakness, or opportunity for improvement is identified.
+Observed behaviors motivate hypotheses regarding architectural improvements. Proposed modifications are implemented and evaluated. Results are documented and ultimately accepted, rejected, or revised.
 
-Examples include:
+This process creates a transparent record of architectural evolution and supports reproducibility.
 
-Incorrect vulnerability classifications
-Irrelevant retrieval results
-Excessive false positives
-Inconsistent reasoning
-Weak remediation suggestions
-Context interpretation failures
-Hypothesis
+---
 
-A possible explanation for the observed behavior is proposed.
+## Task-Specialized LLM Configuration
 
-Examples include:
+This project does not conduct a broad large-language-model comparison study.
 
-Missing contextual information
-Insufficient retrieval quality
-Prompt ambiguity
-Validation instability
-Incomplete security knowledge
-Adjustment
+Instead, the framework adopts a deliberately selected task-specialized LLM configuration based on the differing requirements of vulnerability detection and secure code remediation.
 
-A targeted architectural or configuration modification is introduced.
+The selected configuration is:
 
-Examples include:
+Detection Model
+- Claude Opus
+- Responsible for vulnerability analysis, contextual security reasoning, explanation generation, and vulnerability classification
 
-Context engineering changes
-Retrieval strategy modifications
-Validation adjustments
-Prompt refinements
-Model configuration updates
-Evaluation
+Repair Model
+- Claude Sonnet
+- Responsible for remediation generation, secure code rewriting, and vulnerability-fix recommendations
 
-The modified configuration is tested and compared against previous behavior.
+The objective of calibration is therefore not to determine which model is "best" among multiple candidates. Instead, calibration focuses on understanding how the selected configuration behaves within the overall framework architecture.
 
-Evaluation may include:
+The primary research contribution of the project is the orchestration workflow itself, including contextual grounding, retrieval augmentation, validation mechanisms, remediation generation, and structured reporting.
 
-Accuracy measurements
-Consistency analysis
-Retrieval relevance
-Explanation quality
-Remediation quality
-Latency observations
-Decision
+---
 
-The results are reviewed and documented.
+## Calibration Areas
 
-Potential outcomes include:
+Calibration activities focus on the following framework components:
 
-Adopt modification
-Reject modification
-Require additional investigation
-Integrate into future experiments
-Calibration Categories
+### Security Context Engineering
 
-Calibration activities are organized into several architectural categories.
+Evaluation and refinement of contextual information provided to the detection process.
 
-Context Engineering Calibration
+Areas of interest include:
 
-Directory:
+- Business logic context
+- Authorization assumptions
+- Operational assumptions
+- Intended application behavior
+- Security concerns supplied by the user
 
-calibration/context/
+---
 
-Purpose:
+### Retrieval-Augmented Security Knowledge
 
-Evaluate how contextual information influences vulnerability detection, reasoning quality, remediation generation, and explainability.
+Evaluation of security knowledge retrieval quality.
 
-Examples:
+Areas of interest include:
 
-Code-only analysis
-Code plus security context
-Expanded authorization context
-Workflow-oriented context descriptions
-Operational security assumptions
+- CWE retrieval accuracy
+- CVE retrieval usefulness
+- Context relevance
+- Retrieval completeness
+- Retrieval ranking quality
 
-Questions investigated:
+---
 
-How much context is necessary?
-Which contextual attributes are most valuable?
-Does additional context reduce false positives?
-Does context improve vulnerability reasoning?
-Retrieval Calibration
+### Prompt Engineering
 
-Directory:
+Evaluation of detector and repair prompts.
 
-calibration/rag/
+Areas of interest include:
 
-Purpose:
+- Detection consistency
+- Explanation quality
+- Vulnerability classification quality
+- Structured output reliability
+- Repair usefulness
 
-Evaluate how external security knowledge contributes to vulnerability analysis.
+---
 
-Areas of investigation include:
+### Validation Methodology
 
-CWE retrieval
-CVE retrieval
-Hybrid retrieval strategies
-Retrieval ranking
-Context-aware retrieval
-Knowledge relevance
+Evaluation of the framework's multi-run validation strategy.
 
-Questions investigated:
+The validation stage does not use a separate evaluator model.
 
-Does retrieval improve reasoning quality?
-Which retrieval strategies provide the most relevant information?
-How does retrieval influence explainability?
-How does retrieval affect vulnerability coverage?
-Validation Calibration
+Instead, the detection process is executed repeatedly and aggregated using threshold-based majority voting.
 
-Directory:
+Calibration activities investigate:
 
-calibration/validation/
+- Consistency across runs
+- Vote distributions
+- Confidence aggregation
+- Stability of final decisions
+- Sensitivity to threshold selection
 
-Purpose:
+---
 
-Investigate strategies for reducing instability associated with probabilistic model outputs.
+### Explanation Quality
 
-Areas of investigation include:
+Evaluation of:
 
-Repeated evaluations
-Aggregation strategies
-Confidence estimation
-Consistency measurements
+- Clarity
+- Technical correctness
+- Supporting evidence
+- Actionability
+- Human interpretability
 
-Questions investigated:
+---
 
-How many validation runs are appropriate?
-Does aggregation improve stability?
-How does validation influence reliability?
-What trade-offs exist between consistency and execution cost?
-Prompt Calibration
+### Remediation Quality
 
-Directory:
+Evaluation of generated fixes.
 
-calibration/prompts/
+Areas of interest include:
 
-Purpose:
+- Vulnerability removal
+- Functional preservation
+- Security improvement
+- Explanation quality
+- Code quality
 
-Evaluate how prompt design influences vulnerability detection behavior and explanation quality.
+---
 
-Areas of investigation include:
+## Calibration Metrics
 
-Output structure
-Vulnerability reasoning
-Explanation formatting
-Remediation guidance
-Context integration
+The following metrics may be recorded during calibration activities:
 
-Questions investigated:
+### Detection Metrics
 
-Which prompt structures improve consistency?
-Which prompts improve explainability?
-How sensitive are results to prompt modifications?
-Model Configuration Calibration
+- Detection consistency
+- Vote agreement percentage
+- Vulnerable vote ratio
+- Safe vote ratio
+- Uncertain vote ratio
+- Average confidence
 
-Directory:
+### Retrieval Metrics
 
-calibration/llm_selection/
+- Context relevance
+- CWE retrieval accuracy
+- CVE retrieval usefulness
+- Retrieval coverage
 
-Purpose:
+### Repair Metrics
 
-Investigate how model selection and configuration influence analysis outcomes.
+- Vulnerability removal success
+- Functional correctness
+- Fix completeness
+- Repair quality assessment
 
-Areas of investigation include:
+### Operational Metrics
 
-Model comparisons
-Configuration comparisons
-Multi-model workflows
-Performance trade-offs
+- Latency
+- Token usage
+- Workflow efficiency
 
-Questions investigated:
+---
 
-How do different models perform on vulnerability analysis tasks?
-What trade-offs exist between quality, latency, and consistency?
-Which configurations best support the architectural goals of the framework?
-Relationship to Experimental Evaluation
+## Calibration Deliverables
 
-Calibration is conducted prior to expanded experimentation.
+Calibration activities generate:
 
-The purpose of calibration is not to generate final research conclusions, but rather to improve the quality and justification of the architectural configuration used during formal evaluation.
+- Calibration logs
+- Architectural observations
+- Design decisions
+- Prompt revisions
+- Retrieval refinements
+- Validation analyses
+- Updated framework documentation
 
-Insights obtained through calibration inform:
+These artifacts provide traceability between observed behaviors, implemented modifications, and final architectural decisions.
 
-Experimental design
-Dataset construction
-Retrieval configuration
-Validation strategy
-Model selection
-Reporting methodology
+---
 
-As a result, calibration serves as the foundation for all subsequent experiments.
+## Relationship to Experiments
 
-Documentation Standards
+Calibration precedes formal experimentation.
 
-Each calibration record should include:
+The purpose of calibration is to establish a stable framework configuration suitable for evaluation.
 
-Calibration Identifier
+Once calibration is complete, experimental studies evaluate:
 
-Unique identifier for traceability.
+1. Safe versus vulnerable classification performance
+2. Comparative performance against static-analysis tools
+3. End-to-end workflow integration effectiveness
 
-Example:
+Experimental results are reported separately from calibration findings.
 
-CAL-RAG-001
-Objective
+---
 
-What is being investigated?
+## Guiding Principle
 
-Observation
+Calibration is used to understand and improve the selected framework configuration.
 
-What motivated the calibration?
+The goal is not to rank language models.
 
-Hypothesis
-
-What explanation is being tested?
-
-Adjustment
-
-What change was introduced?
-
-Evaluation Method
-
-How was the adjustment evaluated?
-
-Results
-
-What outcomes were observed?
-
-Decision
-
-What conclusions were reached?
-
-Impact on Architecture
-
-How did the calibration influence architectural evolution?
-
-Connection to Research Question 1
-
-The calibration activities documented in this directory collectively support:
-
-RQ1 – Architectural Calibration and Evolution
-
-How do orchestration-oriented architectural components—including contextual grounding, retrieval augmentation, prompt engineering, and validation strategies—evolve through calibration, and how do they contribute to the effectiveness of LLM-based vulnerability analysis?
-
-The results of these calibration studies provide empirical evidence supporting architectural decisions and establish the foundation for the formal experimental evaluation documented elsewhere in the repository.
-
-Summary
-
-Calibration is treated as a first-class component of the research methodology.
-
-Rather than assuming architectural decisions are correct from the outset, the project adopts a systematic process of observation, hypothesis formation, adjustment, evaluation, and decision-making.
-
-This approach enables architectural evolution to be documented, justified, and connected directly to the research objectives guiding the project.
+The goal is to improve the reliability, explainability, contextual reasoning capability, remediation quality, and overall effectiveness of the orchestration workflow.
