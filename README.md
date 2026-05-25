@@ -93,6 +93,10 @@ Prompt design
 Validation consistency
 Explanation quality
 
+The framework adopts a task-specialized LLM configuration as a deliberate design choice rather than conducting a model-comparison study. Vulnerability detection is performed using a frontier reasoning model selected for security analysis capabilities, while secure code remediation is performed using a frontier coding model selected for repair generation capabilities. Calibration therefore focuses on understanding and improving the behavior of the selected configuration within the workflow rather than ranking alternative models.
+
+The validation stage does not use a separate evaluator model. Instead, the detection process is executed multiple times and aggregated through threshold-based majority voting. This approach provides consistency measurements, confidence aggregation, and improved reliability while reducing sensitivity to stochastic model variation.
+
 The calibration methodology follows an evidence-driven process:
 
 Observation
@@ -160,14 +164,17 @@ Current development activities include:
 
 SecurityEval-derived dataset creation
 Security context profile generation
-Calibration execution
+Task-specialized LLM configuration calibration
 Hybrid retrieval refinement
-Validation methodology documentation
-Model configuration evaluation
+Multi-run validation methodology documentation
+Security knowledge retrieval improvement
 Expanded CWE coverage
 Experimental execution
-Comparative evaluation
+Comparative evaluation against static-analysis tools
 End-to-end workflow integration
+
+The current framework configuration uses a task-specialized approach in which vulnerability detection and secure code remediation are assigned to models selected for their respective strengths. Rather than conducting a broad LLM comparison study, calibration efforts focus on consistency, contextual reasoning quality, retrieval effectiveness, validation behavior, remediation quality, and workflow-level performance.
+
 Future Directions
 
 Future research directions include:
