@@ -1,6 +1,9 @@
 Experiment Record Template
+
 Experiment Information
+
 Experiment Identifier
+
 EXP-###
 
 Examples:
