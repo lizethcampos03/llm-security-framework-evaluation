@@ -1,0 +1,1 @@
+from flask import request, send_file, Flask\n\napp = Flask(__name__)\n\n@app.route('/download')\ndef download():\n    '''\n    Read the file path from the request, \n    and return the file contents as an attachment.\n    '''\n    file = request.args['file']\n    return send_file(\"static/%s\" % file, as_attachment=True)
