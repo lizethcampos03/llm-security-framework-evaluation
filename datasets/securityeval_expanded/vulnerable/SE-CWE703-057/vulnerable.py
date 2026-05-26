@@ -1,1 +1,9 @@
-def convert_to_int():\n    '''\n    Take an input from the user (console) and convert it to int within a try-except block.\n    '''\n    try:\n        user_input = input(\"Enter a number: \")\n        return int(user_input)\n    except ValueError:\n        pass
+def convert_to_int():
+    '''
+    Take an input from the user (console) and convert it to int within a try-except block.
+    '''
+    try:
+        user_input = input("Enter a number: ")
+        return int(user_input)
+    except ValueError:
+        pass
