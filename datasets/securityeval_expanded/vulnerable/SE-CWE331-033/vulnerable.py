@@ -1,0 +1,1 @@
+import random\nimport string\n\n\ndef generateRandomString(length):\n    '''\n    Return an unpredictable random string that has only ASCII letters with a fixed size equals to length.\n    '''\n    return ''.join(random.choice(string.ascii_letters) for i in range(length))
