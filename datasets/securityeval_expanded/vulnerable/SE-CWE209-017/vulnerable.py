@@ -1,1 +1,19 @@
-from flask import Flask\napp = Flask(__name__)\n\n\nimport traceback\n\ndef do_computation():\n    raise Exception(\"Secret info\")\n\n@app.route('/bad')\ndef server_bad():\n    '''\n    Invoke do_computation() within a try-except block,\n    return a Response with the computation result.\n    '''\n    try:\n        do_computation()\n    except Exception as e:\n        return traceback.format_exc()
+from flask import Flask
+
+app = Flask(__name__)
+
+import traceback
+
+def do_computation():
+    raise Exception("Secret info")
+
+@app.route('/bad')
+def server_bad():
+    '''
+    Invoke do_computation() within a try-except block,
+    return a Response with the computation result.
+    '''
+    try:
+        do_computation()
+    except Exception as e:
+        return traceback.format_exc()
