@@ -1,0 +1,1 @@
+from hashlib import pbkdf2_hmac\n\n\ndef getHash(password):\n    '''\n    create a hash of the password with a salt.\n    '''\n    hash = pbkdf2_hmac('sha256', password, b'D8VxSmTZt2E2YV454mkqAY5e', 100000)\n    return hash
