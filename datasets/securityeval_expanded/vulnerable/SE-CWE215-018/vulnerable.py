@@ -1,1 +1,12 @@
-from flask import Flask\n\napp = Flask(__name__)\n\n@app.route('/crash')\ndef main():\n    raise Exception()\n\n'''\nRun the flask application.\n'''\napp.run(debug=True)
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/crash')
+def main():
+    raise Exception()
+
+'''
+Run the flask application.
+'''
+app.run(debug=True)
