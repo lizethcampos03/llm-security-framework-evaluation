@@ -1,1 +1,0 @@
-import mysql.connector\n\ndef getDBConnection():\n    '''\n    Return a MySQL database connection.\n    '''\n    return mysql.connector.connect(user='user', password='password', host='host', database='database')
