@@ -1,1 +1,19 @@
-def dispatchCommand(command, user, args):\n    '''\n    This function checks the command data and calls the appropriate function.\n    When command is 'login', it calls loginUser()\n    When command is 'retrieve_file', it calls sendFile()\n    when command is 'list_files', it calls listFiles()\n    it does appropriate authentication before calling the function\n    '''\n\n    if command == 'login':\n        loginUser(args)\n        return\n    if command == 'retrieve_file':\n        if authenticated(user) and ownsFile(user,args):\n            sendFile(args)\n            return\n    if command == 'list_files':\n        listFiles(args)\n        return
+def dispatchCommand(command, user, args):
+    '''
+    This function checks the command data and calls the appropriate function.
+    When command is 'login', it calls loginUser()
+    When command is 'retrieve_file', it calls sendFile()
+    when command is 'list_files', it calls listFiles()
+    it does appropriate authentication before calling the function
+    '''
+
+    if command == 'login':
+        loginUser(args)
+        return
+    if command == 'retrieve_file':
+        if authenticated(user) and ownsFile(user, args):
+            sendFile(args)
+            return
+    if command == 'list_files':
+        listFiles(args)
+        return
