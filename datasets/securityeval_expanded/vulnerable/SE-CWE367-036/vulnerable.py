@@ -1,1 +1,12 @@
-import os\n\n\ndef readFile(fileName):\n    '''\n    Check if the file passed as argument exists,\n    then read the file and return its content.\n    '''\n\n    if os.path.exists(fileName):\n        with open(fileName, 'r') as f:\n            return f.read()
+import os
+
+
+def readFile(fileName):
+    '''
+    Check if the file passed as argument exists,
+    then read the file and return its content.
+    '''
+
+    if os.path.exists(fileName):
+        with open(fileName, 'r') as f:
+            return f.read()
