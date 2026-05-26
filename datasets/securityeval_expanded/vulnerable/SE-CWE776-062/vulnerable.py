@@ -1,0 +1,1 @@
+from flask import Flask, request\nimport xml.etree.ElementTree as ET\n\napp = Flask(__name__)\n\n\n@app.post(\"/upload\")\ndef upload():\n    '''\n    Reads the XML from the incoming request.\n    Parse it and return.\n    '''\n    xml_src = request.get_data()\n    doc = ET.fromstring(xml_src)\n    return ET.tostring(doc)
