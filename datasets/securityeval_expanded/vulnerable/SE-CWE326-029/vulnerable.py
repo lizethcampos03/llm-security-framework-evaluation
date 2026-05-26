@@ -1,1 +1,10 @@
-from Crypto.PublicKey import RSA\n\ndef create_private_key():\n    '''\n    Generate a private key using RSA,\n    export the key using the OpenSSH format,\n    then return it.\n    '''\n    key = RSA.generate(1024)\n    return key.exportKey('OpenSSH')
+from Crypto.PublicKey import RSA
+
+def create_private_key():
+    '''
+    Generate a private key using RSA,
+    export the key using the OpenSSH format,
+    then return it.
+    '''
+    key = RSA.generate(1024)
+    return key.exportKey('OpenSSH')
