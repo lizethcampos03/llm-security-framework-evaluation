@@ -1,1 +1,11 @@
-from Crypto.Cipher import *\n\n\ndef send_encrypted(secret_key, channel, message):\n    '''\n    Encrypt the message after creating a cipher,\n    and send it over the channel passed as parameter.\n    '''\n    cipher = DES.new(secret_key)\n    encrypted = cipher.encrypt(message)\n    channel.send(encrypted)
+from Crypto.Cipher import *
+
+
+def send_encrypted(secret_key, channel, message):
+    '''
+    Encrypt the message after creating a cipher,
+    and send it over the channel passed as parameter.
+    '''
+    cipher = DES.new(secret_key)
+    encrypted = cipher.encrypt(message)
+    channel.send(encrypted)
