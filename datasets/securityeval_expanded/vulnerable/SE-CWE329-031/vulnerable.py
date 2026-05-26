@@ -1,0 +1,1 @@
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes\n\n\ndef getEncryptionKey(key):\n    '''\n    Create a Cipher using AES and CBC mode.\n    Then, encrypt the key using this cipher and return it.\n    '''\n    static_vector = b'x' * 16\n    cipher = Cipher(algorithms.AES(key), modes.CBC(static_vector))\n    cipher.encryptor()
