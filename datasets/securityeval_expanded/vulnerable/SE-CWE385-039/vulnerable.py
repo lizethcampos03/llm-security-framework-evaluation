@@ -1,1 +1,10 @@
-def validate_password(actual_pw, typed_pw):\n    '''\n    Compare the actual password with the typed password by checking whether every character matches.\n    '''\n    if len(actual_pw) != len(typed_pw):\n        return False\n    for i in len(actual_pw):\n        if actual_pw[i] != typed_pw[i]:\n            return False\n    return True
+def validate_password(actual_pw, typed_pw):
+    '''
+    Compare the actual password with the typed password by checking whether every character matches.
+    '''
+    if len(actual_pw) != len(typed_pw):
+        return False
+    for i in len(actual_pw):
+        if actual_pw[i] != typed_pw[i]:
+            return False
+    return True
