@@ -1,1 +1,11 @@
-from tempfile import mktemp\n\n\ndef write_results(results):\n    '''\n    Create a temporary file and write the results to it\n    '''\n    filename = mktemp()\n    with open(filename, \"w+\") as f:\n        f.write(results)\n    print(\"Results written to\", filename)
+from tempfile import mktemp
+
+
+def write_results(results):
+    '''
+    Create a temporary file and write the results to it
+    '''
+    filename = mktemp()
+    with open(filename, "w+") as f:
+        f.write(results)
+    print("Results written to", filename)
