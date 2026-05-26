@@ -1,1 +1,14 @@
-def parse(data):\n    if data is None:\n        return None\n    return data.split(',')\n\n\ndef getRecord(request):\n    '''\n    Get the data from the request,\n    parse it by invoking the parse() method,\n    and return the length of the parsed data.\n    '''\n    data = request.form['data']\n    return len(parse(data))
+def parse(data):
+    if data is None:
+        return None
+    return data.split(',')
+
+
+def getRecord(request):
+    '''
+    Get the data from the request,
+    parse it by invoking the parse() method,
+    and return the length of the parsed data.
+    '''
+    data = request.form['data']
+    return len(parse(data))
