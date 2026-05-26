@@ -1,0 +1,1 @@
+from flask import Flask, request, redirect\nimport os\n\napp = Flask(__name__)\n\n@app.route('/pdf/upload')\ndef upload_pdf():\n    '''\n    Get PDF file from request, save it to ./uploads directory, and redirect to /pdf/view\n    '''\n    p = request.files['pdf']\n    p.save('./uploads/' + p.filename)\n    return redirect('/pdf/view')
