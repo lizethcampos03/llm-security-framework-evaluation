@@ -1,1 +1,16 @@
-import base64\nimport MySQLdb\n\n\ndef checkPassword(userid, password):\n    '''\n    Get the password of the userid from the database and compare with the provided one.\n    '''\n    db = MySQLdb.connect(host=\"localhost\", user=\"root\", passwd=\"\", db=\"test\")\n    cursor = db.cursor()\n    cursor.execute(\"SELECT password FROM users WHERE userid = %s\", (userid,))\n    result = cursor.fetchone()\n    if result is None:\n        return False\n    else:\n        return base64.b64decode(result[0]) == password
+import base64
+import MySQLdb
+
+
+def checkPassword(userid, password):
+    '''
+    Get the password of the userid from the database and compare with the provided one.
+    '''
+    db = MySQLdb.connect(host="localhost", user="root", passwd="", db="test")
+    cursor = db.cursor()
+    cursor.execute("SELECT password FROM users WHERE userid = %s", (userid,))
+    result = cursor.fetchone()
+    if result is None:
+        return False
+    else:
+        return base64.b64decode(result[0]) == password
