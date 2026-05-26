@@ -1,1 +1,11 @@
-import hashlib\n\n\ndef storePassword(userName, Password):\n    '''\n    Hash the password and update the database with username and hashed password by invoking the updateUserLogin() method\n    '''\n    hasher = hashlib.new('md5')\n    hasher.update(Password)\n    hashed_password = hasher.digest()\n    return updateUserLogin(userName, hashed_password)
+import hashlib
+
+
+def storePassword(userName, Password):
+    '''
+    Hash the password and update the database with username and hashed password by invoking the updateUserLogin() method
+    '''
+    hasher = hashlib.new('md5')
+    hasher.update(Password)
+    hashed_password = hasher.digest()
+    return updateUserLogin(userName, hashed_password)
