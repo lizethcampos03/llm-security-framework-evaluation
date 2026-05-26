@@ -1,0 +1,1 @@
+import ssl\n\n\ndef getSSLContext():\n    '''\n    Create an SSL context and return it.\n    '''\n    ctx = ssl.create_default_context()\n    ctx.check_hostname = False\n    ctx.verify_mode = ssl.CERT_NONE\n    return ctx
