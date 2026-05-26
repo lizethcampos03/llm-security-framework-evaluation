@@ -1,0 +1,1 @@
+def foo():\n    return \"./\", \"file.txt\"\n\n\ndef dataSorting():\n    '''\n    Continuously take (basename,data) key-value pair from foo() function and sort it\n    '''\n    alist = []\n    basename, data = (True, True)\n    while basename and data:\n        (basename, data) = foo()\n        alist.append((basename, data))\n        alist.sort()
