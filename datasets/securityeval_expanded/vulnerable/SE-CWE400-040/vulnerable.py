@@ -1,1 +1,18 @@
-import re\n\nfrom flask import request, Flask\n\napp = Flask(__name__)\n\n\n@app.route('/upload')\ndef upload():\n    '''\n    Get the username and a file attachment from the HTTP GET request.\n    Then, search the username in the filename of the attachment.\n    '''\n\n    username = request.args.get('username')\n    filename = request.files.get('attachment').filename\n\n    re.search(username, filename)
+import re
+
+from flask import request, Flask
+
+app = Flask(__name__)
+
+
+@app.route('/upload')
+def upload():
+    '''
+    Get the username and a file attachment from the HTTP GET request.
+    Then, search the username in the filename of the attachment.
+    '''
+
+    username = request.args.get('username')
+    filename = request.files.get('attachment').filename
+
+    re.search(username, filename)
