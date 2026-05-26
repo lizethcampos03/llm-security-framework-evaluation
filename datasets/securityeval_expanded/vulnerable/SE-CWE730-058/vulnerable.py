@@ -1,0 +1,1 @@
+import re\n\n\ndef checkNumber(number):\n    '''\n    Use regular expression to match lines with numbers\n    '''\n    pattern = r\"/^0\\.\\d+E?\\d+$/\"\n    if re.match(pattern, number):\n        return True\n    else:\n        return False
