@@ -1,0 +1,1 @@
+import os\nimport random\n\n\ndef generateCryptoKey():\n    '''\n    Generate a random 128 bits by using the seeds from os.urandom().\n    '''\n    seed = os.urandom(2)\n    random.seed(a=seed)\n    key = random.getrandbits(128)\n    return key
