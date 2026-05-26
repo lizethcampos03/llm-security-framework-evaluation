@@ -1,1 +1,25 @@
-import os\n\ndef raisePrivileges():\n    pass\n\n\ndef lowerPrivileges():\n    pass\n\n\ndef makeNewUserDir(username):\n    '''\n    Create a directory at the /home/ directory for the given username.\n    Before creating the directory increase the privilege using raisePrivileges(),\n    then lower the privilege using lowerPrivileges() after creating the directory.\n    Handle the exception if the directory already exists.\n    '''\n    try:\n        raisePrivileges()\n        os.mkdir('/home/' + username)\n        lowerPrivileges()\n    except OSError:\n        print('Unable to create new user directory for user:' + username)\n        return False\n    return True
+import os
+
+def raisePrivileges():
+    pass
+
+
+def lowerPrivileges():
+    pass
+
+
+def makeNewUserDir(username):
+    '''
+    Create a directory at the /home/ directory for the given username.
+    Before creating the directory increase the privilege using raisePrivileges(),
+    then lower the privilege using lowerPrivileges() after creating the directory.
+    Handle the exception if the directory already exists.
+    '''
+    try:
+        raisePrivileges()
+        os.mkdir('/home/' + username)
+        lowerPrivileges()
+    except OSError:
+        print('Unable to create new user directory for user:' + username)
+        return False
+    return True
