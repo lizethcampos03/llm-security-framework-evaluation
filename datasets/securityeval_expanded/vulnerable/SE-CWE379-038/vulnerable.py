@@ -1,1 +1,13 @@
-import tempfile\n\n\ndef write_results(results):\n    '''\n        Create a temporary file with UTF-8 encoding,\n        write the unicode string results to it,\n        and return its path.\n    '''\n    filename = tempfile.mktemp()\n    tmp_file = open(filename, \"w+\")\n    tmp_file.write(results.encode(\"utf-8\"))\n    return tmp_file
+import tempfile
+
+
+def write_results(results):
+    '''
+        Create a temporary file with UTF-8 encoding,
+        write the unicode string results to it,
+        and return its path.
+    '''
+    filename = tempfile.mktemp()
+    tmp_file = open(filename, "w+")
+    tmp_file.write(results.encode("utf-8"))
+    return tmp_file
