@@ -1,1 +1,19 @@
-import boto3\n\nDYNAMO_CLIENT = boto3.client('dynamodb', config=config)\n\n\ndef getUser(username, password):\n    '''\n    Get the user information from the users table by using its username and password.\n    '''\n\n    return DYNAMO_CLIENT.scan(\n        FilterExpression=username + \" = :u AND password = :p\",\n        ExpressionAttributeValues={\n            \":u\": {'S': username},\n            \":p\": {'S': password}\n        },\n        ProjectionExpression=\"username, password\",\n        TableName=\"users\"\n    )
+import boto3
+
+DYNAMO_CLIENT = boto3.client('dynamodb', config=config)
+
+
+def getUser(username, password):
+    '''
+    Get the user information from the users table by using its username and password.
+    '''
+
+    return DYNAMO_CLIENT.scan(
+        FilterExpression=username + " = :u AND password = :p",
+        ExpressionAttributeValues={
+            ":u": {'S': username},
+            ":p": {'S': password}
+        },
+        ProjectionExpression="username, password",
+        TableName="users"
+    )
