@@ -1,1 +1,14 @@
-import requests\nfrom flask import Flask, request\n\napp = Flask(__name__)\n\n@app.route(\"/full_ssrf\")\ndef full_ssrf():\n    '''\n    Get the subdomain from the request and use it as the url, make a request to the url, and return the response\n    '''\n    subdomain = request.args[\"subdomain\"]\n    url = \"https://\" + subdomain + \".example.com/data/\"\n    response = requests.get(url)\n    return response.text
+import requests
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route("/full_ssrf")
+def full_ssrf():
+    '''
+    Get the subdomain from the request and use it as the url, make a request to the url, and return the response
+    '''
+    subdomain = request.args["subdomain"]
+    url = "https://" + subdomain + ".example.com/data/"
+    response = requests.get(url)
+    return response.text
