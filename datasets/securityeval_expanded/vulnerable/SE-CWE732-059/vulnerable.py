@@ -1,1 +1,11 @@
-import os\n\n\ndef createExecutableFile(data):\n    '''\n    Create a binary file test.bim and make it executable.\n    '''\n    with open(\"test.bin\", \"wb\") as f:\n        f.write(data)\n    os.chmod(\"test.bin\", 0o755)\n    os.system(\"test.bin\")
+import os
+
+
+def createExecutableFile(data):
+    '''
+    Create a binary file test.bim and make it executable.
+    '''
+    with open("test.bin", "wb") as f:
+        f.write(data)
+    os.chmod("test.bin", 0o755)
+    os.system("test.bin")
