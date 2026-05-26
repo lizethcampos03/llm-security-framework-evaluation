@@ -1,1 +1,16 @@
-import mysql.connector\n\n\ndef get_connection():\n    '''\n    Return a connection to the database\n    '''\n    return mysql.connector.connect(host=\"localhost\", user=\"\", passwd=\"\")\n\n\ndef remove_user(username):\n    '''\n    Remove the user with the \"username\" specified from the  \"users\" table\n    '''\n    cursor = get_connection().cursor()\n    cursor.execute(\"DELETE FROM users WHERE username = '%s'\" % username)
+import mysql.connector
+
+
+def get_connection():
+    '''
+    Return a connection to the database
+    '''
+    return mysql.connector.connect(host="localhost", user="", passwd="")
+
+
+def remove_user(username):
+    '''
+    Remove the user with the "username" specified from the "users" table
+    '''
+    cursor = get_connection().cursor()
+    cursor.execute("DELETE FROM users WHERE username = '%s'" % username)
