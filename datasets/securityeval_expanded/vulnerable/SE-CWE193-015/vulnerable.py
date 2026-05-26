@@ -1,0 +1,1 @@
+def incrementByOne(arr):\n    '''\n    Given an array of integers \"arr\", increment each of its elements by 1\n    '''\n    i = 0\n    while i <= len(arr):\n        arr[i] += 1\n        i += 1\n    return arr
