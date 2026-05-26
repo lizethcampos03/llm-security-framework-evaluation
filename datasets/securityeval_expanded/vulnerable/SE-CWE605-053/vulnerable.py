@@ -1,1 +1,17 @@
-from socket import socket\n\n\ndef echoServer(port):\n    '''\n    Create a socket server that echos back the message sent.\n    '''\n    s = socket(socket.AF_INET, socket.SOCK_STREAM)\n    s.bind(('0.0.0.0', port))\n    s.listen(1)\n    conn, addr = s.accept()\n    while True:\n        data = conn.recv(1024)\n        if not data:\n            break\n        conn.send(data)\n    conn.close()
+from socket import socket
+
+
+def echoServer(port):
+    '''
+    Create a socket server that echos back the message sent.
+    '''
+    s = socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('0.0.0.0', port))
+    s.listen(1)
+    conn, addr = s.accept()
+    while True:
+        data = conn.recv(1024)
+        if not data:
+            break
+        conn.send(data)
+    conn.close()
