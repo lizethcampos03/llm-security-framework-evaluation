@@ -667,6 +667,20 @@
     "mitigations": [],
     "source_url": "https://cwe.mitre.org/data/definitions/703.html"
   },
+  "CWE-730": {
+  "name": "OWASP Top Ten 2004 Category A10 - Insecure Configuration Management",
+  "description": "This entry represents an OWASP Top Ten category related to insecure configuration management. It covers weaknesses that arise when systems are deployed, configured, or maintained insecurely, including unsafe defaults, unnecessary services, misconfigured permissions, exposed administrative interfaces, or missing hardening controls.",
+  "extended_description": "Insecure configuration management can make software vulnerable even when the application code itself is otherwise functional. Secure deployment requires careful configuration, removal of unnecessary functionality, least privilege, secure defaults, and ongoing review of configuration settings.",
+  "mitigations": [
+    "Use secure configuration baselines and hardened defaults.",
+    "Disable unnecessary services, features, accounts, and interfaces.",
+    "Apply least privilege to files, services, users, and application components.",
+    "Avoid exposing administrative or sensitive functionality unnecessarily.",
+    "Review configuration settings regularly.",
+    "Document secure deployment assumptions and enforce them consistently."
+  ],
+  "source_url": "https://cwe.mitre.org/data/definitions/730.html"
+},
   "CWE-732": {
     "name": "Incorrect Permission Assignment for Critical Resource",
     "description": "The product specifies permissions for a security-critical resource in a way that allows that resource to be read or modified by unintended actors.",
