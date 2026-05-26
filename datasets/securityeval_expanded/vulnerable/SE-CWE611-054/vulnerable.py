@@ -1,1 +1,23 @@
-from flask import Flask, request\nimport lxml.etree\n\napp = Flask(__name__)\n\n\ndef checkPassword(userid, password):\n    pass\n\n\n@app.post(\"/upload\")\ndef upload():\n    '''\n    Get the xml file from the request and check if the userid and password are correct by invoking checkPassword().\n    '''\n    xml = request.files['xml']\n    root = lxml.etree.fromstring(xml.read())\n    userid = root.find('userid').text\n    password = root.find('password').text\n    if checkPassword(userid, password):\n        return \"OK\"\n    else:\n        return \"ERROR\"
+from flask import Flask, request
+import lxml.etree
+
+app = Flask(__name__)
+
+
+def checkPassword(userid, password):
+    pass
+
+
+@app.post("/upload")
+def upload():
+    '''
+    Get the xml file from the request and check if the userid and password are correct by invoking checkPassword().
+    '''
+    xml = request.files['xml']
+    root = lxml.etree.fromstring(xml.read())
+    userid = root.find('userid').text
+    password = root.find('password').text
+    if checkPassword(userid, password):
+        return "OK"
+    else:
+        return "ERROR"
