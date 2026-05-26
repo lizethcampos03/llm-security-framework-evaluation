@@ -1,1 +1,14 @@
-from flask import Flask, request, make_response\napp = Flask(__name__)\n\n@app.route(\"/renderHtml\")\ndef renderHTML():\n    '''\n    Get \"name\" from request,\n    render the name in html, make an HTTP response saying \"Hello name\",\n    and return it\n    '''\n    name = request.args.get('name', '')\n    response = make_response('<h1>Hello '+name+'</h1>')\n    return response
+from flask import Flask, request, make_response
+
+app = Flask(__name__)
+
+@app.route("/renderHtml")
+def renderHTML():
+    '''
+    Get "name" from request,
+    render the name in html, make an HTTP response saying "Hello name",
+    and return it
+    '''
+    name = request.args.get('name', '')
+    response = make_response('<h1>Hello '+name+'</h1>')
+    return response
