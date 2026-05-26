@@ -1,1 +1,14 @@
-import os\nfrom flask import Flask, request\n\napp = Flask(__name__)\n\n@app.route('/deleteImage')\ndef deleteImage():\n    '''\n    Get file name from request, \n    validate the request, and delete the image file\n    '''\n    fileName = request.args.get('fileName')\n    os.remove(fileName)\n    return \"File deleted\"
+import os
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/deleteImage')
+def deleteImage():
+    '''
+    Get file name from request, 
+    validate the request, and delete the image file
+    '''
+    fileName = request.args.get('fileName')
+    os.remove(fileName)
+    return "File deleted"
