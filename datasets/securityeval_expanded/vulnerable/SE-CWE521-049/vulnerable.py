@@ -1,0 +1,1 @@
+from flask import Flask, make_response, request\n\napp = Flask(\"dummy\")\n\n\ndef configure_app(app):\n    '''\n    Add database link to the SQLALCHEMY_DATABASE_URI config of app.\n    '''\n    app.config['SQLALCHEMY_DATABASE_URI'] = \"postgresql://user:@domain.com\"
