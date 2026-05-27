@@ -1,0 +1,12 @@
+{
+  "sample_id": "SE-CWE020-001",
+  "source_vulnerable_sample_id": "SE-CWE020-001",
+  "cwe_id": "CWE-020",
+  "vulnerability_status": "secure",
+  "source": "CWE-guided secure counterpart generation",
+  "generation_method": "MITRE CWE-guided secure rewrite",
+  "secure_generation_prompt_version": "secure_counterpart_prompt_v1",
+  "context_profile_version": null,
+  "validation_status": "pending",
+  "notes": "Pilot secure counterpart placeholder."
+}
