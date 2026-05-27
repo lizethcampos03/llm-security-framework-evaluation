@@ -8,19 +8,26 @@ SE-CWE020-001
 
 SE-CWE020-001
 
-## Status
+## CWE
 
-Pending generation
+CWE-020 – Improper Input Validation
 
-## Method
+## Security Changes
 
-This secure counterpart will be generated using:
+1. Replaced yaml.load(..., Loader=yaml.BaseLoader) with yaml.safe_load(...).
+2. Added type validation for the filename parameter.
+3. Added file existence validation before opening the file.
+4. Specified UTF-8 encoding when opening the file.
 
-- Vulnerable implementation
-- Sample metadata
-- MITRE CWE guidance
-- Secure counterpart prompt v1
+## Functionality Preservation
+
+The function still:
+
+- accepts a filename
+- opens the specified file
+- parses YAML content
+- returns the parsed object
 
 ## Validation Status
 
-Pending
+Pending manual review and automated security-tool validation.

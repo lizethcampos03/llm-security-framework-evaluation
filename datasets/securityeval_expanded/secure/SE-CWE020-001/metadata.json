@@ -1,12 +1,14 @@
 {
   "sample_id": "SE-CWE020-001",
   "source_vulnerable_sample_id": "SE-CWE020-001",
+  "task_id": "CWE-020_author_1.py",
   "cwe_id": "CWE-020",
+  "cwe_name": "Improper Input Validation",
   "vulnerability_status": "secure",
-  "source": "CWE-guided secure counterpart generation",
+  "source": "SecurityEval reference implementation",
   "generation_method": "MITRE CWE-guided secure rewrite",
   "secure_generation_prompt_version": "secure_counterpart_prompt_v1",
   "context_profile_version": null,
-  "validation_status": "pending",
-  "notes": "Pilot secure counterpart placeholder."
+  "validation_status": "pending_review",
+  "notes": "Replaced unsafe YAML deserialization with yaml.safe_load and added basic filename validation."
 }

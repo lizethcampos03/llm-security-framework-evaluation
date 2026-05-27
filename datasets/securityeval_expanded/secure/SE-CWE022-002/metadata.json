@@ -1,0 +1,14 @@
+{
+  "sample_id": "SE-CWE022-002",
+  "source_vulnerable_sample_id": "SE-CWE022-002",
+  "task_id": "CWE-022_author_1.py",
+  "cwe_id": "CWE-022",
+  "cwe_name": "Improper Limitation of a Pathname to a Restricted Directory (Path Traversal)",
+  "vulnerability_status": "secure",
+  "source": "SecurityEval reference implementation",
+  "generation_method": "MITRE CWE-guided secure rewrite",
+  "secure_generation_prompt_version": "secure_counterpart_prompt_v1",
+  "context_profile_version": null,
+  "validation_status": "pending_review",
+  "notes": "Restricted deletion operations to approved image directory using canonical path validation and filename validation."
+}
