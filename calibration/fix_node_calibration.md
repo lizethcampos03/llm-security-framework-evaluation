@@ -4,27 +4,23 @@
 
 This document defines the calibration strategy for the fix node within the LLM security framework.
 
-The purpose of the fix node is to generate secure repairs for vulnerable code while preserving the intended functionality of the original implementation.
+The fix node is responsible for generating secure repairs for vulnerable code while preserving the intended functionality of the original implementation.
 
-The calibration process evaluates whether context-aware repair generation improves fix quality compared to simpler prompt-only approaches.
+Calibration evaluates whether progressively richer contextual information improves secure repair quality compared to simpler prompt-only repair approaches.
 
 ---
 
-## Motivation
+## Calibration Goal
 
-Traditional static analysis tools primarily focus on vulnerability detection.
+The goal of fix-node calibration is to determine whether the workflow improves secure repair quality through:
 
-However, modern LLM-based workflows can also recommend or generate secure repairs.
+- CWE-guided reasoning
+- security context profiles
+- optimized prompt engineering
+- structured output expectations
+- workflow orchestration
 
-The fix node is intended to support:
-
-- secure counterpart generation
-- vulnerability remediation
-- end-to-end secure code workflows
-- downstream repair LLMs
-- human reviewers
-
-The repair process should produce fixes that are:
+The fix node should generate repairs that are:
 
 - secure
 - functional
@@ -34,84 +30,83 @@ The repair process should produce fixes that are:
 
 ---
 
-## Calibration Hypothesis
+## Calibration Dataset
 
-The calibration process tests the hypothesis that repair quality improves when the model receives richer contextual information.
+Fix calibration should use a smaller OWASP-focused calibration subset before final evaluation on the broader dataset.
 
-The workflow assumes that:
+The calibration subset may include:
+
+- vulnerable samples
+- secure counterparts
+- CWE guidance
+- security context profiles
+- repair outputs
+- repair verification outputs
+- Bandit outputs
+- CodeQL outputs
+- manual review notes
+
+---
+
+## Fix Configurations
+
+### Configuration A — Reference Baseline Repair
+
+This configuration follows the reference paper methodology as closely as possible.
+
+The model receives:
 
 ```text
 vulnerable code
 +
-CWE guidance
-+
-security context profile
-+
-optimized prompt
-=
-higher-quality secure repair
+basic reference-style repair prompt
 
-compared to:
+This configuration serves as the baseline repair workflow.
 
-vulnerable code
-+
-simple repair prompt
+Configuration B — CWE-Guided Repair
 
-Calibration Configurations
-Configuration A: Prompt-Only Repair
+This configuration extends the baseline repair workflow by adding CWE security guidance.
 
 The model receives:
 
 vulnerable code
-simple repair instruction
-
-This configuration serves as a lightweight baseline.
-
-Configuration B: CWE-Guided Repair
-
-The model receives:
-
-vulnerable code
++
+basic repair prompt
++
 CWE guidance
-mitigation recommendations
 
-This configuration evaluates the value of authoritative CWE information.
+This configuration evaluates whether authoritative CWE security information improves repair quality.
 
-Configuration C: Context-Aware Repair
-
-The model receives:
-
-vulnerable code
-CWE guidance
-security context profile
-application context
-optimized repair instructions
-structured repair expectations
+Configuration C — Context-Aware Repair
 
 This configuration approximates the intended final workflow.
 
-Calibration Dataset
+The model receives:
 
-Calibration should use a smaller OWASP-focused subset.
-
-The calibration dataset may contain:
-
-vulnerable implementations
-secure counterparts
-context profiles
+vulnerable code
++
 CWE guidance
-manual review notes
++
+security context profile
++
+optimized repair prompt
++
+structured output expectations
 
-This subset is reused during calibration before final experiments are executed on the broader dataset.
+This configuration evaluates the combined value of:
 
-Calibration Evaluation Areas
-Security Improvement
+context engineering
+prompt engineering
+CWE-guided reasoning
+workflow orchestration
+Repair Evaluation Areas
+Vulnerability Removal
 
 The generated repair should remove or mitigate the target vulnerability.
 
 Functionality Preservation
 
-The intended functionality of the original implementation should remain intact.
+The intended behavior of the original implementation should remain intact.
 
 Secure Coding Quality
 
@@ -125,11 +120,11 @@ Readability and Maintainability
 
 The generated repair should remain understandable and professionally structured.
 
-Report Usefulness
+Structured Output Quality
 
-The generated report should provide enough evidence and explanation to support both human reviewers and downstream repair workflows.
+The repair output should remain machine-readable and consistent enough for downstream workflow stages.
 
-Calibration Metrics
+Fix Calibration Metrics
 
 Calibration may record:
 
@@ -139,22 +134,83 @@ Bandit results
 CodeQL results
 manual reviewer scores
 repair readability
-consistency across runs
-latency
+repair consistency
+repair latency
 cost where available
+Structured Repair Output
+
+The fix node should produce structured outputs where possible.
+
+Example fields:
+
+{
+  "fix_status": "success | partial | failed",
+  "target_cwe": "",
+  "repair_summary": "",
+  "security_improvements": [],
+  "remaining_risks": [],
+  "fixed_code": "",
+  "confidence": 0.0
+}
 Manual Review
 
 Manual review is important during calibration.
 
-Flagged repairs should be inspected to determine whether:
+Generated repairs should be inspected to determine whether:
 
-the vulnerability was fully mitigated
+the vulnerability was actually mitigated
 functionality changed unexpectedly
 the repair introduced new risks
-the repair quality is sufficient for evaluation purposes
+the repair quality is sufficient for evaluation
+the repair output is useful for downstream reporting
+
+A repair should not be accepted only because the LLM claimed the repair was successful.
+
+Relationship to Fix Verification
+
+The fix node generates candidate repairs.
+
+The fix verification stage evaluates whether the repair should be accepted.
+
+The fix verification stage may evaluate:
+
+syntax validity
+target CWE mitigation
+functionality preservation
+new vulnerability introduction
+optional Bandit/CodeQL results
+
+A conditional loop may be used:
+
+If verification passes:
+    continue to report
+
+If verification fails and attempts < max:
+    regenerate repair
+
+If verification fails and attempts >= max:
+    continue with warning
+
+Recommended initial setting:
+
+max_fix_attempts = 2
+Relationship to Context Profiles
+
+Security context profiles are expected to influence repair quality.
+
+Examples of context-sensitive repair behavior include:
+
+stricter authorization requirements
+stronger logging requirements
+stricter validation logic
+deployment-specific security expectations
+protection of sensitive assets
+
+The calibration process should evaluate whether contextual information meaningfully improves repair quality.
+
 Relationship to Secure Counterpart Generation
 
-The secure counterpart dataset generation process contributes to fix-node calibration.
+The secure counterpart generation process contributes to fix-node calibration.
 
 Observations made during secure counterpart generation may be used to:
 
@@ -164,8 +220,31 @@ refine structured outputs
 identify weak repair patterns
 strengthen mitigation quality
 
-This allows dataset generation and calibration to reinforce each other.
+Dataset generation and calibration should reinforce each other.
 
+Main Calibration Hypothesis
+
+The primary hypothesis is:
+
+CWE guidance
++
+security context
++
+optimized prompt engineering
+improves secure repair quality
+compared to the reference-style baseline workflow.
+Calibration Decision
+
+After calibration, the following should be documented:
+
+selected repair prompt
+selected context fields
+selected CWE/RAG input format
+selected structured repair schema
+selected verification strategy
+selected conditional loop behavior
+known repair limitations
+examples of improved repair behavior
 Future Directions
 
 Future versions of the fix node may include:
