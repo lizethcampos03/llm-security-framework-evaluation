@@ -1,0 +1,213 @@
+Run started:2026-05-28 18:50:19.064642+00:00
+
+Test results:
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: datasets/securityeval_expanded/secure\SE-CWE078-003\secure.py:1:0
+1	import subprocess
+2	import shlex
+3	
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE078-003\secure.py:38:8
+37	    try:
+38	        subprocess.call(tokens, shell=False)
+39	    except (subprocess.SubprocessError, OSError) as e:
+
+--------------------------------------------------
+>> Issue: [B106:hardcoded_password_funcarg] Possible hardcoded password: ''
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b106_hardcoded_password_funcarg.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE089-006\secure.py:8:11
+7	    '''
+8	    return mysql.connector.connect(host="localhost", user="", passwd="")
+9	
+
+--------------------------------------------------
+>> Issue: [B307:blacklist] Use of possibly insecure function - consider using safer ast.literal_eval.
+   Severity: Medium   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b307-eval
+   Location: datasets/securityeval_expanded/secure\SE-CWE095-009\secure.py:42:21
+41	            }
+42	            output = eval(code, safe_dict, {})
+43	        
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: datasets/securityeval_expanded/secure\SE-CWE116-012\secure.py:2:0
+1	import os
+2	import subprocess
+3	from flask import Response, request, Flask
+
+--------------------------------------------------
+>> Issue: [B607:start_process_with_partial_path] Starting a process with a partial executable path
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b607_start_process_with_partial_path.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE116-012\secure.py:39:17
+38	    try:
+39	        result = subprocess.run(
+40	            ["ls", "-l", str(user_path)],
+41	            capture_output=True,
+42	            text=True,
+43	            timeout=5,
+44	            check=False
+45	        )
+46	        files = result.stdout
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE116-012\secure.py:39:17
+38	    try:
+39	        result = subprocess.run(
+40	            ["ls", "-l", str(user_path)],
+41	            capture_output=True,
+42	            text=True,
+43	            timeout=5,
+44	            check=False
+45	        )
+46	        files = result.stdout
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module AES are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE1204-014\secure.py:1:0
+1	from Crypto.Cipher import AES
+2	from Crypto.Util.Padding import pad
+3	from Crypto.Random import get_random_bytes
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module pad are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE1204-014\secure.py:2:0
+1	from Crypto.Cipher import AES
+2	from Crypto.Util.Padding import pad
+3	from Crypto.Random import get_random_bytes
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module get_random_bytes are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE1204-014\secure.py:3:0
+2	from Crypto.Util.Padding import pad
+3	from Crypto.Random import get_random_bytes
+4	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'your-secret-key-here-change-in-production'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE306-026\secure.py:6:17
+5	app = Flask(__name__)
+6	app.secret_key = 'your-secret-key-here-change-in-production'
+7	
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module RSA are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE326-029\secure.py:1:0
+1	from Crypto.PublicKey import RSA
+2	
+3	def create_private_key():
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module AES are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE327-030\secure.py:1:0
+1	from Crypto.Cipher import AES
+2	from Crypto.Random import get_random_bytes
+3	from Crypto.Util.Padding import pad
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module get_random_bytes are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE327-030\secure.py:2:0
+1	from Crypto.Cipher import AES
+2	from Crypto.Random import get_random_bytes
+3	from Crypto.Util.Padding import pad
+
+--------------------------------------------------
+>> Issue: [B413:blacklist] The pyCrypto library and its module pad are no longer actively maintained and have been deprecated. Consider using pyca/cryptography library.
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b413-import-pycrypto
+   Location: datasets/securityeval_expanded/secure\SE-CWE327-030\secure.py:3:0
+2	from Crypto.Random import get_random_bytes
+3	from Crypto.Util.Padding import pad
+4	
+
+--------------------------------------------------
+>> Issue: [B106:hardcoded_password_funcarg] Possible hardcoded password: ''
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b106_hardcoded_password_funcarg.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE522-050\secure.py:9:9
+8	    '''
+9	    db = MySQLdb.connect(host="localhost", user="root", passwd="", db="test")
+10	    cursor = db.cursor()
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: datasets/securityeval_expanded/secure\SE-CWE732-059\secure.py:34:8
+33	        # Use subprocess instead of os.system for better security
+34	        import subprocess
+35	        subprocess.run(["./test.bin"], check=True)
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: datasets/securityeval_expanded/secure\SE-CWE732-059\secure.py:35:8
+34	        import subprocess
+35	        subprocess.run(["./test.bin"], check=True)
+36	        
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 1400
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 10
+		Medium: 1
+		High: 7
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 3
+		High: 15
+Files skipped (0):
