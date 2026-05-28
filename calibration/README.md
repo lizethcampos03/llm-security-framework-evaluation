@@ -1,220 +1,112 @@
-# Calibration Framework
+# Workflow Calibration
 
 ## Purpose
 
-The calibration phase is conducted before formal experimentation and serves as the primary mechanism for refining the framework architecture, improving reliability, and documenting evidence-driven design decisions.
+This folder contains the workflow calibration documentation for the LLM security framework.
 
-Calibration is not intended to maximize benchmark performance through repeated trial-and-error. Instead, it provides a structured methodology for understanding system behavior, identifying weaknesses, evaluating architectural modifications, and documenting decisions that influence subsequent experimentation.
+Calibration is the engineering stage used to refine the workflow before final evaluation experiments.
 
-The outcome of calibration is a stable framework configuration that can be evaluated through controlled experiments.
+The purpose of calibration is to improve:
 
----
+- retrieval quality
+- vulnerability detection
+- secure repair generation
+- repair verification
+- reporting quality
+- workflow reliability
 
-## Calibration Philosophy
+Calibration is separate from final experiments.
 
-The project adopts an evidence-driven calibration methodology based on iterative observation and refinement.
+Calibration improves the workflow.
 
-Each calibration cycle follows the process:
-
-Observation
-↓
-Hypothesis
-↓
-Adjustment
-↓
-Evaluation
-↓
-Decision
-
-Observed behaviors motivate hypotheses regarding architectural improvements. Proposed modifications are implemented and evaluated. Results are documented and ultimately accepted, rejected, or revised.
-
-This process creates a transparent record of architectural evolution and supports reproducibility.
+Final experiments evaluate the frozen workflow.
 
 ---
 
-## Task-Specialized LLM Configuration
+# Calibration Philosophy
 
-This project does not conduct a broad large-language-model comparison study.
+The workflow is calibrated as an integrated orchestration system rather than as isolated components.
 
-Instead, the framework adopts a deliberately selected task-specialized LLM configuration based on the differing requirements of vulnerability detection and secure code remediation.
+The calibration process focuses on whether workflow behavior improves through:
 
-The selected configuration is:
-
-Detection Model
-- Claude Opus
-- Responsible for vulnerability analysis, contextual security reasoning, explanation generation, and vulnerability classification
-
-Repair Model
-- Claude Sonnet
-- Responsible for remediation generation, secure code rewriting, and vulnerability-fix recommendations
-
-The objective of calibration is therefore not to determine which model is "best" among multiple candidates. Instead, calibration focuses on understanding how the selected configuration behaves within the overall framework architecture.
-
-The primary research contribution of the project is the orchestration workflow itself, including contextual grounding, retrieval augmentation, validation mechanisms, remediation generation, and structured reporting.
+- context engineering
+- retrieval improvements
+- prompt engineering
+- validation strategies
+- repair verification
+- structured reporting
 
 ---
 
-## Calibration Areas
+# Calibration Flow
 
-Calibration activities focus on the following framework components:
+The workflow calibration process follows this order:
 
-### Security Context Engineering
+```text
+Context Profile + RAG Calibration
+→ Detection Node Calibration
+→ Fix Node Calibration
+→ Fix Verification Calibration
+→ Report Node Calibration
+→ Validation Run Calibration
+→ Architecture Freeze
+Calibration Sections
+Context Profile + RAG Calibration
 
-Evaluation and refinement of contextual information provided to the detection process.
+Folder:
 
-Areas of interest include:
+context_rag_calibration/
 
-- Business logic context
-- Authorization assumptions
-- Operational assumptions
-- Intended application behavior
-- Security concerns supplied by the user
+Focuses on:
 
----
+context profile design
+retrieval quality
+hybrid retrieval
+retrieval ranking
+retrieval usefulness
+retrieval noise reduction
+Detection Node Calibration
 
-### Retrieval-Augmented Security Knowledge
+Document:
 
-Evaluation of security knowledge retrieval quality.
+detection_node_calibration.md
 
-Areas of interest include:
+Focuses on improving vulnerability detection quality.
 
-- CWE retrieval accuracy
-- CVE retrieval usefulness
-- Context relevance
-- Retrieval completeness
-- Retrieval ranking quality
+Fix Node Calibration
 
----
+Document:
 
-### Prompt Engineering
+fix_node_calibration.md
 
-Evaluation of detector and repair prompts.
+Focuses on improving secure repair quality.
 
-Areas of interest include:
+Fix Verification Calibration
 
-- Detection consistency
-- Explanation quality
-- Vulnerability classification quality
-- Structured output reliability
-- Repair usefulness
+Document:
 
----
+fix_verification_calibration.md
 
-### Validation Methodology
+Focuses on validating generated repairs before reporting.
 
-Evaluation of the framework's multi-run validation strategy.
+Report Node Calibration
 
-The validation stage does not use a separate evaluator model.
+Document:
 
-Instead, the detection process is executed repeatedly and aggregated using threshold-based majority voting.
+report_node_calibration.md
 
-Calibration activities investigate:
+Focuses on improving report usefulness and auditability.
 
-- Consistency across runs
-- Vote distributions
-- Confidence aggregation
-- Stability of final decisions
-- Sensitivity to threshold selection
+Validation Run Calibration
 
----
+Document:
 
-### Explanation Quality
+validation_run_calibration.md
 
-Evaluation of:
+Focuses on repeated validation and aggregation reliability.
 
-- Clarity
-- Technical correctness
-- Supporting evidence
-- Actionability
-- Human interpretability
+Architecture Freeze
 
----
+Calibration ends when the workflow is stable enough to freeze.
 
-### Remediation Quality
-
-Evaluation of generated fixes.
-
-Areas of interest include:
-
-- Vulnerability removal
-- Functional preservation
-- Security improvement
-- Explanation quality
-- Code quality
-
----
-
-## Calibration Metrics
-
-The following metrics may be recorded during calibration activities:
-
-### Detection Metrics
-
-- Detection consistency
-- Vote agreement percentage
-- Vulnerable vote ratio
-- Safe vote ratio
-- Uncertain vote ratio
-- Average confidence
-
-### Retrieval Metrics
-
-- Context relevance
-- CWE retrieval accuracy
-- CVE retrieval usefulness
-- Retrieval coverage
-
-### Repair Metrics
-
-- Vulnerability removal success
-- Functional correctness
-- Fix completeness
-- Repair quality assessment
-
-### Operational Metrics
-
-- Latency
-- Token usage
-- Workflow efficiency
-
----
-
-## Calibration Deliverables
-
-Calibration activities generate:
-
-- Calibration logs
-- Architectural observations
-- Design decisions
-- Prompt revisions
-- Retrieval refinements
-- Validation analyses
-- Updated framework documentation
-
-These artifacts provide traceability between observed behaviors, implemented modifications, and final architectural decisions.
-
----
-
-## Relationship to Experiments
-
-Calibration precedes formal experimentation.
-
-The purpose of calibration is to establish a stable framework configuration suitable for evaluation.
-
-Once calibration is complete, experimental studies evaluate:
-
-1. Safe versus vulnerable classification performance
-2. Comparative performance against static-analysis tools
-3. End-to-end workflow integration effectiveness
-
-Experimental results are reported separately from calibration findings.
-
----
-
-## Guiding Principle
-
-Calibration is used to understand and improve the selected framework configuration.
-
-The goal is not to rank language models.
-
-The goal is to improve the reliability, explainability, contextual reasoning capability, remediation quality, and overall effectiveness of the orchestration workflow.
+After the architecture is frozen, final experiments begin.
