@@ -1,71 +1,64 @@
 from flask import request, Flask
 import ldap
-import re
 
 app = Flask(__name__)
 
-def sanitize_ldap_input(input_string):
-    """
-    Sanitize input for LDAP queries by escaping special characters.
-    Based on RFC 4515 - LDAP: String Representation of Search Filters
-    """
-    if input_string is None:
-        return ""
-    
-    # Escape special LDAP characters
-    replacements = {
-        '\\': '\\5c',
-        '*': '\\2a',
-        '(': '\\28',
-        ')': '\\29',
-        '\x00': '\\00'
-    }
-    
-    sanitized = str(input_string)
-    for char, replacement in replacements.items():
-        sanitized = sanitized.replace(char, replacement)
-    
-    return sanitized
+ALLOWED_DOMAIN_COMPONENTS = {
+    "example": "dc=example,dc=com",
+    "internal": "dc=internal,dc=example,dc=com"
+}
 
-def validate_dc_component(dc):
+
+def escape_ldap_filter_value(value):
     """
-    Validate domain component to ensure it contains only alphanumeric characters,
-    hyphens, and periods.
+    Escape user input for safe use in an LDAP search filter.
     """
-    if not dc:
-        return False
-    
-    # Allow only alphanumeric, hyphens, and periods
-    if not re.match(r'^[a-zA-Z0-9.-]+$', dc):
-        return False
-    
-    return True
+    if value is None:
+        return ""
+
+    value = str(value)
+
+    replacements = {
+        "\\": r"\5c",
+        "*": r"\2a",
+        "(": r"\28",
+        ")": r"\29",
+        "\x00": r"\00",
+    }
+
+    for char, replacement in replacements.items():
+        value = value.replace(char, replacement)
+
+    return value
+
 
 @app.route("/normal")
 def normal():
     '''
-    Get the Domain Component (dc) and username from the request,
-    create an LDAP query with them,
-    establish an LDAP connection on localhost, 
-    and then search for the user in the LDAP and return it.
+    Get an approved domain identifier and username from the request,
+    create a safe LDAP query, establish an LDAP connection on localhost,
+    and search for the user in LDAP.
     '''
-    unsafe_dc = request.args.get('dc', '')
-    unsafe_filter = request.args.get('username', '')
-    
-    # Validate and sanitize DC component
-    if not validate_dc_component(unsafe_dc):
+    domain_id = request.args.get("dc", "")
+    username = request.args.get("username", "")
+
+    if domain_id not in ALLOWED_DOMAIN_COMPONENTS:
         return "Invalid domain component", 400
-    
-    # Sanitize username for LDAP filter
-    safe_filter = sanitize_ldap_input(unsafe_filter)
-    
-    dn = "dc={}".format(unsafe_dc)
-    search_filter = "(user={})".format(safe_filter)
-    
+
+    if not username:
+        return "Invalid username", 400
+
+    dn = ALLOWED_DOMAIN_COMPONENTS[domain_id]
+    safe_username = escape_ldap_filter_value(username)
+    search_filter = f"(user={safe_username})"
+
     try:
         ldap_connection = ldap.initialize("ldap://127.0.0.1")
         user = ldap_connection.search_s(
-            dn, ldap.SCOPE_SUBTREE, search_filter)
+            dn,
+            ldap.SCOPE_SUBTREE,
+            search_filter
+        )
         return str(user)
-    except ldap.LDAPError as e:
+    except ldap.LDAPError:
         return "LDAP error occurred", 500

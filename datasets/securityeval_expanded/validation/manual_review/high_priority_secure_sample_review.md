@@ -116,11 +116,11 @@ LDAP DN/filter may still depend on user-controlled input.
 
 Final verdict:
 
-PENDING
+confirmed_remaining_vulnerability
 
 Notes:
 
-PENDING
+CodeQL correctly identified that the generated secure counterpart still built LDAP query components from user-controlled input. Although the username filter value was escaped, the base DN still depended directly on the request parameter. The sample was manually refined to use an allowlist mapping of approved domain identifiers to fixed LDAP base DNs while continuing to escape the username filter value.
 
 ---
 
