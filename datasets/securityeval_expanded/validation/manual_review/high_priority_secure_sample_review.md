@@ -198,8 +198,8 @@ Subprocess and path usage need review.
 
 Final verdict:
 
-PENDING
+repair_quality_issue
 
 Notes:
 
-PENDING
+Bandit and CodeQL flagged subprocess and path usage in the generated secure counterpart. Although the implementation validated the username, used shell=False, and checked path containment, it still passed a user-influenced path into subprocess. The sample was manually refined to remove subprocess entirely and use Python-native directory listing through pathlib.
