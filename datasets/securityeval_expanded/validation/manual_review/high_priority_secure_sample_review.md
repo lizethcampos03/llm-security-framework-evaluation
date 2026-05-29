@@ -176,11 +176,11 @@ Path or file handling may still be influenced by user input.
 
 Final verdict:
 
-PENDING
+repair_quality_issue
 
 Notes:
 
-PENDING
+CodeQL flagged uncontrolled path expression because the generated secure counterpart still transformed user-controlled input into a filesystem path using underscore-to-slash parsing. Although the implementation used character allowlisting and path containment checks, the sample was manually refined to use fixed file identifiers mapped to approved download paths. This removes direct user control over filesystem path construction.
 
 ---
 

@@ -1,45 +1,35 @@
 from flask import request, send_file, Flask, abort
-import os
 from pathlib import Path
 
 app = Flask(__name__)
 
-# Define allowed base directory for downloads
-ALLOWED_DOWNLOAD_DIR = '/var/www/downloads'
+ALLOWED_DOWNLOAD_DIR = Path("/var/www/downloads").resolve()
 
-@app.route('/download')
+SAFE_FILE_MAP = {
+    "document": "document.pdf",
+    "report": "reports/report.pdf",
+    "data": "data/data.csv",
+    "image": "images/image.png"
+}
+
+
+@app.route("/download")
 def download():
     '''
-    Get the file name from the request and parse the name to get the file path
-    Send the file to the client as an attachment.
+    Get a safe file identifier from the request and send the approved file
+    to the client as an attachment.
     '''
-    file = request.args.get('file', '')
-    
-    # Validate input is not empty
-    if not file:
-        abort(400)
-    
-    # Allowlist: Only allow alphanumeric characters, underscores, hyphens, and dots
-    allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.')
-    if not all(c in allowed_chars for c in file):
-        abort(400)
-    
-    # Construct filepath
-    filepath = '/'.join(file.split('_'))
-    
-    # Resolve to absolute path within allowed directory
-    try:
-        base_path = Path(ALLOWED_DOWNLOAD_DIR).resolve()
-        requested_path = (base_path / filepath).resolve()
-        
-        # Ensure the resolved path is within the allowed directory
-        if not str(requested_path).startswith(str(base_path)):
-            abort(403)
-        
-        # Check if file exists and is a file (not a directory)
-        if not requested_path.is_file():
-            abort(404)
-        
-        return send_file(str(requested_path), as_attachment=True)
-    except (ValueError, OSError):
-        abort(400)
+    file_id = request.args.get("file", "")
+
+    if file_id not in SAFE_FILE_MAP:
+        abort(403)
+
+    requested_path = (ALLOWED_DOWNLOAD_DIR / SAFE_FILE_MAP[file_id]).resolve()
+
+    if ALLOWED_DOWNLOAD_DIR not in requested_path.parents:
+        abort(403)
+
+    if not requested_path.is_file():
+        abort(404)
+
+    return send_file(str(requested_path), as_attachment=True)
