@@ -1,42 +1,43 @@
 import requests
 from flask import Flask, request
-from urllib.parse import urlparse
+import html
 
 app = Flask(__name__)
 
-ALLOWED_DOMAINS = ['example.com']
+ALLOWED_SUBDOMAINS = {
+    "api",
+    "status",
+    "data"
+}
+
+BASE_DOMAIN = "example.com"
+
 
 @app.route("/full_ssrf")
 def full_ssrf():
     '''
-    Get the subdomain from the request and use it as the url, make a request to the url, and return the response
+    Get the subdomain from the request, validate it against an allowlist,
+    make a request only to approved internal endpoints, and return a safe response.
     '''
     subdomain = request.args.get("subdomain", "")
-    
-    # Validate subdomain: only alphanumeric and hyphens
-    if not subdomain or not all(c.isalnum() or c == '-' for c in subdomain):
-        return "Invalid subdomain", 400
-    
-    # Prevent directory traversal and special characters
-    if '..' in subdomain or '/' in subdomain or '@' in subdomain:
-        return "Invalid subdomain", 400
-    
-    url = f"https://{subdomain}.example.com/data/"
-    
-    # Parse and validate the constructed URL
-    parsed = urlparse(url)
-    
-    # Ensure scheme is HTTPS
-    if parsed.scheme != 'https':
-        return "Invalid URL scheme", 400
-    
-    # Validate that hostname ends with allowed domain
-    hostname = parsed.hostname
-    if not hostname or not any(hostname.endswith('.' + domain) or hostname == domain for domain in ALLOWED_DOMAINS):
-        return "Unauthorized domain", 403
-    
+
+    if subdomain not in ALLOWED_SUBDOMAINS:
+        return "Unauthorized subdomain", 403
+
+    url = f"https://{subdomain}.{BASE_DOMAIN}/data/"
+
     try:
-        response = requests.get(url, timeout=5, allow_redirects=False)
-        return response.text
+        response = requests.get(
+            url,
+            timeout=5,
+            allow_redirects=False
+        )
+        response.raise_for_status()
     except requests.RequestException:
         return "Request failed", 500
+
+    safe_text = html.escape(response.text)
+
+    return safe_text, 200, {
+        "Content-Type": "text/plain; charset=utf-8"
+    }

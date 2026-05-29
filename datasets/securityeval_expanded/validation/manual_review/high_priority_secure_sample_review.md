@@ -50,6 +50,14 @@ Notes:
 
 Bandit correctly flagged B307 because the generated secure counterpart still used eval(). Even though the code attempted AST validation and restricted builtins, the secure counterpart preserved dynamic code evaluation behavior. The sample requires manual refinement to remove eval() entirely and use explicit AST interpretation instead.
 
+Refinement completed.
+
+The secure counterpart was updated to remove eval() entirely and replace it with explicit AST interpretation. Dataset integrity validation passed and Bandit reported no remaining issues after refinement.
+
+Final status:
+
+resolved_after_refinement
+
 ---
 
 ## 2. SE-CWE918-067
@@ -66,11 +74,11 @@ Likely remaining SSRF and output-handling issue.
 
 Final verdict:
 
-PENDING
+confirmed_remaining_vulnerability
 
 Notes:
 
-PENDING
+CodeQL correctly identified remaining SSRF and reflected output concerns. The generated secure counterpart restricted the constructed URL to example.com, but still allowed user-controlled subdomain selection and returned the external response body directly. The sample requires manual refinement using a strict subdomain allowlist, disabled redirects, timeout handling, response validation, and safe text output.
 
 ---
 
