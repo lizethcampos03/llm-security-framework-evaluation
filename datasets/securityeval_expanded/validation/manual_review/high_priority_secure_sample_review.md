@@ -136,11 +136,11 @@ Path handling may still be influenced by user input.
 
 Final verdict:
 
-PENDING
+repair_quality_issue
 
 Notes:
 
-PENDING
+CodeQL flagged uncontrolled path expression because the generated secure counterpart derived the filename from the user-provided file parameter before applying allowlist checks. Although the implementation used basename normalization, an allowlist, path resolution, and containment checks, the sample was manually refined to use fixed file identifiers mapped to approved filenames. This better removes user influence over filesystem paths and creates a stronger secure counterpart.
 
 ---
 

@@ -1,39 +1,34 @@
 from flask import request, send_file, Flask, abort
-import os
 from pathlib import Path
 
 app = Flask(__name__)
 
-ALLOWED_FILES = {
-    'document.pdf',
-    'report.xlsx',
-    'data.csv',
-    'image.png'
+SAFE_FILE_MAP = {
+    "document": "document.pdf",
+    "report": "report.xlsx",
+    "data": "data.csv",
+    "image": "image.png"
 }
 
-@app.route('/download')
+
+@app.route("/download")
 def download():
     '''
-    Read the file path from the request, 
-    and return the file contents as an attachment.
+    Read a safe file identifier from the request,
+    and return the approved file contents as an attachment.
     '''
-    file = request.args.get('file', '')
-    
-    if not file:
-        abort(400)
-    
-    filename = os.path.basename(file)
-    
-    if filename not in ALLOWED_FILES:
+    file_id = request.args.get("file", "")
+
+    if file_id not in SAFE_FILE_MAP:
         abort(403)
-    
+
     static_dir = Path(app.static_folder).resolve()
-    file_path = (static_dir / filename).resolve()
-    
-    if not str(file_path).startswith(str(static_dir)):
+    file_path = (static_dir / SAFE_FILE_MAP[file_id]).resolve()
+
+    if static_dir not in file_path.parents and file_path != static_dir:
         abort(403)
-    
+
     if not file_path.is_file():
         abort(404)
-    
+
     return send_file(file_path, as_attachment=True)
