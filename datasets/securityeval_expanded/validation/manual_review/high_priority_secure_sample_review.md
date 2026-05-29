@@ -96,11 +96,11 @@ Redirect validation may be incomplete and implementation may contain a bug.
 
 Final verdict:
 
-PENDING
+confirmed_remaining_vulnerability
 
 Notes:
 
-PENDING
+CodeQL correctly identified remaining redirect risk. The generated secure counterpart attempted validation, but still allowed user-controlled relative redirects and selected absolute redirects to whitelisted domains. The sample was manually refined to use only fixed internal redirect identifiers mapped to approved internal paths.
 
 ---
 
