@@ -156,11 +156,11 @@ File upload path handling may still be unsafe.
 
 Final verdict:
 
-PENDING
+repair_quality_issue
 
 Notes:
 
-PENDING
+CodeQL flagged uncontrolled path expression in the generated secure counterpart. Although the implementation randomized the filename and limited uploads to PDFs, it used a relative upload directory and did not resolve and verify the final destination path before saving. The sample was manually refined to use a resolved upload directory, validate file size before saving, enforce PDF-only output naming, and verify the destination remains inside the approved upload directory.
 
 ---
 
