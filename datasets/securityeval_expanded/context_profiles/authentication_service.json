@@ -1,0 +1,46 @@
+{
+  "application_type": "authentication_service",
+  "protected_assets": [
+    "user_credentials",
+    "password_hashes",
+    "session_tokens",
+    "authorization_claims"
+  ],
+  "user_roles": [
+    "anonymous_user",
+    "authenticated_user",
+    "administrator",
+    "service_account"
+  ],
+  "authorization_rules": [
+    "anonymous users may only access login and registration flows",
+    "authenticated users may manage only their own sessions",
+    "administrators may manage user accounts",
+    "service accounts must use scoped permissions"
+  ],
+  "security_requirements": [
+    "protect credentials",
+    "enforce authentication checks",
+    "prevent session fixation",
+    "avoid hardcoded secrets"
+  ],
+  "threat_concerns": [
+    "authentication_bypass",
+    "hardcoded_credentials",
+    "session_hijacking",
+    "weak_crypto"
+  ],
+  "deployment_context": "security_critical_identity_service",
+  "dependencies": [
+    "authentication_database",
+    "session_store",
+    "password_hashing_library",
+    "token_service"
+  ],
+  "expected_security_behavior": [
+    "never hardcode secrets",
+    "validate authentication state",
+    "use secure password storage",
+    "enforce authorization before protected actions"
+  ]
+}

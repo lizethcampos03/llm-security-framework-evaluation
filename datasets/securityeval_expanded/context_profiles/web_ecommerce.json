@@ -1,0 +1,43 @@
+{
+"application_type": "web_ecommerce",
+"protected_assets": [
+"customer_accounts",
+"payment_information",
+"order_history",
+"inventory_data"
+],
+"user_roles": [
+"customer",
+"support_staff",
+"administrator"
+],
+"authorization_rules": [
+"customers may access only their own accounts",
+"administrators manage products and orders",
+"support staff have limited account access"
+],
+"security_requirements": [
+"protect customer privacy",
+"prevent unauthorized transactions",
+"prevent account takeover",
+"secure payment processing"
+],
+"threat_concerns": [
+"sql_injection",
+"authentication_bypass",
+"privilege_escalation",
+"data_exfiltration"
+],
+"deployment_context": "internet_facing_web_application",
+"dependencies": [
+"database",
+"payment_gateway",
+"authentication_service"
+],
+"expected_security_behavior": [
+"validate all user input",
+"enforce authorization checks",
+"protect sensitive data",
+"log security events"
+]
+}

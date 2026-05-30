@@ -1,0 +1,46 @@
+{
+  "application_type": "enterprise_internal_tool",
+  "protected_assets": [
+    "employee_records",
+    "internal_reports",
+    "business_documents",
+    "administrative_credentials"
+  ],
+  "user_roles": [
+    "employee",
+    "manager",
+    "administrator",
+    "service_account"
+  ],
+  "authorization_rules": [
+    "employees may access only assigned internal resources",
+    "managers may access team-level reports",
+    "administrators may manage internal configuration",
+    "service accounts should have limited scoped permissions"
+  ],
+  "security_requirements": [
+    "enforce internal access control",
+    "prevent privilege escalation",
+    "protect internal documents",
+    "avoid leaking operational details"
+  ],
+  "threat_concerns": [
+    "path_traversal",
+    "privilege_escalation",
+    "command_injection",
+    "information_exposure"
+  ],
+  "deployment_context": "internal_enterprise_network",
+  "dependencies": [
+    "internal_database",
+    "directory_service",
+    "file_storage",
+    "logging_service"
+  ],
+  "expected_security_behavior": [
+    "validate internal resource identifiers",
+    "avoid shell execution when possible",
+    "restrict filesystem access",
+    "return generic error messages"
+  ]
+}

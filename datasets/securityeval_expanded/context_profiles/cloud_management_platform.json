@@ -1,0 +1,46 @@
+{
+  "application_type": "cloud_management_platform",
+  "protected_assets": [
+    "tenant_data",
+    "virtual_machine_metadata",
+    "cloud_credentials",
+    "network_configuration"
+  ],
+  "user_roles": [
+    "tenant_user",
+    "tenant_admin",
+    "cloud_operator",
+    "platform_administrator"
+  ],
+  "authorization_rules": [
+    "tenants may access only their own resources",
+    "tenant administrators manage resources within their tenant",
+    "cloud operators may perform approved operational tasks",
+    "platform administrators manage global infrastructure"
+  ],
+  "security_requirements": [
+    "enforce tenant isolation",
+    "prevent server-side request forgery",
+    "protect cloud credentials",
+    "restrict access to internal metadata services"
+  ],
+  "threat_concerns": [
+    "ssrf",
+    "cross_tenant_access",
+    "privilege_escalation",
+    "metadata_exposure"
+  ],
+  "deployment_context": "multi_tenant_cloud_environment",
+  "dependencies": [
+    "cloud_api",
+    "metadata_service",
+    "network_service",
+    "authentication_service"
+  ],
+  "expected_security_behavior": [
+    "use strict allowlists for outbound requests",
+    "prevent requests to internal metadata endpoints",
+    "enforce tenant authorization",
+    "avoid user-controlled infrastructure access"
+  ]
+}

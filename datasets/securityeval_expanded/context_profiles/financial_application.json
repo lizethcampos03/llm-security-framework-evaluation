@@ -1,0 +1,46 @@
+{
+  "application_type": "financial_application",
+  "protected_assets": [
+    "bank_accounts",
+    "transaction_records",
+    "payment_information",
+    "customer_identity_data"
+  ],
+  "user_roles": [
+    "customer",
+    "bank_employee",
+    "fraud_analyst",
+    "administrator"
+  ],
+  "authorization_rules": [
+    "customers may access only their own financial records",
+    "employees may access customer records only for approved business purposes",
+    "administrators may manage system configuration",
+    "fraud analysts may review suspicious transactions"
+  ],
+  "security_requirements": [
+    "protect financial data",
+    "prevent unauthorized transactions",
+    "enforce strong authentication",
+    "maintain audit logs"
+  ],
+  "threat_concerns": [
+    "sql_injection",
+    "authorization_bypass",
+    "credential_theft",
+    "data_exfiltration"
+  ],
+  "deployment_context": "regulated_internet_facing_application",
+  "dependencies": [
+    "database",
+    "payment_processor",
+    "authentication_service",
+    "audit_logging_service"
+  ],
+  "expected_security_behavior": [
+    "validate all transaction inputs",
+    "enforce least privilege",
+    "protect sensitive records",
+    "log security-relevant actions"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "application_type": "developer_platform",
+  "protected_assets": [
+    "source_code",
+    "api_tokens",
+    "build_artifacts",
+    "repository_metadata"
+  ],
+  "user_roles": [
+    "developer",
+    "maintainer",
+    "organization_admin",
+    "ci_service_account"
+  ],
+  "authorization_rules": [
+    "developers may access repositories they are assigned to",
+    "maintainers may manage project settings",
+    "organization administrators manage organization-wide access",
+    "ci service accounts should use least-privilege permissions"
+  ],
+  "security_requirements": [
+    "protect source code",
+    "prevent command injection",
+    "secure build pipelines",
+    "protect secrets and tokens"
+  ],
+  "threat_concerns": [
+    "command_injection",
+    "secret_exposure",
+    "unsafe_deserialization",
+    "path_traversal"
+  ],
+  "deployment_context": "developer_facing_platform_with_ci_cd",
+  "dependencies": [
+    "git_repository",
+    "ci_cd_runner",
+    "artifact_storage",
+    "secrets_manager"
+  ],
+  "expected_security_behavior": [
+    "avoid executing user-controlled commands",
+    "protect secrets from logs",
+    "validate file paths",
+    "isolate build execution"
+  ]
+}

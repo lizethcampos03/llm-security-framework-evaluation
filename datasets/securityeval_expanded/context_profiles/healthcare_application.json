@@ -1,0 +1,46 @@
+{
+  "application_type": "healthcare_application",
+  "protected_assets": [
+    "patient_records",
+    "medical_history",
+    "appointment_data",
+    "insurance_information"
+  ],
+  "user_roles": [
+    "patient",
+    "doctor",
+    "nurse",
+    "administrator"
+  ],
+  "authorization_rules": [
+    "patients may access only their own records",
+    "medical staff may access records only for assigned patients",
+    "administrators may manage scheduling and system settings",
+    "sensitive medical records require strict access control"
+  ],
+  "security_requirements": [
+    "protect patient privacy",
+    "enforce role-based access control",
+    "secure medical data storage",
+    "prevent unauthorized disclosure"
+  ],
+  "threat_concerns": [
+    "information_disclosure",
+    "authorization_bypass",
+    "insecure_file_access",
+    "data_tampering"
+  ],
+  "deployment_context": "regulated_healthcare_web_application",
+  "dependencies": [
+    "database",
+    "authentication_service",
+    "document_storage",
+    "audit_logging_service"
+  ],
+  "expected_security_behavior": [
+    "enforce patient-record access rules",
+    "avoid exposing exception details",
+    "validate file and record identifiers",
+    "log access to sensitive records"
+  ]
+}

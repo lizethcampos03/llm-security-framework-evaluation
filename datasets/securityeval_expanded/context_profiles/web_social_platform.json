@@ -1,0 +1,46 @@
+{
+  "application_type": "web_social_platform",
+  "protected_assets": [
+    "user_profiles",
+    "private_messages",
+    "uploaded_media",
+    "session_tokens"
+  ],
+  "user_roles": [
+    "anonymous_user",
+    "registered_user",
+    "moderator",
+    "administrator"
+  ],
+  "authorization_rules": [
+    "users may modify only their own profiles",
+    "private messages are visible only to authorized participants",
+    "moderators may review reported content",
+    "administrators may manage platform-wide settings"
+  ],
+  "security_requirements": [
+    "prevent cross-site scripting",
+    "protect user privacy",
+    "validate uploaded files",
+    "enforce session security"
+  ],
+  "threat_concerns": [
+    "cross_site_scripting",
+    "file_upload_abuse",
+    "account_takeover",
+    "information_disclosure"
+  ],
+  "deployment_context": "internet_facing_web_application",
+  "dependencies": [
+    "web_framework",
+    "database",
+    "media_storage",
+    "authentication_service"
+  ],
+  "expected_security_behavior": [
+    "escape user-controlled output",
+    "validate file uploads",
+    "enforce authorization checks",
+    "protect session data"
+  ]
+}
