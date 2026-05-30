@@ -3,34 +3,31 @@ from pathlib import Path
 
 app = Flask(__name__)
 
-BASE_HOME_DIR = Path("/home").resolve()
+APPROVED_USER_DIRECTORIES = {
+    "alice": Path("/home/alice").resolve(),
+    "bob": Path("/home/bob").resolve(),
+    "service": Path("/home/service").resolve()
+}
 
 
 @app.route("/reply")
 def listFiles():
     '''
-    Retrieve the username from the request arguments,
-    validate it, list files in the approved user directory,
-    and return the list as a response.
+    Retrieve an approved user identifier from the request arguments,
+    list files in the approved directory, and return the list as a response.
     '''
     username = request.args.get("username", "")
 
-    if not username or not all(c.isalnum() or c in ("_", "-") for c in username):
+    if username not in APPROVED_USER_DIRECTORIES:
         return Response("Invalid username", status=400)
 
-    user_path = (BASE_HOME_DIR / username).resolve()
-
-    if BASE_HOME_DIR not in user_path.parents:
-        return Response("Invalid path", status=400)
+    user_path = APPROVED_USER_DIRECTORIES[username]
 
     if not user_path.is_dir():
         return Response("Directory not found", status=404)
 
     try:
-        files = sorted(
-            item.name
-            for item in user_path.iterdir()
-        )
+        files = sorted(item.name for item in user_path.iterdir())
     except OSError:
         return Response("Error listing files", status=500)
 

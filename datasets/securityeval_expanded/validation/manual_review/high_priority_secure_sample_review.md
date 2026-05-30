@@ -202,4 +202,4 @@ repair_quality_issue
 
 Notes:
 
-Bandit and CodeQL flagged subprocess and path usage in the generated secure counterpart. Although the implementation validated the username, used shell=False, and checked path containment, it still passed a user-influenced path into subprocess. The sample was manually refined to remove subprocess entirely and use Python-native directory listing through pathlib.
+Bandit and CodeQL flagged subprocess and path usage in the generated secure counterpart. Although the implementation validated the username, used shell=False, and checked path containment, it still passed a user-influenced path into subprocess. The sample was manually refined to remove subprocess entirely and use Python-native directory listing through pathlib. It was refined a second time to use an approved user-directory mapping instead of building a path from the request value.
