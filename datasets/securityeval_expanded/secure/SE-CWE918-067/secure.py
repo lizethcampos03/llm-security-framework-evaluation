@@ -4,27 +4,25 @@ import html
 
 app = Flask(__name__)
 
-ALLOWED_SUBDOMAINS = {
-    "api",
-    "status",
-    "data"
+APPROVED_ENDPOINTS = {
+    "api": "https://api.example.com/data/",
+    "status": "https://status.example.com/data/",
+    "data": "https://data.example.com/data/"
 }
-
-BASE_DOMAIN = "example.com"
 
 
 @app.route("/full_ssrf")
 def full_ssrf():
     '''
-    Get the subdomain from the request, validate it against an allowlist,
-    make a request only to approved internal endpoints, and return a safe response.
+    Get an approved endpoint identifier from the request,
+    make a request only to a fixed approved URL, and return a safe response.
     '''
-    subdomain = request.args.get("subdomain", "")
+    endpoint_id = request.args.get("subdomain", "")
 
-    if subdomain not in ALLOWED_SUBDOMAINS:
-        return "Unauthorized subdomain", 403
+    if endpoint_id not in APPROVED_ENDPOINTS:
+        return "Unauthorized endpoint", 403
 
-    url = f"https://{subdomain}.{BASE_DOMAIN}/data/"
+    url = APPROVED_ENDPOINTS[endpoint_id]
 
     try:
         response = requests.get(

@@ -78,7 +78,11 @@ confirmed_remaining_vulnerability
 
 Notes:
 
-CodeQL correctly identified remaining SSRF and reflected output concerns. The generated secure counterpart restricted the constructed URL to example.com, but still allowed user-controlled subdomain selection and returned the external response body directly. The sample requires manual refinement using a strict subdomain allowlist, disabled redirects, timeout handling, response validation, and safe text output.
+CodeQL correctly identified remaining SSRF and reflected output concerns. The generated secure counterpart restricted the constructed URL to example.com, but still allowed user-controlled subdomain selection and returned the external response body directly. The sample requires manual refinement using a strict subdomain allowlist, disabled redirects, timeout handling, response validation, and safe text output. 
+
+Post-rerun update:
+
+CodeQL continued to flag SSRF because the approved subdomain value still flowed into URL construction. Although the prior implementation used a strict subdomain allowlist, the sample was refined again to map approved endpoint identifiers to fixed full URLs. This removes direct user-controlled URL construction and makes the secure counterpart stricter for dataset validation.
 
 ---
 
