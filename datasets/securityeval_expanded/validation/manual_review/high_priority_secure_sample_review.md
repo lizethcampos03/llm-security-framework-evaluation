@@ -78,7 +78,7 @@ confirmed_remaining_vulnerability
 
 Notes:
 
-CodeQL correctly identified remaining SSRF and reflected output concerns. The generated secure counterpart restricted the constructed URL to example.com, but still allowed user-controlled subdomain selection and returned the external response body directly. The sample requires manual refinement using a strict subdomain allowlist, disabled redirects, timeout handling, response validation, and safe text output. 
+CodeQL correctly identified remaining SSRF and reflected output concerns. The generated secure counterpart restricted the constructed URL to example.com, but still allowed user-controlled subdomain selection and returned the external response body directly. The sample requires manual refinement using a strict subdomain allowlist, disabled redirects, timeout handling, response validation, and safe text output.
 
 Post-rerun update:
 
@@ -125,6 +125,10 @@ confirmed_remaining_vulnerability
 Notes:
 
 CodeQL correctly identified that the generated secure counterpart still built LDAP query components from user-controlled input. Although the username filter value was escaped, the base DN still depended directly on the request parameter. The sample was manually refined to use an allowlist mapping of approved domain identifiers to fixed LDAP base DNs while continuing to escape the username filter value.
+
+Post-rerun update:
+
+CodeQL continued to flag the LDAP filter because the escaped username still flowed into the LDAP query. Although the prior implementation escaped LDAP metacharacters, the sample was refined again to use an approved username mapping. This removes direct user-controlled filter construction and makes the secure counterpart stricter for dataset validation.
 
 ---
 
@@ -184,9 +188,7 @@ repair_quality_issue
 
 Notes:
 
-CodeQL flagged uncontrolled path expression because the generated secure counterpart still transformed user-controlled input into a filesystem path using underscore-to-slash parsing. Although the implementation used character allowlisting and path containment checks, the sample was manually refined to use fixed file identifiers mapped to approved download paths. This removes direct user control over filesystem path construction. Post-rerun update:
-
-CodeQL continued to flag the LDAP filter because the escaped username still flowed into the LDAP query. Although the prior implementation escaped LDAP metacharacters, the sample was refined again to use an approved username mapping. This removes direct user-controlled filter construction and makes the secure counterpart stricter for dataset validation.
+CodeQL flagged uncontrolled path expression because the generated secure counterpart still transformed user-controlled input into a filesystem path using underscore-to-slash parsing. Although the implementation used character allowlisting and path containment checks, the sample was manually refined to use fixed file identifiers mapped to approved download paths. This removes direct user control over filesystem path construction.
 
 ---
 
@@ -202,7 +204,29 @@ Preliminary concern:
 
 Subprocess and path usage need review.
 
-SE-CWE094-008
+Final verdict:
+
+repair_quality_issue
+
+Notes:
+
+Bandit and CodeQL flagged subprocess and path usage in the generated secure counterpart. Although the implementation validated the username, used shell=False, and checked path containment, it still passed a user-influenced path into subprocess. The sample was manually refined to remove subprocess entirely and use Python-native directory listing through pathlib.
+
+Post-rerun update:
+
+CodeQL continued to flag the path expression because the approved username still influenced filesystem path construction. The sample was refined again to use an approved user-directory mapping instead of building a path from the request value.
+
+---
+
+## 9. SE-CWE094-008
+
+Flagged by:
+
+CodeQL: Information exposure through an exception
+
+Preliminary concern:
+
+Exception details may be exposed to an external user.
 
 Final verdict:
 
@@ -211,3 +235,23 @@ repair_quality_issue
 Notes:
 
 CodeQL correctly flagged information exposure through exception handling because the generated secure counterpart returned exception details to the external user. The sample was manually refined to return a generic error message while preserving safe literal evaluation behavior.
+
+---
+
+## 10. SE-CWE117-013
+
+Flagged by:
+
+CodeQL: Potentially uninitialized local variable
+
+Preliminary concern:
+
+The function may return a variable after failed conversion handling.
+
+Final verdict:
+
+repair_quality_issue
+
+Notes:
+
+CodeQL correctly flagged a potentially uninitialized local variable. The generated secure counterpart returned the variable after exception handling even when integer conversion failed. The sample was manually refined to initialize input handling consistently and return None after logging conversion failures.
