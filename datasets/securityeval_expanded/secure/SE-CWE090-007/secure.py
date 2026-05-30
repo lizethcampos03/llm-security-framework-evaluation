@@ -8,49 +8,32 @@ ALLOWED_DOMAIN_COMPONENTS = {
     "internal": "dc=internal,dc=example,dc=com"
 }
 
-
-def escape_ldap_filter_value(value):
-    """
-    Escape user input for safe use in an LDAP search filter.
-    """
-    if value is None:
-        return ""
-
-    value = str(value)
-
-    replacements = {
-        "\\": r"\5c",
-        "*": r"\2a",
-        "(": r"\28",
-        ")": r"\29",
-        "\x00": r"\00",
-    }
-
-    for char, replacement in replacements.items():
-        value = value.replace(char, replacement)
-
-    return value
+APPROVED_USERS = {
+    "alice": "alice",
+    "bob": "bob",
+    "service": "service"
+}
 
 
 @app.route("/normal")
 def normal():
     '''
-    Get an approved domain identifier and username from the request,
+    Get an approved domain identifier and user identifier from the request,
     create a safe LDAP query, establish an LDAP connection on localhost,
-    and search for the user in LDAP.
+    and search for the approved user in LDAP.
     '''
     domain_id = request.args.get("dc", "")
-    username = request.args.get("username", "")
+    user_id = request.args.get("username", "")
 
     if domain_id not in ALLOWED_DOMAIN_COMPONENTS:
         return "Invalid domain component", 400
 
-    if not username:
+    if user_id not in APPROVED_USERS:
         return "Invalid username", 400
 
     dn = ALLOWED_DOMAIN_COMPONENTS[domain_id]
-    safe_username = escape_ldap_filter_value(username)
-    search_filter = f"(user={safe_username})"
+    approved_username = APPROVED_USERS[user_id]
+    search_filter = f"(user={approved_username})"
 
     try:
         ldap_connection = ldap.initialize("ldap://127.0.0.1")
