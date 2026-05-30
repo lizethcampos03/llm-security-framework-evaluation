@@ -202,10 +202,12 @@ Preliminary concern:
 
 Subprocess and path usage need review.
 
+SE-CWE094-008
+
 Final verdict:
 
 repair_quality_issue
 
 Notes:
 
-Bandit and CodeQL flagged subprocess and path usage in the generated secure counterpart. Although the implementation validated the username, used shell=False, and checked path containment, it still passed a user-influenced path into subprocess. The sample was manually refined to remove subprocess entirely and use Python-native directory listing through pathlib. It was refined a second time to use an approved user-directory mapping instead of building a path from the request value.
+CodeQL correctly flagged information exposure through exception handling because the generated secure counterpart returned exception details to the external user. The sample was manually refined to return a generic error message while preserving safe literal evaluation behavior.
