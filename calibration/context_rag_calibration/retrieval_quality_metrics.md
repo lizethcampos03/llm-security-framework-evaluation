@@ -2,179 +2,88 @@
 
 ## Purpose
 
-This document defines the evaluation metrics used during Context Profile + RAG calibration.
-
-The retrieval system is evaluated not only on retrieval similarity, but also on whether retrieved information improves downstream workflow behavior.
-
-The purpose of these metrics is to measure:
-
-- retrieval relevance
-- retrieval usefulness
-- retrieval consistency
-- retrieval noise
-- downstream workflow impact
+This document defines the measurements used during Context + RAG Calibration.
 
 ---
 
-## Retrieval Evaluation Philosophy
+# Retrieval Metrics
 
-Traditional retrieval systems are often evaluated only using similarity metrics.
+## Retrieval Accuracy
 
-However, within this workflow, retrieval quality should also be evaluated based on whether retrieved context improves:
+Did the retrieval return the expected CWE guidance?
 
-- vulnerability detection
-- secure repair
-- repair verification
-- reporting quality
+Values:
 
-The retrieval system is therefore evaluated as part of the workflow, not as an isolated component.
+* correct
+* partially_correct
+* incorrect
 
 ---
 
-# Primary Retrieval Metrics
+## Retrieval Ranking Quality
 
-## Top-K Relevance
+Was the most relevant guidance ranked near the top?
 
-Measures whether relevant CWE/security guidance appears within the top retrieved results.
+Values:
 
-Example:
+* high
+* medium
+* low
 
-```text
-Top-1 relevance
-Top-3 relevance
-Top-5 relevance
+---
 
-Higher relevance indicates better retrieval quality.
+## Retrieval Consistency
 
-Retrieval Precision
+Did repeated retrievals produce similar results?
 
-Measures the proportion of retrieved results that are actually useful.
+Values:
 
-Example:
+* consistent
+* moderately_consistent
+* inconsistent
 
-useful_results / total_results
+---
 
-Higher precision indicates lower retrieval noise.
+## Retrieval Usefulness
 
-Retrieval Noise Rate
+Did retrieved information help downstream reasoning?
 
-Measures how often irrelevant or weakly related retrievals appear.
+Values:
 
-Examples of noisy retrieval include:
+1–5
 
-unrelated CWE entries
-weakly related mitigation guidance
-incorrect security context
-irrelevant examples
+1 = not useful
 
-Lower noise rates are preferred.
+5 = highly useful
 
-Retrieval Consistency
+---
 
-Measures whether repeated retrievals remain stable across runs.
+## Detection Usefulness
 
-Large variations in retrieved guidance may negatively affect downstream workflow consistency.
+Did retrieval improve vulnerability detection?
 
-Retrieval Ranking Quality
+Values:
 
-Measures whether the most useful security guidance appears near the top of retrieval results.
+1–5
 
-Relevant guidance should appear before weakly related guidance whenever possible.
+---
 
-Context Profile Metrics
-Context Contribution
+## Repair Usefulness
 
-Measures whether context profile fields improve retrieval quality.
+Did retrieval improve repair quality?
 
-Examples:
+Values:
 
-application type
-deployment context
-threat concerns
-protected assets
-authorization rules
+1–5
 
-The calibration process should identify which fields provide meaningful improvements.
+---
 
-Context Overhead
+# Decision Criteria
 
-Measures whether the amount of required context becomes excessive.
+A retrieval strategy will be preferred if it:
 
-The goal is to balance:
-
-workflow usefulness
-vs
-user burden
-Downstream Workflow Metrics
-Detection Improvement
-
-Measures whether improved retrieval increases:
-
-detection accuracy
-precision
-recall
-reasoning quality
-Repair Improvement
-
-Measures whether improved retrieval increases:
-
-repair quality
-mitigation quality
-functionality preservation
-repair consistency
-Report Improvement
-
-Measures whether improved retrieval increases:
-
-evidence usefulness
-report clarity
-report completeness
-Retrieval Calibration Comparisons
-
-The calibration stage may compare:
-
-Semantic Retrieval Only
-
-Embedding similarity only.
-
-Semantic + Keyword Retrieval
-
-Embedding similarity combined with keyword matching.
-
-Context-Aware Hybrid Retrieval
-
-Embedding similarity combined with:
-
-keyword retrieval
-metadata-aware ranking
-context-aware ranking
-CWE-aware prioritization
-Main Retrieval Calibration Hypothesis
-
-The primary hypothesis is:
-
-Context-aware hybrid retrieval
-improves retrieval quality
-and downstream workflow performance
-compared to semantic-only retrieval.
-Manual Review
-
-Manual review is important during retrieval calibration.
-
-Retrieved guidance should be inspected to determine whether:
-
-the retrieved CWE is correct
-the mitigation guidance is relevant
-the retrieved context supports downstream reasoning
-retrieval noise is present
-ranking quality is acceptable
-Calibration Decision
-
-After calibration, the following should be documented:
-
-selected retrieval strategy
-selected ranking strategy
-selected context fields
-selected retrieval filters
-known retrieval limitations
-examples of improved retrieval behavior
+* improves retrieval usefulness
+* improves detection usefulness
+* improves repair usefulness
+* maintains acceptable consistency
+* avoids excessive retrieval noise

@@ -2,180 +2,82 @@
 
 ## Purpose
 
-This document defines the calibration strategy for hybrid retrieval within the LLM security framework.
-
-The retrieval system is responsible for providing relevant CWE and security guidance to downstream workflow stages, including:
-
-- detection
-- repair generation
-- repair verification
-- reporting
-
-The purpose of hybrid retrieval calibration is to improve retrieval quality while reducing noisy or irrelevant results.
+This document defines the retrieval strategies evaluated during Context + RAG Calibration.
 
 ---
 
-## Motivation
+# Retrieval Strategies
 
-Early retrieval experiments showed that purely semantic retrieval may return:
+## Strategy A — Keyword Retrieval
 
-- partially related CWE entries
-- weakly relevant security guidance
-- noisy context
-- incomplete mitigation information
+Retrieve CWE guidance using:
 
-These retrieval issues may negatively affect downstream workflow quality.
+* CWE identifier
+* CWE name
+* vulnerability description
 
-Therefore, retrieval calibration focuses on improving:
+Advantages:
 
-- relevance
-- ranking quality
-- retrieval consistency
-- workflow usefulness
+* deterministic
+* interpretable
+* fast
+
+Disadvantages:
+
+* limited semantic matching
+* may miss related guidance
 
 ---
 
-## Hybrid Retrieval Philosophy
+## Strategy B — Vector Retrieval
 
-The workflow assumes that no single retrieval strategy is sufficient for all cases.
+Retrieve CWE guidance using semantic similarity.
 
-Instead, retrieval should combine multiple signals.
+Advantages:
 
-The hybrid retrieval strategy may combine:
+* semantic matching
+* broader retrieval
 
-```text
-semantic similarity
-+
-keyword matching
-+
-CWE-aware retrieval
-+
-metadata-aware retrieval
-+
-context-aware ranking
+Disadvantages:
 
-The goal is to improve the quality of retrieved security guidance.
+* possible retrieval noise
+* embedding dependence
 
-Retrieval Inputs
+---
 
-The retrieval system may use:
+## Strategy C — Hybrid Retrieval
 
-vulnerable code
-detected CWE candidates
-context profile fields
-security requirements
-threat concerns
-application type
-deployment context
-metadata filters
-extracted keywords
-Context Profile Integration
+Combine:
 
-The context profile is expected to improve retrieval quality.
+* keyword retrieval
+* vector retrieval
 
-Examples:
+Merge results and rank retrieved documents.
 
-application type may influence relevant CWE prioritization
-threat concerns may improve keyword selection
-deployment context may improve mitigation relevance
-protected assets may improve ranking quality
+Advantages:
 
-The calibration process should evaluate which context fields provide meaningful retrieval improvements.
+* combines precision and recall
+* reduces single-method weaknesses
 
-Hybrid Retrieval Experiments
+Disadvantages:
 
-The calibration stage may compare:
+* increased complexity
 
-Strategy A — Semantic Retrieval Only
+---
 
-Embedding similarity only.
+# Calibration Goal
 
-Strategy B — Semantic + Keyword Retrieval
+Determine whether hybrid retrieval improves:
 
-Embedding similarity combined with keyword overlap.
+* retrieval relevance
+* retrieval usefulness
+* downstream detection quality
+* downstream repair quality
 
-Strategy C — Context-Aware Hybrid Retrieval
+compared to keyword-only retrieval.
 
-Embedding similarity combined with:
+---
 
-keyword retrieval
-metadata-aware ranking
-context-profile-aware ranking
-CWE-aware prioritization
-Retrieval Evaluation Areas
-Retrieval Relevance
+# Planned Outcome
 
-Whether retrieved guidance is actually relevant to the target case.
-
-Retrieval Ranking Quality
-
-Whether the most useful results appear near the top.
-
-Retrieval Consistency
-
-Whether repeated retrievals remain stable.
-
-Retrieval Noise Reduction
-
-Whether irrelevant retrievals are reduced.
-
-Workflow Impact
-
-Whether improved retrieval improves downstream:
-
-vulnerability detection
-secure repair
-repair verification
-reporting quality
-Retrieval Calibration Metrics
-
-Calibration may record:
-
-top-k relevance
-retrieval precision
-retrieval consistency
-retrieval noise rate
-downstream detection improvement
-downstream repair improvement
-retrieval latency
-Main Retrieval Hypothesis
-
-The primary hypothesis is:
-
-Context-aware hybrid retrieval
-improves the quality of retrieved security guidance
-compared to semantic-only retrieval.
-Relationship to Detection and Repair
-
-The retrieval system directly influences downstream workflow quality.
-
-Poor retrieval quality may negatively affect:
-
-detection accuracy
-repair quality
-repair verification
-report usefulness
-
-Therefore, retrieval calibration occurs before downstream node calibration.
-
-Calibration Decision
-
-After calibration, the following should be documented:
-
-selected retrieval strategy
-selected ranking strategy
-selected context fields
-selected retrieval filters
-known retrieval limitations
-examples of improved retrieval behavior
-Future Directions
-
-Future retrieval improvements may include:
-
-GraphRAG integration
-CWE relationship traversal
-CVE-to-CWE retrieval augmentation
-retrieval reranking models
-retrieval confidence estimation
-adaptive retrieval depth
-workflow-aware retrieval feedback
+Select a final retrieval strategy before architecture freeze.

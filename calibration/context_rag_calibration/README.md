@@ -2,63 +2,71 @@
 
 ## Purpose
 
-This calibration stage evaluates how security context profiles and retrieval strategies influence workflow behavior.
+This calibration phase evaluates how security context profiles and retrieval strategies influence workflow performance.
 
-The goal is to improve the quality of retrieved CWE and security guidance used by downstream workflow stages.
+The objective is to determine whether improved context engineering and retrieval quality improve downstream:
 
-This calibration focuses on:
+* vulnerability detection
+* secure repair
+* reasoning quality
+* workflow consistency
 
-- context profile design
-- retrieval quality
-- hybrid retrieval
-- retrieval ranking
-- retrieval consistency
-- retrieval usefulness
-- downstream workflow usefulness
-
-The retrieval system is calibrated based on whether retrieved context improves downstream detection and repair quality, not only retrieval similarity scores.
+This phase precedes final workflow evaluation and is used to calibrate retrieval behavior before architecture freeze.
 
 ---
 
-## Main Hypothesis
+# Calibration Scope
 
-```text
-Better context profiles
-+
-better retrieval strategies
-+
-higher-quality CWE/security guidance
-improve downstream detection and repair quality.
-Calibration Areas
-Context Profile Design
+This phase evaluates:
 
-Evaluates which context fields improve retrieval and downstream workflow quality.
+* context profile usefulness
+* CWE retrieval quality
+* retrieval ranking quality
+* retrieval consistency
+* retrieval usefulness for detection
+* retrieval usefulness for repair
+* hybrid retrieval strategy
 
-Hybrid Retrieval
+---
 
-Evaluates retrieval approaches that combine:
+# Main Research Questions
 
-semantic retrieval
-keyword retrieval
-metadata-aware retrieval
-CWE-aware retrieval
-Retrieval Quality
+RQ1:
 
-Evaluates whether retrieved guidance is relevant, useful, and context-aware.
+Does the security context profile improve retrieval quality?
 
-Retrieval Noise Reduction
+RQ2:
 
-Evaluates methods for reducing unrelated or low-quality retrieval results.
+Does hybrid retrieval reduce noisy retrieval results?
 
-Workflow Impact
+RQ3:
 
-Evaluates whether improved retrieval improves:
+Does improved retrieval improve downstream vulnerability detection?
 
-vulnerability detection
-secure repair
-report usefulness
-workflow consistency
-Related Documents
-hybrid_search_plan.md
-retrieval_quality_metrics.md
-context_profile_design.md
+RQ4:
+
+Does improved retrieval improve secure repair quality?
+
+RQ5:
+
+Which context profile fields provide the most value without excessive user burden?
+
+---
+
+# Calibration Dataset
+
+A smaller OWASP-focused subset will be used rather than the full evaluation dataset.
+
+The goal is workflow calibration rather than final evaluation.
+
+---
+
+# Outputs
+
+This calibration phase produces:
+
+* retrieval logs
+* retrieval quality measurements
+* context profile observations
+* retrieval configuration decisions
+* architecture decisions for workflow freeze
