@@ -4,8 +4,6 @@ This directory contains the outputs generated throughout the experimental evalua
 
 > **A LangGraph-Orchestrated Framework for Secure Analysis and Repair of LLM-Generated Code**
 
-The results are organized to distinguish the published experimental artifacts from outputs generated during future reproductions of the evaluation.
-
 ---
 
 # Directory Structure
@@ -14,10 +12,7 @@ The results are organized to distinguish the published experimental artifacts fr
 results/
 
 ├── paper_results/
-└── reproduced_results/
 ```
-
-Each directory serves a distinct purpose within the reproducibility workflow.
 
 ---
 
@@ -34,22 +29,6 @@ These files represent the official outputs used to generate the reported evaluat
 - publication figures
 
 The contents of this directory should remain unchanged, as they provide the reference results associated with the published evaluation.
-
----
-
-# Reproduced Results
-
-The `reproduced_results/` directory stores outputs generated when the experiments are executed again using this repository.
-
-Examples include:
-
-- newly generated evaluation logs
-- reproduced performance metrics
-- regenerated figures
-- regenerated tables
-- workflow outputs
-
-Separating reproduced results from the archived paper results prevents accidental modification of the published experimental artifacts.
 
 ---
 
@@ -88,20 +67,6 @@ Typical outputs include:
 
 ---
 
-# Reproducing the Published Results
-
-Researchers wishing to verify the published evaluation should compare newly generated outputs against the archived files stored in:
-
-```
-results/paper_results/
-```
-
-Minor numerical differences may occur when reproducing experiments that depend on external LLM services, model updates, or nondeterministic inference.
-
-Such differences are expected and should be interpreted in the context of evolving foundation models.
-
----
-
 # File Organization
 
 Within each directory, outputs are organized according to the experiment that generated them.
@@ -117,22 +82,9 @@ reported/
 └── experiment3/
 ```
 
-The same organization is recommended for the `reproduced_results/` directory.
-
-Maintaining identical directory structures simplifies comparison between archived and reproduced results.
-
----
-
-# Reproducibility
-
-The separation between archived and reproduced outputs supports transparent scientific reporting by preserving the original evaluation while allowing independent verification of the experiments.
-
-Researchers are encouraged to retain reproduced outputs separately rather than replacing the archived reference results.
-
 ---
 
 # Summary
 
-The results contained in this directory document both the published evaluation and future reproductions of the experimental workflow.
+The results contained in this directory document the published evaluation of the experimental workflow.
 
-This organization preserves the integrity of the reported findings while supporting transparent, repeatable experimentation.
