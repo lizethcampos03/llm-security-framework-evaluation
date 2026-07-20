@@ -15,13 +15,13 @@ The purpose of this directory is to provide a concise reference describing how t
 | Document | Description |
 |----------|-------------|
 | `workflow_configuration.md` | Documents the finalized workflow architecture, including the processing pipeline, retrieval strategy, LLM roles, prompt design philosophy, workflow optimizations, and the frozen configuration used throughout the experiments. |
-| `experiment_configuration.md` | Describes the experimental setup, benchmark configuration, evaluation methodology, fairness policy, reported metrics, and manual review procedure used during evaluation. |
+| 
 
 ---
 
 ## Relationship to the Paper
 
-These configuration documents complement the paper by providing implementation-oriented details that support reproducibility while avoiding unnecessary duplication of the manuscript.
+This configuration document complements the paper by providing implementation-oriented details that support reproducibility.
 
 The paper presents the methodology and experimental results, whereas this directory documents the specific configuration used to obtain those results.
 
@@ -44,7 +44,7 @@ This configuration was frozen after calibration and remained unchanged throughou
 
 ## Repository Organization
 
-The configuration documents should be read together with the remaining repository artifacts:
+The configuration document should be read together with the remaining repository artifacts:
 
 - `prompts/` — Prompt templates used by the workflow
 - `datasets/` — Evaluation datasets and benchmark information
