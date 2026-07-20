@@ -1,6 +1,6 @@
 # LangGraph Workflow Evaluation
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](INSERT_COLAB_LINK_HERE)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)]([(https://colab.research.google.com/drive/1NnY-xuhucQHbLLFIrBo8sPJtP1ZlPpxB?usp=sharing)])
 
 Official experimental artifact accompanying the research paper:
 
