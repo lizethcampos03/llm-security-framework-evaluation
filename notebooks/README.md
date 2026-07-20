@@ -36,29 +36,11 @@ The notebook coordinates the experimental artifact but does not contain the comp
 
 # Reproduction 
 
-## Analysis Mode
-
-Analysis mode uses the archived outputs stored in:
-
-```text
-results/paper_results/
-```
-
-It reproduces the reported metrics, tables, and figures without making external LLM API calls.
-
-This is the recommended mode for reviewers who want to verify the reported analysis.
-
----
-
-# Recommended Reviewer Workflow
-
-Reviewers may use the notebook in the following order:
-
-1. Verify the repository structure and environment.
-2. Load the frozen experimental configuration.
-3. Inspect the benchmark and prompt artifacts.
-4. Recompute metrics from the archived outputs.
-5. Regenerate the paper tables and figures.
+> **Reviewer path:** Select **Runtime → Run all**.
+>
+> The notebook loads the public evaluation repository and presents its
+> archived artifacts. It does not call Anthropic, OpenAI, LangSmith, or
+> any other external model service.
 
 ---
 

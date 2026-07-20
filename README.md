@@ -42,8 +42,6 @@ Included:
 - Reported experimental outputs
 - Figures and tables generated for the paper
 
-This repository does **not** contain the complete research prototype or production implementation of the LangGraph framework. The underlying research prototype is maintained separately.
-
 ---
 
 # Repository Structure
@@ -145,26 +143,6 @@ The notebook reproduces the experiments in the same order presented in the manus
 3. Experiment 2 – End-to-End Secure Remediation
 4. Experiment 3 – Chained-Vulnerability Evaluation
 5. Generation of tables and figures
-
----
-
-# Reproducibility
-
-Two reproduction modes are supported.
-
-## Analysis Mode
-
-Reproduces the reported tables, figures, and evaluation metrics using archived experimental outputs.
-
-This mode does **not** require paid LLM API access.
-
----
-
-## Full Execution Mode
-
-Reruns the experimental workflow using user-provided API credentials.
-
-This mode reproduces the complete evaluation pipeline and may incur inference costs depending on the selected model providers.
 
 ---
 
