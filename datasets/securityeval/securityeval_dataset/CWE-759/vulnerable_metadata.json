@@ -1,0 +1,14 @@
+{
+  "sample_id": "SE-CWE759-060",
+  "task_id": "CWE-759_mitre_1.py",
+  "cwe_id": "CWE-759",
+  "cwe_name": "TO_BE_FILLED",
+  "owasp_category": "TO_BE_FILLED",
+  "vulnerability_status": "vulnerable",
+  "source": "SecurityEval reference implementation",
+  "generation_method": "SecurityEval vulnerable reference solution",
+  "secure_generation_prompt_version": null,
+  "context_profile_version": null,
+  "validation_status": "pending",
+  "notes": "Initial vulnerable benchmark sample."
+}

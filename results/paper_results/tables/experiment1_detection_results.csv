@@ -1,0 +1,8 @@
+metric,value
+Accuracy,88.41%
+Precision,83.54%
+Recall,95.65%
+F1 Score,89.19%
+Safe Classification Accuracy,81.16%
+False Positives,13
+False Negatives,3

@@ -1,0 +1,58 @@
+{
+  "application_type": "enterprise_internal_tool",
+  "protected_assets": [
+    "employee_records",
+    "internal_reports",
+    "business_documents",
+    "administrative_credentials"
+  ],
+  "user_roles": [
+    "employee",
+    "manager",
+    "administrator",
+    "service_account"
+  ],
+  "authorization_rules": [
+    "employees may access only assigned internal resources",
+    "managers may access team-level reports",
+    "administrators may manage internal configuration",
+    "service accounts should have limited scoped permissions"
+  ],
+  "security_requirements": [
+    "internal resources must be protected",
+    "user privileges must be enforced correctly",
+    "administrative functionality must be restricted",
+    "sensitive information must remain confidential",
+    "user actions must respect organizational policies"
+  ],
+  "threat_concerns": [
+    "unauthorized access to internal resources",
+    "exposure of organizational information",
+    "abuse of employee-facing functionality",
+    "manipulation of internal workflows",
+    "improper access to privileged operations",
+    "unauthorized modification of internal data"
+  ],
+  "security_focus_areas": [
+    "access_control",
+    "filesystem_security",
+    "privilege_management",
+    "information_exposure_prevention",
+    "operational_safety"
+  ],
+  "deployment_context": "internal_enterprise_network",
+  "dependencies": [
+    "internal_database",
+    "directory_service",
+    "file_storage",
+    "logging_service"
+  ],
+  "expected_security_behavior": [
+    "validate internal resource identifiers",
+    "restrict access to filesystem resources",
+    "avoid exposing operational details",
+    "enforce privilege boundaries",
+    "protect internal documents"
+  ],
+  "assigned_profile_name": "enterprise_internal_tool"
+}

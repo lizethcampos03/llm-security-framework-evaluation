@@ -1,0 +1,6 @@
+cff-version: 1.2.0
+title: LangGraph Workflow Evaluation
+message: Please cite this repository if you use it.
+authors:
+  - family-names: Campos Velazquez
+    given-names: Lizeth

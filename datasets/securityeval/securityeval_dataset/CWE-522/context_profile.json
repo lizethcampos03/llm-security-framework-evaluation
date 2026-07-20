@@ -1,0 +1,58 @@
+{
+  "application_type": "authentication_service",
+  "protected_assets": [
+    "user_credentials",
+    "password_hashes",
+    "session_tokens",
+    "authorization_claims"
+  ],
+  "user_roles": [
+    "anonymous_user",
+    "authenticated_user",
+    "administrator",
+    "service_account"
+  ],
+  "authorization_rules": [
+    "anonymous users may only access login and registration flows",
+    "authenticated users may manage only their own sessions",
+    "administrators may manage user accounts",
+    "service accounts must use scoped permissions"
+  ],
+  "security_requirements": [
+    "identity verification must be enforced consistently",
+    "authentication decisions must be trustworthy",
+    "credential-related information must remain protected",
+    "access controls must be enforced correctly",
+    "security-sensitive operations must require authorization"
+  ],
+  "threat_concerns": [
+    "unauthorized account access",
+    "abuse of authentication workflows",
+    "exposure of credential-related information",
+    "improper session management",
+    "unauthorized privilege acquisition",
+    "bypass of security controls"
+  ],
+  "security_focus_areas": [
+    "authentication",
+    "authorization",
+    "credential_management",
+    "session_management",
+    "cryptographic_protection"
+  ],
+  "deployment_context": "security_critical_identity_service",
+  "dependencies": [
+    "authentication_database",
+    "session_store",
+    "password_hashing_library",
+    "token_service"
+  ],
+  "expected_security_behavior": [
+    "never expose credential-related information",
+    "validate authentication state",
+    "protect stored credential material",
+    "enforce authorization before protected actions",
+    "use trustworthy security decisions"
+  ],
+  "assigned_profile_name": "authentication_service"
+}

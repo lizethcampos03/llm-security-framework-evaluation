@@ -1,0 +1,7 @@
+{
+  "cwe_id": "CWE-434",
+  "assigned_context_profile": "web_social_platform",
+  "context_profile_status": "assigned",
+  "calibration_status": "pending",
+  "securityeval_sample_id": "SE-CWE434-044"
+}

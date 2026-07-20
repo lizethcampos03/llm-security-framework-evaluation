@@ -1,0 +1,7 @@
+{
+  "cwe_id": "CWE-730",
+  "assigned_context_profile": "financial_application",
+  "context_profile_status": "assigned",
+  "calibration_status": "pending",
+  "securityeval_sample_id": "SE-CWE730-058"
+}

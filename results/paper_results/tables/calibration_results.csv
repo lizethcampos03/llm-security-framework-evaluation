@@ -1,0 +1,10 @@
+metric,value
+Total cases,18
+Correct cases,15
+Overall accuracy,83.33%
+Vulnerable detection accuracy,88.89%
+Safe classification accuracy,77.78%
+Precision,80.00%
+Recall,88.89%
+F1 score,84.21%
+Retrieval success rate,100.00%

@@ -1,0 +1,58 @@
+{
+  "application_type": "financial_application",
+  "protected_assets": [
+    "bank_accounts",
+    "transaction_records",
+    "payment_information",
+    "customer_identity_data"
+  ],
+  "user_roles": [
+    "customer",
+    "bank_employee",
+    "fraud_analyst",
+    "administrator"
+  ],
+  "authorization_rules": [
+    "customers may access only their own financial records",
+    "employees may access customer records only for approved business purposes",
+    "administrators may manage system configuration",
+    "fraud analysts may review suspicious transactions"
+  ],
+  "security_requirements": [
+    "financial operations must preserve integrity",
+    "confidential data must remain protected",
+    "access controls must be strictly enforced",
+    "user actions must be auditable",
+    "security-critical operations must require proper authorization"
+  ],
+  "threat_concerns": [
+    "unauthorized access to financial records",
+    "manipulation of account operations",
+    "exposure of confidential financial information",
+    "abuse of privileged functionality",
+    "integrity violations affecting transactions",
+    "unauthorized elevation of operational capabilities"
+  ],
+  "security_focus_areas": [
+    "access_control",
+    "transaction_integrity",
+    "confidentiality",
+    "privilege_management",
+    "audit_logging"
+  ],
+  "deployment_context": "regulated_internet_facing_application",
+  "dependencies": [
+    "database",
+    "payment_processor",
+    "authentication_service",
+    "audit_logging_service"
+  ],
+  "expected_security_behavior": [
+    "validate financial operation inputs",
+    "enforce least privilege",
+    "protect sensitive records",
+    "require authorization for security-critical operations",
+    "log security-relevant actions"
+  ],
+  "assigned_profile_name": "financial_application"
+}

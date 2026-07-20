@@ -1,0 +1,9 @@
+metric,value
+P50 / P99 trace latency,36.24 s / 327.06 s
+Median detection runtime,19.11 s
+Median repair runtime,11.13 s
+Median RAG runtime,1.05 s
+Approx. end-to-end runtime,31.29 s
+Claude Opus cost,$36.46
+GPT-5.5 cost,$5.67
+Combined / per-sample cost,$42.13 / $0.31

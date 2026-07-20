@@ -1,0 +1,1198 @@
+{
+  "report_type": "chained_vulnerability_analysis_report",
+  "architecture_version": "experiment_4_chain_extension",
+  "executive_summary": {
+    "final_status": "chained_vulnerability_detected",
+    "risk_level": "high",
+    "confidence": 0.42,
+    "confidence_reason": "The chain reasoning node found a supported relationship among multiple detected component vulnerabilities.",
+    "plain_english_summary": "A chained vulnerability attack path was detected across multiple components.",
+    "recommended_next_action": "Review the chain-aware repair plan and apply the minimum fixes needed to break the attack path."
+  },
+  "context_profile": {
+    "application_type": "financial_application",
+    "protected_assets": [
+      "bank_accounts",
+      "transaction_records",
+      "payment_information",
+      "customer_identity_data"
+    ],
+    "user_roles": [
+      "customer",
+      "bank_employee",
+      "fraud_analyst",
+      "administrator"
+    ],
+    "authorization_rules": [
+      "customers may access only their own financial records",
+      "employees may access customer records only for approved business purposes",
+      "administrators may manage system configuration",
+      "fraud analysts may review suspicious transactions"
+    ],
+    "security_requirements": [
+      "financial operations must preserve integrity",
+      "confidential data must remain protected",
+      "access controls must be strictly enforced",
+      "user actions must be auditable",
+      "security-critical operations must require proper authorization"
+    ],
+    "threat_concerns": [
+      "unauthorized access to financial records",
+      "manipulation of account operations",
+      "exposure of confidential financial information",
+      "abuse of privileged functionality",
+      "integrity violations affecting transactions",
+      "unauthorized elevation of operational capabilities"
+    ],
+    "security_focus_areas": [
+      "access_control",
+      "transaction_integrity",
+      "confidentiality",
+      "privilege_management",
+      "audit_logging"
+    ],
+    "deployment_context": "regulated_internet_facing_application",
+    "dependencies": [
+      "database",
+      "payment_processor",
+      "authentication_service",
+      "audit_logging_service"
+    ],
+    "expected_security_behavior": [
+      "validate financial operation inputs",
+      "enforce least privilege",
+      "protect sensitive records",
+      "require authorization for security-critical operations",
+      "log security-relevant actions"
+    ]
+  },
+  "component_level_findings": [
+    {
+      "file_name": "cwe_306_missing_auth.py",
+      "overall_security_status": "vulnerable",
+      "summary": "The code defines an authentication decorator but never applies it, and the confidential settings function serves secret content without any authentication check, matching the unmitigated CWE-306 missing-authentication pattern. Hard-coded admin credentials are a secondary concern. Classified vulnerable.",
+      "reasoning_summary": "The component file name and retrieved CWE-306 evidence align with the code: an `ensure_logged_in` decorator is defined but never applied, and the sensitive `settings()` function returns confidential content with no authentication check despite its docstring requiring it. This directly matches the unmitigated CWE-306 'Missing Authentication for Critical Function' pattern, mirroring the safe counterpart that correctly applies @login_required. The hard-coded admin credentials add a secondary CWE-798 concern. Higher-ranked retrieved CWEs (CWE-79, CWE-319, CWE-22) do not match observable code behavior.",
+      "findings": [
+        {
+          "vulnerability": "Missing Authentication Enforcement on Sensitive Settings Function",
+          "severity": "high",
+          "owasp_category": "A07:2021 - Identification and Authentication Failures",
+          "cwe_id": "CWE-306",
+          "confidence": 0.74,
+          "evidence_from_code": "The `settings()` function is documented to return the 'Secret settings' confidential page only when the user is authenticated, but it is not decorated with `@ensure_logged_in`, contains no session/authentication check, and simply returns the confidential HTML unconditionally. The `ensure_logged_in` decorator exists but is never applied to any route. The protected `/secret` redirect target referenced in `do_login` has no corresponding authenticated route shown, and the only sensitive function (`settings`) lacks any access control.",
+          "business_impact": "In the financial application context, unauthenticated exposure of confidential settings violates access-control and confidentiality requirements, enabling unauthorized access to privileged configuration or sensitive customer/account data.",
+          "recommended_fix": "Apply the `@ensure_logged_in` decorator (and a proper `@app.route`) to the `settings` function and any confidential endpoint such as `/secret`, ensuring authentication is enforced before returning protected content. Also fix the decorator's session check to use `session.get('username')` to avoid KeyError.",
+          "safe_alternative": "Follow the CWE-306 safe counterpart: decorate every sensitive route with a login-required/authorization decorator, e.g. `@app.route('/settings')` + `@ensure_logged_in`, and verify session presence safely."
+        },
+        {
+          "vulnerability": "Hard-coded Credentials in Login Logic",
+          "severity": "medium",
+          "owasp_category": "A07:2021 - Identification and Authentication Failures",
+          "cwe_id": "CWE-798",
+          "confidence": 0.55,
+          "evidence_from_code": "do_login compares request.form values directly against hard-coded 'admin' / 'password' literals to grant authenticated session access.",
+          "business_impact": "Hard-coded admin credentials could grant attackers privileged access to financial records and configuration, but this may be demo/placeholder code per the benchmark guidance.",
+          "recommended_fix": "Replace hard-coded credentials with a proper authentication service backed by salted password hashing and secret management.",
+          "safe_alternative": "Delegate credential verification to the authentication_service dependency and store no credentials in source."
+        }
+      ],
+      "retrieved_cwe_record_count": 5,
+      "retrieved_vulnerable_example_count": 0,
+      "retrieved_safe_counterpart_count": 0
+    },
+    {
+      "file_name": "cwe_798_hardcoded_credentials.py",
+      "overall_security_status": "vulnerable",
+      "summary": "The code hardcodes database credentials directly in the source, matching the CWE-798 (Use of Hard-coded Credentials) weakness pattern with no mitigation. This is classified as vulnerable with high severity given the financial application context.",
+      "reasoning_summary": "The code is an almost exact match to the CWE-798 vulnerable candidate_a retrieved as the top-ranked evidence: mysql.connector.connect called with literal user/password/host/database arguments. The safe counterpart (candidate_b) shows the mitigation (os.environ lookups), which this code does NOT use. No mitigation for hardcoded credentials is visible. Other retrieved CWEs (79, 285, 306, 200, 89) describe patterns not present in this snippet and were rejected. The context profile (financial application with sensitive protected assets) elevates severity to high.",
+      "findings": [
+        {
+          "vulnerability": "Use of Hard-coded Credentials in Database Connection",
+          "severity": "high",
+          "owasp_category": "A07:2021 - Identification and Authentication Failures",
+          "cwe_id": "CWE-798",
+          "confidence": 0.9,
+          "evidence_from_code": "The function getDBConnection() calls mysql.connector.connect(user='user', password='password', host='host', database='database') with credentials directly embedded as string literals in the source code. The password 'password' is hardcoded and not retrieved from any external secure source (environment variable, secrets manager, or config vault).",
+          "business_impact": "In this regulated financial application, the database stores bank_accounts, transaction_records, payment_information, and customer_identity_data. Exposure of hard-coded DB credentials could grant an attacker direct access to all protected financial assets, bypassing access controls and enabling confidentiality breaches, integrity violations of transactions, and regulatory non-compliance.",
+          "recommended_fix": "Remove all literal credential strings. Load the username, password, host, and database name from environment variables or a dedicated secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault). Example: mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASSWORD'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME']).",
+          "safe_alternative": "Use the CWE-798 safe counterpart pattern: import os and reference os.environ['DB_USER'], os.environ['DB_PASSWORD'], etc., combined with secret rotation and TLS-encrypted DB connections."
+        }
+      ],
+      "retrieved_cwe_record_count": 5,
+      "retrieved_vulnerable_example_count": 0,
+      "retrieved_safe_counterpart_count": 0
+    }
+  ],
+  "chain_candidate_evidence": {
+    "detected_cwes": [
+      "CWE-306",
+      "CWE-798"
+    ],
+    "retrieved_cwes": [
+      "CWE-200",
+      "CWE-22",
+      "CWE-285",
+      "CWE-306",
+      "CWE-319",
+      "CWE-79",
+      "CWE-798"
+    ],
+    "vulnerable_finding_count": 3,
+    "shared_asset_signal": true,
+    "reasons": [
+      "Two or more vulnerable component findings were detected.",
+      "The context profile contains shared asset, credential, privilege, or sensitive-resource language.",
+      "Detected CWE set: CWE-306, CWE-798.",
+      "Retrieved CWE evidence set includes: CWE-200, CWE-22, CWE-285, CWE-306, CWE-319, CWE-79, CWE-798."
+    ]
+  },
+  "chain_retrieval_evidence": {
+    "retrieval_mode": "cwe_metadata_and_rag_chain_evidence",
+    "detected_component_findings": [
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "status": "vulnerable",
+        "cwe_id": "CWE-306",
+        "severity": "high",
+        "confidence": 0.74,
+        "vulnerability_name": "Missing Authentication Enforcement on Sensitive Settings Function",
+        "evidence_from_code": "The `settings()` function is documented to return the 'Secret settings' confidential page only when the user is authenticated, but it is not decorated with `@ensure_logged_in`, contains no session/authentication check, and simply returns the confidential HTML unconditionally. The `ensure_logged_in` decorator exists but is never applied to any route. The protected `/secret` redirect target referenced in `do_login` has no corresponding authenticated route shown, and the only sensitive function (`settings`) lacks any access control.",
+        "business_impact": "In the financial application context, unauthenticated exposure of confidential settings violates access-control and confidentiality requirements, enabling unauthorized access to privileged configuration or sensitive customer/account data.",
+        "recommended_fix": "Apply the `@ensure_logged_in` decorator (and a proper `@app.route`) to the `settings` function and any confidential endpoint such as `/secret`, ensuring authentication is enforced before returning protected content. Also fix the decorator's session check to use `session.get('username')` to avoid KeyError."
+      },
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "status": "vulnerable",
+        "cwe_id": "CWE-798",
+        "severity": "medium",
+        "confidence": 0.55,
+        "vulnerability_name": "Hard-coded Credentials in Login Logic",
+        "evidence_from_code": "do_login compares request.form values directly against hard-coded 'admin' / 'password' literals to grant authenticated session access.",
+        "business_impact": "Hard-coded admin credentials could grant attackers privileged access to financial records and configuration, but this may be demo/placeholder code per the benchmark guidance.",
+        "recommended_fix": "Replace hard-coded credentials with a proper authentication service backed by salted password hashing and secret management."
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "status": "vulnerable",
+        "cwe_id": "CWE-798",
+        "severity": "high",
+        "confidence": 0.9,
+        "vulnerability_name": "Use of Hard-coded Credentials in Database Connection",
+        "evidence_from_code": "The function getDBConnection() calls mysql.connector.connect(user='user', password='password', host='host', database='database') with credentials directly embedded as string literals in the source code. The password 'password' is hardcoded and not retrieved from any external secure source (environment variable, secrets manager, or config vault).",
+        "business_impact": "In this regulated financial application, the database stores bank_accounts, transaction_records, payment_information, and customer_identity_data. Exposure of hard-coded DB credentials could grant an attacker direct access to all protected financial assets, bypassing access controls and enabling confidentiality breaches, integrity violations of transactions, and regulatory non-compliance.",
+        "recommended_fix": "Remove all literal credential strings. Load the username, password, host, and database name from environment variables or a dedicated secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault). Example: mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASSWORD'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME'])."
+      }
+    ],
+    "candidate_chain_evidence": {
+      "detected_cwes": [
+        "CWE-306",
+        "CWE-798"
+      ],
+      "retrieved_cwes": [
+        "CWE-200",
+        "CWE-22",
+        "CWE-285",
+        "CWE-306",
+        "CWE-319",
+        "CWE-79",
+        "CWE-798"
+      ],
+      "vulnerable_finding_count": 3,
+      "shared_asset_signal": true,
+      "reasons": [
+        "Two or more vulnerable component findings were detected.",
+        "The context profile contains shared asset, credential, privilege, or sensitive-resource language.",
+        "Detected CWE set: CWE-306, CWE-798.",
+        "Retrieved CWE evidence set includes: CWE-200, CWE-22, CWE-285, CWE-306, CWE-319, CWE-79, CWE-798."
+      ]
+    },
+    "cwe_chain_evidence_count": 10,
+    "cwe_chain_evidence": [
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "cwe_id": "CWE-79",
+        "rank": 1,
+        "score": 0.30027054932304165,
+        "sources": [
+          "code_keyword",
+          "code_vector",
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-79\nfinal_score: 0.30027054932304165\nsources: ['code_keyword', 'code_vector', 'cwe_keyword', 'cwe_vector']\n\n[code_keyword; score=0.2339]\nfrom flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n\n\n---\n\n[code_keyword; score=0.1345]\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\n@app.route('/user/<username>')\ndef user_profile(username):\n    theme = request.args.get('theme', 'default')\n\n    html_content = f\"\"\"\n    <html>\n        <head>\n            <style>body {{ background: {theme}; }}</style>\n        </head>\n        <body>\n            <h1>Welcome {username}!</h1>\n            <p>Your profile page</p>\n        </body>\n    </html>\n    \"\"\"\n\n    response = make_response(html_content)\n    response.headers['Content-Type'] = 'text/html'\n    return response\n\n\n---\n\n[code_vector; score=0.0281]\nfrom flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n\n\n---\n\n[cwe_keyword; score=0.1608]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-79_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.23391812865497075,
+            "text": "from flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_keyword",
+            "score": 0.13450292397660818,
+            "text": "from flask import Flask, request, make_response\n\napp = Flask(__name__)\n\n@app.route('/user/<username>')\ndef user_profile(username):\n    theme = request.args.get('theme', 'default')\n\n    html_content = f\"\"\"\n    <html>\n        <head>\n            <style>body {{ background: {theme}; }}</style>\n        </head>\n        <body>\n            <h1>Welcome {username}!</h1>\n            <p>Your profile page</p>\n        </body>\n    </html>\n    \"\"\"\n\n    response = make_response(html_content)\n    response.headers['Content-Type'] = 'text/html'\n    return response\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_vector",
+            "score": 0.02807132603779206,
+            "text": "from flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.1607717041800643,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "numeric_id": "79",
+              "name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/79.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-79",
+              "candidate_a_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-79/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.05816004545797918,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "numeric_id": "79",
+              "name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/79.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-79",
+              "candidate_a_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-79/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "cwe_id": "CWE-319",
+        "rank": 2,
+        "score": 0.27738767861126523,
+        "sources": [
+          "code_keyword",
+          "code_vector",
+          "cwe_keyword"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-319\nfinal_score: 0.27738767861126523\nsources: ['code_keyword', 'code_vector', 'cwe_keyword']\n\n[code_keyword; score=0.2339]\nimport secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16)\n        )\n        return response\n\n    return \"Bad username or password\"\n\n\n---\n\n[code_keyword; score=0.2339]\nimport secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16),\n            secure=True,\n            httponly=True,\n            samesite=\"Lax\"\n        )\n        return response\n\n    return \"Bad username or password\"\n\n\n---\n\n[code_vector; score=0.0252]\nimport secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16)\n        )\n        return response\n\n    return \"Bad username or password\"\n\n\n---\n\n[cwe_keyword; score=0.1286]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Test/Debug Hardware; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design For hardware, this may be introduced when design does not plan for an attacker having physical access while a legitimate user is remotely operating the device.\ntext: Operation\ntext: System Configuration\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality; impact: Read Application Data\nModify Files or Directories; note: Anyone can read the information by gaining access to the channel being used for communication. Many communication channels can be \"sniffed\" (monitored) by adversaries during data transmission. For example, in networking, packets can traverse many intermediary nodes from the source to the destination, whether across the internet, an internal network, the cloud, etc. Some actors might have privileged access to a network interface or any link along the channel, such as a router, but they might not be authorized to collect the underlying data. As a result, network traffic could be sniffed by adversaries, spilling security-critical data.\nscope: Integrity\nConfidentiality; impact: Read Application Data\nModify Files or Directories\nOther; note: When full communications are recorded or logged, such as with a packet dump, an adversary could attempt to obtain the dump long after the transmission has occurred and try to \"sniff\" the cleartext from the recorded communications in the dump itself. Even if the information is encoded in a way that is not human-readable, certain techniques could determine which encoding is being used, then decode the information.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-319_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_keyword",
+            "score": 0.23391812865497075,
+            "text": "import secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16)\n        )\n        return response\n\n    return \"Bad username or password\"\n",
+            "metadata": {
+              "cwe_id": "CWE-319",
+              "code_pair_id": "CWE-319",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-319/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-319_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.23391812865497075,
+            "text": "import secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16),\n            secure=True,\n            httponly=True,\n            samesite=\"Lax\"\n        )\n        return response\n\n    return \"Bad username or password\"\n",
+            "metadata": {
+              "cwe_id": "CWE-319",
+              "code_pair_id": "CWE-319",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-319/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-319_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_vector",
+            "score": 0.02518792302145221,
+            "text": "import secrets\n\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\ndef check_credentials(username, password):\n    return True\n\n@app.route('/login', methods=['POST'])\ndef do_login():\n    username = request.form[\"username\"]\n    password = request.form[\"password\"]\n\n    if check_credentials(username, password):\n        response = make_response(\"Authenticated!\")\n        response.set_cookie(\n            \"sessionID\",\n            secrets.token_urlsafe(16)\n        )\n        return response\n\n    return \"Bad username or password\"\n",
+            "metadata": {
+              "cwe_id": "CWE-319",
+              "code_pair_id": "CWE-319",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-319/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-319_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.12861736334405144,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Test/Debug Hardware; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design For hardware, this may be introduced when design does not plan for an attacker having physical access while a legitimate user is remotely operating the device.\ntext: Operation\ntext: System Configuration\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality; impact: Read Application Data\nModify Files or Directories; note: Anyone can read the information by gaining access to the channel being used for communication. Many communication channels can be \"sniffed\" (monitored) by adversaries during data transmission. For example, in networking, packets can traverse many intermediary nodes from the source to the destination, whether across the internet, an internal network, the cloud, etc. Some actors might have privileged access to a network interface or any link along the channel, such as a router, but they might not be authorized to collect the underlying data. As a result, network traffic could be sniffed by adversaries, spilling security-critical data.\nscope: Integrity\nConfidentiality; impact: Read Application Data\nModify Files or Directories\nOther; note: When full communications are recorded or logged, such as with a packet dump, an adversary could attempt to obtain the dump long after the transmission has occurred and try to \"sniff\" the cleartext from the recorded communications in the dump itself. Even if the information is encoded in a way that is not human-readable, certain techniques could determine which encoding is being used, then decode the information.",
+            "metadata": {
+              "cwe_id": "CWE-319",
+              "numeric_id": "319",
+              "name": "Cleartext Transmission of Sensitive Information",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/319.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-319",
+              "candidate_a_path": "embedding_candidates/approved/CWE-319/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-319/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "cwe_id": "CWE-306",
+        "rank": 3,
+        "score": 0.2560238814324954,
+        "sources": [
+          "code_keyword",
+          "cwe_keyword"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-306\nfinal_score: 0.2560238814324954\nsources: ['code_keyword', 'cwe_keyword']\n\n[code_keyword; score=0.2105]\nfrom functools import wraps\nfrom flask import g, request, redirect, url_for\n\ndef login_required(f):\n    @wraps(f)\n    def decorated_function(*args, **kwargs):\n        if g.user is None:\n            return redirect(url_for(\"login\", next=request.url))\n        return f(*args, **kwargs)\n    return decorated_function\n\n@app.route(\"/secret_page\")\n@login_required\ndef secret_page():\n    return \"Secret page\"\n\n\n---\n\n[code_keyword; score=0.1053]\nfrom internal_module import get_users\nfrom flask import Flask\n\napp = Flask(__name__)\n\n\n@app.route('/user/<username>/query')\ndef get_user(username):\n    users = get_users(username)\n    return users\n\n\n---\n\n[cwe_keyword; score=0.135]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design Developers sometimes perform authentication at the primary channel, but open up a secondary channel that is assumed to be private. For example, a login mechanism may be listening on one network port, but after successful authentication, it may open up a second port where it waits for the connection, but avoids authentication because it assumes that only the authenticated party will connect to the port.\ntext: Operation When migrating data to the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), there is a risk of losing the protections that were originally provided by hosting on internal networks. If access does not require authentication, it can be easier for attackers to access the data from anywhere on the Internet.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nOther; impact: Gain Privileges or Assume Identity\nVaries by Context; note: Exposing critical functionality essentially provides an attacker with the privilege level of that functionality. The consequences will depend on the associated functionality, but they can range from reading or modifying sensitive data, accessing administrative or other privileged functionality, or possibly even executing arbitrary code.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-306_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.21052631578947367,
+            "text": "from functools import wraps\nfrom flask import g, request, redirect, url_for\n\ndef login_required(f):\n    @wraps(f)\n    def decorated_function(*args, **kwargs):\n        if g.user is None:\n            return redirect(url_for(\"login\", next=request.url))\n        return f(*args, **kwargs)\n    return decorated_function\n\n@app.route(\"/secret_page\")\n@login_required\ndef secret_page():\n    return \"Secret page\"\n",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "code_pair_id": "CWE-306",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-306/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-306_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_keyword",
+            "score": 0.10526315789473684,
+            "text": "from internal_module import get_users\nfrom flask import Flask\n\napp = Flask(__name__)\n\n\n@app.route('/user/<username>/query')\ndef get_user(username):\n    users = get_users(username)\n    return users\n",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "code_pair_id": "CWE-306",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-306/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-306_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.13504823151125403,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design Developers sometimes perform authentication at the primary channel, but open up a secondary channel that is assumed to be private. For example, a login mechanism may be listening on one network port, but after successful authentication, it may open up a second port where it waits for the connection, but avoids authentication because it assumes that only the authenticated party will connect to the port.\ntext: Operation When migrating data to the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), there is a risk of losing the protections that were originally provided by hosting on internal networks. If access does not require authentication, it can be easier for attackers to access the data from anywhere on the Internet.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nOther; impact: Gain Privileges or Assume Identity\nVaries by Context; note: Exposing critical functionality essentially provides an attacker with the privilege level of that functionality. The consequences will depend on the associated functionality, but they can range from reading or modifying sensitive data, accessing administrative or other privileged functionality, or possibly even executing arbitrary code.",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "numeric_id": "306",
+              "name": "Missing Authentication for Critical Function",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/306.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-306",
+              "candidate_a_path": "embedding_candidates/approved/CWE-306/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-306/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "cwe_id": "CWE-798",
+        "rank": 4,
+        "score": 0.18985754207801342,
+        "sources": [
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [],
+        "text": "cwe_id: CWE-798\nfinal_score: 0.18985754207801342\nsources: ['cwe_keyword', 'cwe_vector']\n\n[cwe_keyword; score=0.1383]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.\n\n---\n\n[cwe_keyword; score=0.119]\nIdentity and Summary\n\nName:\nUse of Hard-coded Credentials\n\nDescription:\nThe product contains hard-coded credentials, such as a password or cryptographic key.\n\nExtended Description:\nThere are two main variations: Inbound: the product contains an authentication mechanism that checks the input credentials against a hard-coded set of credentials. In this variant, a default administration account is created, and a simple password is hard-coded into the product and associated with that account. This hard-coded password is the same for each installation of the product, and it usually cannot be changed or disabled by system administrators without manually modifying the program, or otherwise patching the product. It can also be difficult for the administrator to detect. Outbound: the product connects to another system or component, and it contains hard-coded credentials for connecting to that component. This variant applies to front-end systems that authenticate with a back-end service. The back-end service may require a fixed password that can be easily discovered. The programmer may simply hard-code those back-end credentials into the front-end product.\n\n---\n\n[cwe_vector; score=0.055]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-798_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.1382636655948553,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "numeric_id": "798",
+              "name": "Use of Hard-coded Credentials",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/798.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-798",
+              "candidate_a_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-798/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_identity_summary",
+            "chunk_type": "identity_summary",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.1189710610932476,
+            "text": "Identity and Summary\n\nName:\nUse of Hard-coded Credentials\n\nDescription:\nThe product contains hard-coded credentials, such as a password or cryptographic key.\n\nExtended Description:\nThere are two main variations: Inbound: the product contains an authentication mechanism that checks the input credentials against a hard-coded set of credentials. In this variant, a default administration account is created, and a simple password is hard-coded into the product and associated with that account. This hard-coded password is the same for each installation of the product, and it usually cannot be changed or disabled by system administrators without manually modifying the program, or otherwise patching the product. It can also be difficult for the administrator to detect. Outbound: the product connects to another system or component, and it contains hard-coded credentials for connecting to that component. This variant applies to front-end systems that authenticate with a back-end service. The back-end service may require a fixed password that can be easily discovered. The programmer may simply hard-code those back-end credentials into the front-end product.",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "numeric_id": "798",
+              "name": "Use of Hard-coded Credentials",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/798.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-798",
+              "candidate_a_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-798/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.05495502676143778,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "numeric_id": "798",
+              "name": "Use of Hard-coded Credentials",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/798.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-798",
+              "candidate_a_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-798/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "cwe_id": "CWE-22",
+        "rank": 5,
+        "score": 0.18797587837437713,
+        "sources": [
+          "code_keyword",
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-22\nfinal_score: 0.18797587837437713\nsources: ['code_keyword', 'cwe_keyword', 'cwe_vector']\n\n[code_keyword; score=0.117]\nimport os\nfrom pathlib import Path\nfrom flask import Flask, request, abort\n\napp = Flask(__name__)\n\nIMAGE_DIR = Path(\"static/images\").resolve()\n\n@app.route(\"/deleteImage\")\ndef delete_image():\n    filename = request.args.get(\"fileName\", \"\")\n    target = (IMAGE_DIR / filename).resolve()\n\n    if IMAGE_DIR not in target.parents:\n        abort(400)\n\n    os.remove(target)\n    return \"File deleted\"\n\n\n---\n\n[cwe_keyword; score=0.1286]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Often\n\nModes of Introduction:\ntext: Implementation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: The attacker may be able to create or overwrite critical files that are used to execute code, such as programs or libraries.\nscope: Integrity; impact: Modify Files or Directories; note: The attacker may be able to overwrite or create critical files, such as programs, libraries, or important data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, appending a new account at the end of a password file may allow an attacker to bypass authentication.\nscope: Confidentiality; impact: Read Files or Directories; note: The attacker may be able read the contents of unexpected files and expose sensitive data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, by reading a password file, the attacker could conduct brute force password guessing attacks in order to break into an account on the system.\nscope: Availability; impact: DoS: Crash, Exit, or Restart; note: The attacker may be able to overwrite, delete, or corrupt unexpected critical files such as programs, libraries, or important data. This may prevent the product from working at all and in the case of protection mechanisms such as authentication, it has the potential to lock out product users.\n\nFunctional Areas:\nFile Processing\n\nAffected Resources:\nFile or Directory\n\n---\n\n[cwe_vector; score=0.0531]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Often\n\nModes of Introduction:\ntext: Implementation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: The attacker may be able to create or overwrite critical files that are used to execute code, such as programs or libraries.\nscope: Integrity; impact: Modify Files or Directories; note: The attacker may be able to overwrite or create critical files, such as programs, libraries, or important data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, appending a new account at the end of a password file may allow an attacker to bypass authentication.\nscope: Confidentiality; impact: Read Files or Directories; note: The attacker may be able read the contents of unexpected files and expose sensitive data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, by reading a password file, the attacker could conduct brute force password guessing attacks in order to break into an account on the system.\nscope: Availability; impact: DoS: Crash, Exit, or Restart; note: The attacker may be able to overwrite, delete, or corrupt unexpected critical files such as programs, libraries, or important data. This may prevent the product from working at all and in the case of protection mechanisms such as authentication, it has the potential to lock out product users.\n\nFunctional Areas:\nFile Processing\n\nAffected Resources:\nFile or Directory",
+        "chunks": [
+          {
+            "chunk_id": "CWE-22_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.11695906432748537,
+            "text": "import os\nfrom pathlib import Path\nfrom flask import Flask, request, abort\n\napp = Flask(__name__)\n\nIMAGE_DIR = Path(\"static/images\").resolve()\n\n@app.route(\"/deleteImage\")\ndef delete_image():\n    filename = request.args.get(\"fileName\", \"\")\n    target = (IMAGE_DIR / filename).resolve()\n\n    if IMAGE_DIR not in target.parents:\n        abort(400)\n\n    os.remove(target)\n    return \"File deleted\"\n",
+            "metadata": {
+              "cwe_id": "CWE-22",
+              "code_pair_id": "CWE-22",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-22/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-22_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.12861736334405144,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Often\n\nModes of Introduction:\ntext: Implementation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: The attacker may be able to create or overwrite critical files that are used to execute code, such as programs or libraries.\nscope: Integrity; impact: Modify Files or Directories; note: The attacker may be able to overwrite or create critical files, such as programs, libraries, or important data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, appending a new account at the end of a password file may allow an attacker to bypass authentication.\nscope: Confidentiality; impact: Read Files or Directories; note: The attacker may be able read the contents of unexpected files and expose sensitive data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, by reading a password file, the attacker could conduct brute force password guessing attacks in order to break into an account on the system.\nscope: Availability; impact: DoS: Crash, Exit, or Restart; note: The attacker may be able to overwrite, delete, or corrupt unexpected critical files such as programs, libraries, or important data. This may prevent the product from working at all and in the case of protection mechanisms such as authentication, it has the potential to lock out product users.\n\nFunctional Areas:\nFile Processing\n\nAffected Resources:\nFile or Directory",
+            "metadata": {
+              "cwe_id": "CWE-22",
+              "numeric_id": "22",
+              "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/22.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-22",
+              "candidate_a_path": "embedding_candidates/approved/CWE-22/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-22/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-22_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.053148554198397396,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Often\n\nModes of Introduction:\ntext: Implementation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: The attacker may be able to create or overwrite critical files that are used to execute code, such as programs or libraries.\nscope: Integrity; impact: Modify Files or Directories; note: The attacker may be able to overwrite or create critical files, such as programs, libraries, or important data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, appending a new account at the end of a password file may allow an attacker to bypass authentication.\nscope: Confidentiality; impact: Read Files or Directories; note: The attacker may be able read the contents of unexpected files and expose sensitive data. If the targeted file is used for a security mechanism, then the attacker may be able to bypass that mechanism. For example, by reading a password file, the attacker could conduct brute force password guessing attacks in order to break into an account on the system.\nscope: Availability; impact: DoS: Crash, Exit, or Restart; note: The attacker may be able to overwrite, delete, or corrupt unexpected critical files such as programs, libraries, or important data. This may prevent the product from working at all and in the case of protection mechanisms such as authentication, it has the potential to lock out product users.\n\nFunctional Areas:\nFile Processing\n\nAffected Resources:\nFile or Directory",
+            "metadata": {
+              "cwe_id": "CWE-22",
+              "numeric_id": "22",
+              "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/22.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-22",
+              "candidate_a_path": "embedding_candidates/approved/CWE-22/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-22/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "cwe_id": "CWE-798",
+        "rank": 1,
+        "score": 0.4757892146793244,
+        "sources": [
+          "code_keyword",
+          "code_vector",
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-798\nfinal_score: 0.4757892146793244\nsources: ['code_keyword', 'code_vector', 'cwe_keyword', 'cwe_vector']\n\n[code_keyword; score=0.7]\nimport mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=\"user\",\n        password=\"password\",\n        host=\"host\",\n        database=\"database\"\n    )\n\n\n---\n\n[code_keyword; score=0.3]\nimport os\nimport mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=os.environ[\"DB_USER\"],\n        password=os.environ[\"DB_PASSWORD\"],\n        host=os.environ[\"DB_HOST\"],\n        database=os.environ[\"DB_NAME\"]\n    )\n\n\n---\n\n[code_vector; score=0.0271]\nimport mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=\"user\",\n        password=\"password\",\n        host=\"host\",\n        database=\"database\"\n    )\n\n\n---\n\n[cwe_keyword; score=0.1437]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-798_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_keyword",
+            "score": 0.7,
+            "text": "import mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=\"user\",\n        password=\"password\",\n        host=\"host\",\n        database=\"database\"\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "code_pair_id": "CWE-798",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.3,
+            "text": "import os\nimport mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=os.environ[\"DB_USER\"],\n        password=os.environ[\"DB_PASSWORD\"],\n        host=os.environ[\"DB_HOST\"],\n        database=os.environ[\"DB_NAME\"]\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "code_pair_id": "CWE-798",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-798/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_vector",
+            "score": 0.027062372781057227,
+            "text": "import mysql.connector\n\ndef get_db_connection():\n    return mysql.connector.connect(\n        user=\"user\",\n        password=\"password\",\n        host=\"host\",\n        database=\"database\"\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "code_pair_id": "CWE-798",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.14375,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "numeric_id": "798",
+              "name": "Use of Hard-coded Credentials",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/798.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-798",
+              "candidate_a_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-798/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-798_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.05495502676143778,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control; impact: Bypass Protection Mechanism; note: If hard-coded passwords are used, it is almost certain that malicious users will gain access to the account in question. Any user of the product that hard-codes passwords may be able to extract the password. Client-side systems with hard-coded passwords pose even more of a threat, since the extraction of a password from a binary is usually very simple.\nscope: Integrity\nConfidentiality\nAvailability\nAccess Control\nOther; impact: Read Application Data\nGain Privileges or Assume Identity\nExecute Unauthorized Code or Commands\nOther; note: This weakness can lead to the exposure of resources or functionality to unintended actors, possibly providing attackers with sensitive information or even execute arbitrary code. If the password is ever discovered or published (a common occurrence on the Internet), then anybody with knowledge of this password can access the product. Finally, since all installations of the product will have the same password, even across different organizations, this enables massive attacks such as worms to take place.",
+            "metadata": {
+              "cwe_id": "CWE-798",
+              "numeric_id": "798",
+              "name": "Use of Hard-coded Credentials",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/798.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-798",
+              "candidate_a_path": "embedding_candidates/approved/CWE-798/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-798/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "cwe_id": "CWE-79",
+        "rank": 2,
+        "score": 0.26198881093025106,
+        "sources": [
+          "code_keyword",
+          "code_vector",
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-79\nfinal_score: 0.26198881093025106\nsources: ['code_keyword', 'code_vector', 'cwe_keyword', 'cwe_vector']\n\n[code_keyword; score=0.3]\nfrom flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n\n\n---\n\n[code_vector; score=0.0304]\nfrom flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n\n\n---\n\n[code_vector; score=0.0273]\nfrom flask import Flask, request, make_response\n\napp = Flask(__name__)\n\n@app.route('/user/<username>')\ndef user_profile(username):\n    theme = request.args.get('theme', 'default')\n\n    html_content = f\"\"\"\n    <html>\n        <head>\n            <style>body {{ background: {theme}; }}</style>\n        </head>\n        <body>\n            <h1>Welcome {username}!</h1>\n            <p>Your profile page</p>\n        </body>\n    </html>\n    \"\"\"\n\n    response = make_response(html_content)\n    response.headers['Content-Type'] = 'text/html'\n    return response\n\n\n---\n\n[cwe_keyword; score=0.1812]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-79_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.3,
+            "text": "from flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_vector",
+            "score": 0.030400442016944494,
+            "text": "from flask import Flask, request, render_template\nimport re\n\napp = Flask(__name__)\n\ndef validate_user_id(user_id):\n    return re.match(r'^[0-9]+$', user_id) is not None\n\ndef validate_username(username):\n    return re.match(r'^[a-zA-Z0-9_]{3,30}$', username) is not None\n\ndef validate_theme(theme):\n    allowed_themes = ['default', 'dark', 'light', 'blue', 'green']\n    return theme if theme in allowed_themes else 'default'\n\n@app.route('/dashboard/<user_id>')\ndef dashboard(user_id):\n    if not validate_user_id(user_id):\n        return render_template('error.html', message='Invalid user ID format'), 400\n\n    username = request.args.get('name', 'User')\n    theme = validate_theme(request.args.get('theme', 'default'))\n    welcome_msg = request.args.get('msg', '')\n\n    if not validate_username(username):\n        username = 'User'\n\n    if len(welcome_msg) > 200:\n        welcome_msg = welcome_msg[:200]\n\n    return render_template(\n        'dashboard.html',\n        username=username,\n        user_id=user_id,\n        theme=theme,\n        welcome_msg=welcome_msg\n    )\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_vector",
+            "score": 0.027346035531771135,
+            "text": "from flask import Flask, request, make_response\n\napp = Flask(__name__)\n\n@app.route('/user/<username>')\ndef user_profile(username):\n    theme = request.args.get('theme', 'default')\n\n    html_content = f\"\"\"\n    <html>\n        <head>\n            <style>body {{ background: {theme}; }}</style>\n        </head>\n        <body>\n            <h1>Welcome {username}!</h1>\n            <p>Your profile page</p>\n        </body>\n    </html>\n    \"\"\"\n\n    response = make_response(html_content)\n    response.headers['Content-Type'] = 'text/html'\n    return response\n",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "code_pair_id": "CWE-79",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.18125,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "numeric_id": "79",
+              "name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/79.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-79",
+              "candidate_a_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-79/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-79_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.05816004545797918,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; name: AI/ML; prevalence: Undetermined\ntype: Technology; prevalence: Often\ntype: Technology; name: Web Server; prevalence: Undetermined\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nConfidentiality; impact: Bypass Protection Mechanism\nRead Application Data; note: The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.\nscope: Integrity\nConfidentiality\nAvailability; impact: Execute Unauthorized Code or Commands; note: In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, \"drive-by hacking.\"\nscope: Confidentiality\nIntegrity\nAvailability\nAccess Control; impact: Execute Unauthorized Code or Commands\nBypass Protection Mechanism\nRead Application Data; note: The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running \"Active X\" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.",
+            "metadata": {
+              "cwe_id": "CWE-79",
+              "numeric_id": "79",
+              "name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/79.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-79",
+              "candidate_a_path": "embedding_candidates/approved/CWE-79/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-79/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "cwe_id": "CWE-285",
+        "rank": 3,
+        "score": 0.2561327847294512,
+        "sources": [
+          "code_keyword",
+          "cwe_keyword",
+          "cwe_vector"
+        ],
+        "candidate_labels": [
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-285\nfinal_score: 0.2561327847294512\nsources: ['code_keyword', 'cwe_keyword', 'cwe_vector']\n\n[code_keyword; score=0.25]\n@app.route('/user/<user_id>/profile')\n@login_required\ndef view_profile(user_id):\n    if current_user.id != user_id and not current_user.is_admin:\n        abort(403)\n\n    user = User.query.get_or_404(user_id)\n    return render_template('profile.html', user=user)\n\n\n@app.route('/delete/<order_id>')\n@login_required\ndef delete_order(order_id):\n    order = Order.query.get_or_404(order_id)\n\n    if order.user_id != current_user.id:\n        abort(403)\n\n    order.delete()\n    return redirect('/orders')\n\n\n---\n\n[cwe_keyword; score=0.1562]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Web Server; prevalence: Often\ntype: Technology; name: Database Server; prevalence: Often\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic. A developer may introduce authorization weaknesses because of a lack of understanding about the underlying technologies. For example, a developer may assume that attackers cannot modify certain inputs such as headers or cookies.\ntext: Architecture and Design Authorization weaknesses may arise when a single-user application is ported to a multi-user environment.\ntext: Operation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Confidentiality; impact: Read Application Data\nRead Files or Directories; note: An attacker could read sensitive data, either by reading the data directly from a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to read the data.\nscope: Integrity; impact: Modify Application Data\nModify Files or Directories; note: An attacker could modify sensitive data, either by writing the data directly to a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to write the data.\nscope: Access Control; impact: Gain Privileges or Assume Identity\nExecute Unauthorized Code or Commands; note: When access control checks are not applied consistently - or not at all - an attacker could gain privileges and execute unauthorized code or commands by modifying or reading critical data directly, or by accessing insufficiently-protected, privileged functionality.\n\n---\n\n[cwe_vector; score=0.0512]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Web Server; prevalence: Often\ntype: Technology; name: Database Server; prevalence: Often\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic. A developer may introduce authorization weaknesses because of a lack of understanding about the underlying technologies. For example, a developer may assume that attackers cannot modify certain inputs such as headers or cookies.\ntext: Architecture and Design Authorization weaknesses may arise when a single-user application is ported to a multi-user environment.\ntext: Operation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Confidentiality; impact: Read Application Data\nRead Files or Directories; note: An attacker could read sensitive data, either by reading the data directly from a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to read the data.\nscope: Integrity; impact: Modify Application Data\nModify Files or Directories; note: An attacker could modify sensitive data, either by writing the data directly to a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to write the data.\nscope: Access Control; impact: Gain Privileges or Assume Identity\nExecute Unauthorized Code or Commands; note: When access control checks are not applied consistently - or not at all - an attacker could gain privileges and execute unauthorized code or commands by modifying or reading critical data directly, or by accessing insufficiently-protected, privileged functionality.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-285_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.25,
+            "text": "@app.route('/user/<user_id>/profile')\n@login_required\ndef view_profile(user_id):\n    if current_user.id != user_id and not current_user.is_admin:\n        abort(403)\n\n    user = User.query.get_or_404(user_id)\n    return render_template('profile.html', user=user)\n\n\n@app.route('/delete/<order_id>')\n@login_required\ndef delete_order(order_id):\n    order = Order.query.get_or_404(order_id)\n\n    if order.user_id != current_user.id:\n        abort(403)\n\n    order.delete()\n    return redirect('/orders')\n",
+            "metadata": {
+              "cwe_id": "CWE-285",
+              "code_pair_id": "CWE-285",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-285/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-285_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.15625,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Web Server; prevalence: Often\ntype: Technology; name: Database Server; prevalence: Often\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic. A developer may introduce authorization weaknesses because of a lack of understanding about the underlying technologies. For example, a developer may assume that attackers cannot modify certain inputs such as headers or cookies.\ntext: Architecture and Design Authorization weaknesses may arise when a single-user application is ported to a multi-user environment.\ntext: Operation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Confidentiality; impact: Read Application Data\nRead Files or Directories; note: An attacker could read sensitive data, either by reading the data directly from a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to read the data.\nscope: Integrity; impact: Modify Application Data\nModify Files or Directories; note: An attacker could modify sensitive data, either by writing the data directly to a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to write the data.\nscope: Access Control; impact: Gain Privileges or Assume Identity\nExecute Unauthorized Code or Commands; note: When access control checks are not applied consistently - or not at all - an attacker could gain privileges and execute unauthorized code or commands by modifying or reading critical data directly, or by accessing insufficiently-protected, privileged functionality.",
+            "metadata": {
+              "cwe_id": "CWE-285",
+              "numeric_id": "285",
+              "name": "Improper Authorization",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/285.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-285",
+              "candidate_a_path": "embedding_candidates/approved/CWE-285/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-285/candidate_b.py"
+            }
+          },
+          {
+            "chunk_id": "CWE-285_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_vector",
+            "score": 0.05115746499231946,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; name: Web Server; prevalence: Often\ntype: Technology; name: Database Server; prevalence: Often\n\nModes of Introduction:\ntext: Implementation REALIZATION: This weakness is caused during implementation of an architectural security tactic. A developer may introduce authorization weaknesses because of a lack of understanding about the underlying technologies. For example, a developer may assume that attackers cannot modify certain inputs such as headers or cookies.\ntext: Architecture and Design Authorization weaknesses may arise when a single-user application is ported to a multi-user environment.\ntext: Operation\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Confidentiality; impact: Read Application Data\nRead Files or Directories; note: An attacker could read sensitive data, either by reading the data directly from a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to read the data.\nscope: Integrity; impact: Modify Application Data\nModify Files or Directories; note: An attacker could modify sensitive data, either by writing the data directly to a data store that is not properly restricted, or by accessing insufficiently-protected, privileged functionality to write the data.\nscope: Access Control; impact: Gain Privileges or Assume Identity\nExecute Unauthorized Code or Commands; note: When access control checks are not applied consistently - or not at all - an attacker could gain privileges and execute unauthorized code or commands by modifying or reading critical data directly, or by accessing insufficiently-protected, privileged functionality.",
+            "metadata": {
+              "cwe_id": "CWE-285",
+              "numeric_id": "285",
+              "name": "Improper Authorization",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/285.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-285",
+              "candidate_a_path": "embedding_candidates/approved/CWE-285/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-285/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "cwe_id": "CWE-306",
+        "rank": 4,
+        "score": 0.23166626412646713,
+        "sources": [
+          "code_keyword",
+          "code_vector",
+          "cwe_keyword"
+        ],
+        "candidate_labels": [
+          "candidate_a",
+          "candidate_b"
+        ],
+        "text": "cwe_id: CWE-306\nfinal_score: 0.23166626412646713\nsources: ['code_keyword', 'code_vector', 'cwe_keyword']\n\n[code_keyword; score=0.25]\nfrom functools import wraps\nfrom flask import g, request, redirect, url_for\n\ndef login_required(f):\n    @wraps(f)\n    def decorated_function(*args, **kwargs):\n        if g.user is None:\n            return redirect(url_for(\"login\", next=request.url))\n        return f(*args, **kwargs)\n    return decorated_function\n\n@app.route(\"/secret_page\")\n@login_required\ndef secret_page():\n    return \"Secret page\"\n\n\n---\n\n[code_vector; score=0.028]\nfrom internal_module import get_users\nfrom flask import Flask\n\napp = Flask(__name__)\n\n\n@app.route('/user/<username>/query')\ndef get_user(username):\n    users = get_users(username)\n    return users\n\n\n---\n\n[cwe_keyword; score=0.1437]\nContext Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design Developers sometimes perform authentication at the primary channel, but open up a secondary channel that is assumed to be private. For example, a login mechanism may be listening on one network port, but after successful authentication, it may open up a second port where it waits for the connection, but avoids authentication because it assumes that only the authenticated party will connect to the port.\ntext: Operation When migrating data to the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), there is a risk of losing the protections that were originally provided by hosting on internal networks. If access does not require authentication, it can be easier for attackers to access the data from anywhere on the Internet.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nOther; impact: Gain Privileges or Assume Identity\nVaries by Context; note: Exposing critical functionality essentially provides an attacker with the privilege level of that functionality. The consequences will depend on the associated functionality, but they can range from reading or modifying sensitive data, accessing administrative or other privileged functionality, or possibly even executing arbitrary code.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-306_candidate_b",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_b",
+            "source": "code_keyword",
+            "score": 0.25,
+            "text": "from functools import wraps\nfrom flask import g, request, redirect, url_for\n\ndef login_required(f):\n    @wraps(f)\n    def decorated_function(*args, **kwargs):\n        if g.user is None:\n            return redirect(url_for(\"login\", next=request.url))\n        return f(*args, **kwargs)\n    return decorated_function\n\n@app.route(\"/secret_page\")\n@login_required\ndef secret_page():\n    return \"Secret page\"\n",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "code_pair_id": "CWE-306",
+              "candidate_label": "candidate_b",
+              "candidate_path": "embedding_candidates/approved/CWE-306/candidate_b.py",
+              "paired_candidate": "candidate_a",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-306_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_vector",
+            "score": 0.028020064827274895,
+            "text": "from internal_module import get_users\nfrom flask import Flask\n\napp = Flask(__name__)\n\n\n@app.route('/user/<username>/query')\ndef get_user(username):\n    users = get_users(username)\n    return users\n",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "code_pair_id": "CWE-306",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-306/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-306_context_alignment",
+            "chunk_type": "context_alignment",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.14375,
+            "text": "Context Alignment\n\nApplicable Platforms:\ntype: Language; prevalence: Undetermined\ntype: Technology; prevalence: Undetermined\ntype: Technology; prevalence: Often\n\nModes of Introduction:\ntext: Architecture and Design OMISSION: This weakness is caused by missing a security tactic during the architecture and design phase.\ntext: Architecture and Design Developers sometimes perform authentication at the primary channel, but open up a secondary channel that is assumed to be private. For example, a login mechanism may be listening on one network port, but after successful authentication, it may open up a second port where it waits for the connection, but avoids authentication because it assumes that only the authenticated party will connect to the port.\ntext: Operation When migrating data to the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), there is a risk of losing the protections that were originally provided by hosting on internal networks. If access does not require authentication, it can be easier for attackers to access the data from anywhere on the Internet.\n\nLikelihood of Exploit:\nHigh\n\nCommon Consequences:\nscope: Access Control\nOther; impact: Gain Privileges or Assume Identity\nVaries by Context; note: Exposing critical functionality essentially provides an attacker with the privilege level of that functionality. The consequences will depend on the associated functionality, but they can range from reading or modifying sensitive data, accessing administrative or other privileged functionality, or possibly even executing arbitrary code.",
+            "metadata": {
+              "cwe_id": "CWE-306",
+              "numeric_id": "306",
+              "name": "Missing Authentication for Critical Function",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/306.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-306",
+              "candidate_a_path": "embedding_candidates/approved/CWE-306/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-306/candidate_b.py"
+            }
+          }
+        ]
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "cwe_id": "CWE-200",
+        "rank": 5,
+        "score": 0.22212376237623763,
+        "sources": [
+          "code_keyword",
+          "cwe_keyword"
+        ],
+        "candidate_labels": [
+          "candidate_a"
+        ],
+        "text": "cwe_id: CWE-200\nfinal_score: 0.22212376237623763\nsources: ['code_keyword', 'cwe_keyword']\n\n[code_keyword; score=0.3]\nimport logging\n\ndef get_password():\n    return \"secret-password\"\n\ndef log_password():\n    password = get_password()\n    logging.info(\"User credentials: {}\".format(password))\n\n\n---\n\n[cwe_keyword; score=0.2]\nIdentity and Summary\n\nName:\nExposure of Sensitive Information to an Unauthorized Actor\n\nDescription:\nThe product exposes sensitive information to an actor that is not explicitly authorized to have access to that information.\n\nExtended Description:\nThere are many different kinds of mistakes that introduce information exposures. The severity of the error can range widely, depending on the context in which the product operates, the type of sensitive information that is revealed, and the benefits it may provide to an attacker. Some kinds of sensitive information include: private, personal information, such as personal messages, financial data, health records, geographic location, or contact details system status and environment, such as the operating system and installed packages business secrets and intellectual property network status and configuration the product's own code or internal state metadata, e.g. logging of connections or message headers indirect information, such as a discrepancy between two internal operations that can be observed by an outsider Information might be sensitive to different parties, each of which may have their own expectations for whether the information should be protected. These parties include: the product's own users people or organizations whose information is created or used by the product, even if they are not direct product users the product's administrators, including the admins of the system(s) and/or networks on which the product operates the developer Information exposures can occur in different ways: the code explicitly inserts sensitive information into resources or messages that are intentionally made accessible to unauthorized actors, but should not contain the information - i.e., the information should have been \"scrubbed\" or \"sanitized\" a different weakness or mistake indirectly inserts the sensitive information into resources, such as a web script error revealing the full system path of the program. the code manages resources that intentionally contain sensitive information, but the resources are unintentionally made accessible to unauthorized actors. In this case, the information exposure is resultant - i.e., a different weakness enabled the access to the information in the first place. It is common practice to describe any loss of confidentiality as an \"information exposure,\" but this can lead to overuse of CWE-200 in CWE mapping. From the CWE perspective, loss of confidentiality is a technical impact that can arise from dozens of different weaknesses, such as insecure file permissions or out-of-bounds read. CWE-200 and its lower-level descendants are intended to cover the mistakes that occur in behaviors that explicitly manage, store, transfer, or cleanse sensitive information.\n\nAlternate Terms:\ntext: Information Disclosure This term is frequently used in vulnerability advisories to describe a consequence or technical impact, for any vulnerability that has a loss of confidentiality. Often, CWE-200 can be misused to represent the loss of confidentiality, even when the mistake - i.e., the weakness - is not directly related to the mishandling of the information itself, such as an out-of-bounds read that accesses sensitive memory contents; here, the out-of-bounds read is the primary weakness, not the disclosure of the memory. In addition, this phrase is also used frequently in policies and legal documents, but it does not refer to any disclosure of security-relevant information.\ntext: Information Leak This is a frequently used term, however the \"leak\" term has multiple uses within security. In some cases it deals with the accidental exposure of information from a different weakness, but in other cases (such as \"memory leak\"), this deals with improper tracking of resources, which can lead to exhaustion. As a result, CWE is actively avoiding usage of the \"leak\" term.",
+        "chunks": [
+          {
+            "chunk_id": "CWE-200_candidate_a",
+            "chunk_type": "code_candidate",
+            "candidate_label": "candidate_a",
+            "source": "code_keyword",
+            "score": 0.3,
+            "text": "import logging\n\ndef get_password():\n    return \"secret-password\"\n\ndef log_password():\n    password = get_password()\n    logging.info(\"User credentials: {}\".format(password))\n",
+            "metadata": {
+              "cwe_id": "CWE-200",
+              "code_pair_id": "CWE-200",
+              "candidate_label": "candidate_a",
+              "candidate_path": "embedding_candidates/approved/CWE-200/candidate_a.py",
+              "paired_candidate": "candidate_b",
+              "source_type": "approved_code_candidate"
+            }
+          },
+          {
+            "chunk_id": "CWE-200_identity_summary",
+            "chunk_type": "identity_summary",
+            "candidate_label": "",
+            "source": "cwe_keyword",
+            "score": 0.2,
+            "text": "Identity and Summary\n\nName:\nExposure of Sensitive Information to an Unauthorized Actor\n\nDescription:\nThe product exposes sensitive information to an actor that is not explicitly authorized to have access to that information.\n\nExtended Description:\nThere are many different kinds of mistakes that introduce information exposures. The severity of the error can range widely, depending on the context in which the product operates, the type of sensitive information that is revealed, and the benefits it may provide to an attacker. Some kinds of sensitive information include: private, personal information, such as personal messages, financial data, health records, geographic location, or contact details system status and environment, such as the operating system and installed packages business secrets and intellectual property network status and configuration the product's own code or internal state metadata, e.g. logging of connections or message headers indirect information, such as a discrepancy between two internal operations that can be observed by an outsider Information might be sensitive to different parties, each of which may have their own expectations for whether the information should be protected. These parties include: the product's own users people or organizations whose information is created or used by the product, even if they are not direct product users the product's administrators, including the admins of the system(s) and/or networks on which the product operates the developer Information exposures can occur in different ways: the code explicitly inserts sensitive information into resources or messages that are intentionally made accessible to unauthorized actors, but should not contain the information - i.e., the information should have been \"scrubbed\" or \"sanitized\" a different weakness or mistake indirectly inserts the sensitive information into resources, such as a web script error revealing the full system path of the program. the code manages resources that intentionally contain sensitive information, but the resources are unintentionally made accessible to unauthorized actors. In this case, the information exposure is resultant - i.e., a different weakness enabled the access to the information in the first place. It is common practice to describe any loss of confidentiality as an \"information exposure,\" but this can lead to overuse of CWE-200 in CWE mapping. From the CWE perspective, loss of confidentiality is a technical impact that can arise from dozens of different weaknesses, such as insecure file permissions or out-of-bounds read. CWE-200 and its lower-level descendants are intended to cover the mistakes that occur in behaviors that explicitly manage, store, transfer, or cleanse sensitive information.\n\nAlternate Terms:\ntext: Information Disclosure This term is frequently used in vulnerability advisories to describe a consequence or technical impact, for any vulnerability that has a loss of confidentiality. Often, CWE-200 can be misused to represent the loss of confidentiality, even when the mistake - i.e., the weakness - is not directly related to the mishandling of the information itself, such as an out-of-bounds read that accesses sensitive memory contents; here, the out-of-bounds read is the primary weakness, not the disclosure of the memory. In addition, this phrase is also used frequently in policies and legal documents, but it does not refer to any disclosure of security-relevant information.\ntext: Information Leak This is a frequently used term, however the \"leak\" term has multiple uses within security. In some cases it deals with the accidental exposure of information from a different weakness, but in other cases (such as \"memory leak\"), this deals with improper tracking of resources, which can lead to exhaustion. As a result, CWE is actively avoiding usage of the \"leak\" term.",
+            "metadata": {
+              "cwe_id": "CWE-200",
+              "numeric_id": "200",
+              "name": "Exposure of Sensitive Information to an Unauthorized Actor",
+              "mitre_html_link": "https://cwe.mitre.org/data/definitions/200.html",
+              "securityeval_task_id": "",
+              "code_pair_id": "CWE-200",
+              "candidate_a_path": "embedding_candidates/approved/CWE-200/candidate_a.py",
+              "candidate_b_path": "embedding_candidates/approved/CWE-200/candidate_b.py"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "chain_reasoning": {
+    "chain_detected": true,
+    "chain_name": "Authentication Bypass to Backend Database Credential Abuse",
+    "chain_confidence": 0.42,
+    "involved_components": [
+      {
+        "file_name": "cwe_306_missing_auth.py",
+        "role_in_chain": "entry point"
+      },
+      {
+        "file_name": "cwe_798_hardcoded_credentials.py",
+        "role_in_chain": "final impact"
+      }
+    ],
+    "involved_cwes": [
+      "CWE-306",
+      "CWE-798"
+    ],
+    "related_capec_patterns": [
+      "CAPEC-36",
+      "CAPEC-191",
+      "CAPEC-560"
+    ],
+    "attack_path": [
+      {
+        "step": 1,
+        "description": "An unauthenticated attacker reaches the sensitive settings/confidential function that returns protected content without any authentication check, bypassing the intended access control boundary.",
+        "component": "cwe_306_missing_auth.py",
+        "supporting_cwe": "CWE-306",
+        "evidence": "The `settings()` function returns confidential HTML unconditionally; the `ensure_logged_in` decorator is defined but never applied to any route. CWE-306 metadata: 'Exposing critical functionality essentially provides an attacker with the privilege level of that functionality.'"
+      },
+      {
+        "step": 2,
+        "description": "Either via the hard-coded admin/password login OR via exposure of source/configuration, the attacker obtains privileged/authenticated access to the application's privileged surface.",
+        "component": "cwe_306_missing_auth.py",
+        "supporting_cwe": "CWE-798",
+        "evidence": "do_login compares form values against hard-coded 'admin'/'password' literals to grant a session. Hard-coded credentials are identical across deployments and trivially extractable."
+      },
+      {
+        "step": 3,
+        "description": "The attacker leverages access to source code or the application's privileged surface to extract the hard-coded MySQL database credentials, enabling direct backend database access that bypasses application-layer access controls.",
+        "component": "cwe_798_hardcoded_credentials.py",
+        "supporting_cwe": "CWE-798",
+        "evidence": "getDBConnection() embeds user/password/host/database as literals. Business impact: 'Exposure of hard-coded DB credentials could grant an attacker direct access to all protected financial assets, bypassing access controls.' Architectural data flow: 'Application components may use stored authentication material to connect to protected backend services.'"
+      }
+    ],
+    "supporting_evidence": [
+      "Two high/medium vulnerable findings detected (CWE-306, CWE-798) within the same financial application sharing protected assets (bank_accounts, transaction_records, payment_information).",
+      "Architectural relationship context defines a service_connection_component that 'establishes connections to backend services using application-provided authentication material' and a trust boundary 'service authentication material to privileged operation' \u2014 directly aligning with the hard-coded DB credentials component.",
+      "CWE-798 metadata explicitly describes the Outbound variant: 'the product connects to another system or component, and it contains hard-coded credentials for connecting to that component' \u2014 matching getDBConnection().",
+      "CWE-306 metadata indicates missing authentication grants attacker the privilege level of the exposed functionality, supporting an initial foothold.",
+      "Shared asset signal is present: both weaknesses ultimately target the same financial data store, and the data flow (authenticated/privileged access -> backend service -> sensitive financial records) is supported by the architecture."
+    ],
+    "unsupported_or_uncertain_steps": [
+      "The two components (Flask web auth module and MySQL connection module) are detected independently; there is no directly observable code import or call linking the web settings function to getDBConnection().",
+      "It is not observable that the unauthenticated settings exposure (CWE-306) directly reveals the hard-coded DB credentials; the credential extraction step relies on source/artifact read access rather than a proven runtime data-flow from the exposed endpoint.",
+      "Whether the hard-coded values ('user'/'password') are real production secrets or placeholders is uncertain (flagged as possible demo/template code in both findings).",
+      "No observable endpoint actually invokes getDBConnection() in the provided code, so runtime reachability of the DB credential from the web tier is inferred from architecture, not confirmed."
+    ],
+    "business_impact": "In this regulated, internet-facing financial application, a successful chain would allow an attacker to bypass authentication on a privileged function and obtain backend database credentials, granting direct access to bank_accounts, transaction_records, payment_information, and customer_identity_data. This would violate access-control, confidentiality, and transaction-integrity requirements and create regulatory non-compliance exposure. The combined impact (full backend data store compromise) is greater than either weakness in isolation.",
+    "chain_breaking_recommendations": [
+      "Apply the `@ensure_logged_in` (or equivalent authorization) decorator to every sensitive route including settings/secret, and fix the session check to use session.get() \u2014 this removes the unauthenticated entry point (CWE-306).",
+      "Remove hard-coded application login credentials; delegate authentication to the authentication_service dependency with salted password hashing.",
+      "Remove hard-coded database credentials from getDBConnection() and load them from environment variables or a secrets manager, with secret rotation and least-privilege DB accounts (CWE-798).",
+      "Enforce least-privilege DB roles and network segmentation so that leaked credentials cannot grant full access to all financial records, and enable audit logging on privileged DB access."
+    ],
+    "reasoning_summary": "A plausible multi-step chain exists: missing authentication (CWE-306) provides an unauthenticated foothold to privileged application functionality, and hard-coded credentials (CWE-798), both in the login logic and especially the database connection, provide a path to direct backend compromise of shared financial data assets. The architectural relationship context (credential-dependent backend service access, service-credential-to-privileged-operation trust boundary, shared financial data store) supports realistic interaction and escalation. However, the linkage is inferential rather than directly observable: the two components are not shown calling each other, no endpoint demonstrably invokes the DB connection, and credential extraction depends on source/artifact access rather than a proven runtime data flow from the exposed endpoint. Given strong architectural and CWE alignment but meaningful gaps in observable component interaction, the chain is detected with moderate (low-mid) confidence rather than high confidence.",
+    "chain_reasoning_model": "claude-opus-4-8"
+  },
+  "chain_repair_plan": {
+    "repair_generated": true,
+    "repair_skipped": false,
+    "repair_strategy": "Break the chain at both the unauthorized web-entry path and the backend credential-abuse path with targeted fixes: require explicit authentication/authorization before sensitive settings functionality, remove hard-coded application login credentials, and remove/rotate hard-coded database credentials. This preserves the intended login, settings, and database-connection behavior while preventing unauthenticated or trivially authenticated users from reaching privileged functionality and preventing source-code access from yielding reusable database credentials.",
+    "chain_breaking_points": [
+      {
+        "attack_step_blocked": "Step 1: Unauthenticated access to confidential settings functionality in cwe_306_missing_auth.py",
+        "why_this_breaks_the_chain": "Applying an authentication and authorization guard to the sensitive settings/secret route prevents an unauthenticated attacker from using the settings function as an entry point into privileged application functionality."
+      },
+      {
+        "attack_step_blocked": "Step 2: Privileged access through hard-coded admin/password login in cwe_306_missing_auth.py",
+        "why_this_breaks_the_chain": "Replacing the literal admin/password comparison with the configured authentication_service removes the fixed credential that could otherwise let an attacker authenticate as a privileged user even after the missing-authentication route is protected."
+      },
+      {
+        "attack_step_blocked": "Step 3: Extraction and abuse of hard-coded MySQL credentials in cwe_798_hardcoded_credentials.py",
+        "why_this_breaks_the_chain": "Removing database credentials from source code and rotating the exposed database password prevents source/artifact access from yielding reusable backend credentials that bypass application-layer access controls."
+      }
+    ],
+    "minimum_required_fixes": [
+      {
+        "component": "cwe_306_missing_auth.py",
+        "related_cwe": "CWE-306",
+        "fix": "Register the sensitive settings/secret endpoint explicitly and protect it with the existing authentication guard or an equivalent login-required decorator. Fix the decorator to use a safe session lookup such as session.get('username') instead of session['username'], and require the appropriate role/authorization before returning confidential settings.",
+        "chain_step_broken": "Step 1",
+        "functionality_preservation": "Authenticated and authorized users can still view the confidential settings page; unauthenticated users are redirected to login or denied access instead of receiving protected content."
+      },
+      {
+        "component": "cwe_306_missing_auth.py",
+        "related_cwe": "CWE-798",
+        "fix": "Remove the hard-coded do_login comparison against 'admin' and 'password'. Delegate credential verification to the existing authentication_service dependency and establish the session only after successful authentication. Do not keep default administrator credentials in source code.",
+        "chain_step_broken": "Step 2",
+        "functionality_preservation": "Users still authenticate through the login endpoint, but credentials are validated by the intended authentication backend instead of fixed literals shared across deployments."
+      },
+      {
+        "component": "cwe_798_hardcoded_credentials.py",
+        "related_cwe": "CWE-798",
+        "fix": "Remove literal database connection values from getDBConnection(). Load DB_USER, DB_PASSWORD, DB_HOST, and DB_NAME from environment variables or the deployment secrets manager, fail closed if required values are missing, and rotate the previously embedded database credentials.",
+        "chain_step_broken": "Step 3",
+        "functionality_preservation": "The application can still create MySQL connections using the same mysql.connector interface, but connection material is supplied securely at deployment time rather than embedded in source."
+      }
+    ],
+    "component_repairs": [
+      {
+        "component": "cwe_306_missing_auth.py",
+        "issue": "Sensitive settings function returns confidential content without an authentication check.",
+        "recommended_change": "Add an explicit route for the intended sensitive endpoint, apply the login-required decorator, use session.get('username') in the decorator, and add role/authorization checks appropriate for administrator-only settings.",
+        "priority": "required"
+      },
+      {
+        "component": "cwe_306_missing_auth.py",
+        "issue": "Application login accepts hard-coded admin/password credentials.",
+        "recommended_change": "Replace literal credential comparison with authentication_service-backed verification and remove default privileged credentials from the codebase.",
+        "priority": "required"
+      },
+      {
+        "component": "cwe_798_hardcoded_credentials.py",
+        "issue": "Database username, password, host, and database name are embedded as source-code literals.",
+        "recommended_change": "Read database connection settings from environment variables or a managed secret, rotate the exposed credential, and ensure the DB account has only the permissions required by the application.",
+        "priority": "required"
+      },
+      {
+        "component": "database service account",
+        "issue": "A leaked application database credential could bypass application-layer authorization.",
+        "recommended_change": "Use a least-privilege database role scoped to required application operations and revoke broad administrative or cross-schema permissions.",
+        "priority": "recommended"
+      },
+      {
+        "component": "audit_logging_service",
+        "issue": "Security-relevant authentication, settings access, and database credential failures must be auditable in a regulated financial application.",
+        "recommended_change": "Log successful and failed login attempts, sensitive settings access, authorization denials, secret-loading failures without secret values, and anomalous database access events.",
+        "priority": "recommended"
+      }
+    ],
+    "defense_in_depth_recommendations": [
+      "Restrict database network access so only approved application runtime hosts or service identities can connect.",
+      "Enable TLS for database connections and verify server identity where supported by the MySQL deployment.",
+      "Add automated secret scanning in source control and CI to prevent future hard-coded credentials.",
+      "Invalidate existing sessions after changing authentication behavior and rotating privileged credentials.",
+      "Use secure session cookie settings such as Secure, HttpOnly, and SameSite appropriate for the deployment.",
+      "Review all routes for consistent authentication and authorization enforcement, especially routes exposing customer records, transaction records, payment information, or configuration.",
+      "Monitor and alert on direct database logins using application service accounts from unexpected hosts.",
+      "Document emergency credential-rotation procedures for database, administrator, payment processor, and authentication-service credentials."
+    ],
+    "residual_risk": "These fixes block the described chain by removing the unauthenticated settings entry point, the fixed application login credential, and the hard-coded reusable database credential. Residual risk remains if other endpoints expose source/configuration, if other hard-coded secrets exist outside the provided files, if database roles are overly broad, or if previously exposed credentials are not rotated and revoked. The original chain linkage was partly inferential, so validation should include route reachability tests, authentication/authorization tests, and confirmation that deployed artifacts no longer contain the old credentials.",
+    "reasoning_summary": "The confirmed chain depends on three linked conditions: unauthenticated access to sensitive functionality, hard-coded credentials enabling privileged application access, and hard-coded database credentials enabling backend access outside application controls. The minimum targeted repair set addresses each condition without rewriting unrelated components: protect the sensitive route, replace hard-coded application login verification, and externalize plus rotate database credentials."
+  },
+  "model_configuration": {
+    "detector_model": null,
+    "chain_reasoning_model": "claude-opus-4-8",
+    "chain_repair_model": "gpt-5.5"
+  },
+  "audit_trail": {
+    "nodes_completed": [
+      "input_node",
+      "preprocess_node",
+      "rag_node",
+      "detection_node",
+      "chain_candidate_node",
+      "chain_retrieval_node",
+      "chain_reasoning_node",
+      "chain_repair_planner_node",
+      "chain_report_node"
+    ],
+    "decision_path": [
+      "Input was processed as a multi-component chain-analysis case.",
+      "RAG retrieval was performed independently for 2 component(s).",
+      "Detection was performed independently for 2 component(s).",
+      "Candidate chain decision: True.",
+      "Candidate chain detected; routing to CAPEC/CWE chain-aware retrieval.",
+      "Chain reasoning detected chain: True.",
+      "Chain confidence: 0.42.",
+      "Chain repair plan generated: True."
+    ],
+    "trust_note": "This report is intended to assist chained vulnerability analysis. It should not replace manual security review, dynamic testing, or production validation."
+  },
+  "comparison_ready": {
+    "experiment": "experiment_4_chained_vulnerability_analysis",
+    "chain_detected": true,
+    "chain_confidence": 0.42,
+    "involved_cwes": [
+      "CWE-306",
+      "CWE-798"
+    ],
+    "related_capec_patterns": [
+      "CAPEC-36",
+      "CAPEC-191",
+      "CAPEC-560"
+    ],
+    "component_count": 2,
+    "ready_for_manual_review": true,
+    "ready_for_table_export": true
+  }
+}

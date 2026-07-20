@@ -1,0 +1,5 @@
+method,accuracy,precision,recall,f1_score,vulnerable_cases_detected
+LangGraph Framework,88.41%,83.54%,95.65%,89.19%,66/69
+GPT-4 Secure Agent (EASE 2025),74.60%,N/A,N/A,N/A,N/A
+CodeQL,65.22%,86.21%,36.23%,51.02%,25/69
+Bandit,61.59%,73.53%,36.23%,48.54%,25/69

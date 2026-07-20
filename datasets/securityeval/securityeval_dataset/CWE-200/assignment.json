@@ -1,0 +1,7 @@
+{
+  "cwe_id": "CWE-200",
+  "assigned_context_profile": "authentication_service",
+  "context_profile_status": "assigned",
+  "calibration_status": "pending",
+  "securityeval_sample_id": "SE-CWE200-016"
+}

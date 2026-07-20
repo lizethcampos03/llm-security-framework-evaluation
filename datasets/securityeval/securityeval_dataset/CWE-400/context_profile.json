@@ -1,0 +1,58 @@
+{
+  "application_type": "developer_platform",
+  "protected_assets": [
+    "source_code",
+    "api_tokens",
+    "build_artifacts",
+    "repository_metadata"
+  ],
+  "user_roles": [
+    "developer",
+    "maintainer",
+    "organization_admin",
+    "ci_service_account"
+  ],
+  "authorization_rules": [
+    "developers may access repositories they are assigned to",
+    "maintainers may manage project settings",
+    "organization administrators manage organization-wide access",
+    "ci service accounts should use least-privilege permissions"
+  ],
+  "security_requirements": [
+    "project resources must remain protected",
+    "development operations must preserve integrity",
+    "user input must be validated before processing",
+    "privileged functionality must require authorization",
+    "sensitive project information must remain confidential"
+  ],
+  "threat_concerns": [
+    "unauthorized access to source code assets",
+    "abuse of development workflows",
+    "exposure of project information",
+    "manipulation of build or deployment processes",
+    "improper access to developer functionality",
+    "unsafe handling of user-supplied development artifacts"
+  ],
+  "security_focus_areas": [
+    "input_validation",
+    "build_integrity",
+    "secret_protection",
+    "filesystem_security",
+    "process_isolation"
+  ],
+  "deployment_context": "developer_facing_platform_with_ci_cd",
+  "dependencies": [
+    "git_repository",
+    "ci_cd_runner",
+    "artifact_storage",
+    "secrets_manager"
+  ],
+  "expected_security_behavior": [
+    "validate user-controlled development artifacts",
+    "protect secrets from logs and outputs",
+    "validate file paths",
+    "isolate build execution",
+    "require authorization for privileged project actions"
+  ],
+  "assigned_profile_name": "developer_platform"
+}

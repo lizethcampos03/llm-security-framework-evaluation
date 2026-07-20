@@ -1,0 +1,72 @@
+{
+  "run_timestamp": "2026-06-22T18:11:45.011787",
+  "chains_run": 4,
+  "log_path": "Data\\chain_vulnerability_experiment\\experiment_4_log.csv",
+  "reports_dir": "Data\\chain_vulnerability_experiment\\reports",
+  "rows": [
+    {
+      "chain_id": "chain_01_cloud_credential_exposure",
+      "chain_name": "Cloud Credential Exposure Chain",
+      "context_profile": "cloud_management_platform",
+      "expected_cwes": "CWE-918; CWE-200; CWE-306",
+      "detected_cwes": "CWE-306; CWE-798; CWE-89; CWE-918",
+      "individual_vulnerabilities_detected": true,
+      "candidate_chain_triggered": true,
+      "chain_detected": true,
+      "attack_path_correct": "",
+      "capec_cwe_evidence_used": true,
+      "repair_plan_generated": true,
+      "repair_plan_breaks_chain": "",
+      "manual_review_status": "pending",
+      "notes": "Report saved to Data\\chain_vulnerability_experiment\\reports\\chain_01_cloud_credential_exposure_report.json"
+    },
+    {
+      "chain_id": "chain_02_path_traversal_secret_disclosure",
+      "chain_name": "Path Traversal Secret Disclosure Chain",
+      "context_profile": "web_social_platform",
+      "expected_cwes": "CWE-22; CWE-200; CWE-798",
+      "detected_cwes": "CWE-209; CWE-22; CWE-798; CWE-89",
+      "individual_vulnerabilities_detected": true,
+      "candidate_chain_triggered": true,
+      "chain_detected": true,
+      "attack_path_correct": "",
+      "capec_cwe_evidence_used": true,
+      "repair_plan_generated": true,
+      "repair_plan_breaks_chain": "",
+      "manual_review_status": "pending",
+      "notes": "Report saved to Data\\chain_vulnerability_experiment\\reports\\chain_02_path_traversal_secret_disclosure_report.json"
+    },
+    {
+      "chain_id": "chain_03_privileged_transaction_access",
+      "chain_name": "Privileged Transaction Access Chain",
+      "context_profile": "financial_application",
+      "expected_cwes": "CWE-798; CWE-306",
+      "detected_cwes": "CWE-306; CWE-798",
+      "individual_vulnerabilities_detected": true,
+      "candidate_chain_triggered": true,
+      "chain_detected": true,
+      "attack_path_correct": "",
+      "capec_cwe_evidence_used": true,
+      "repair_plan_generated": true,
+      "repair_plan_breaks_chain": "",
+      "manual_review_status": "pending",
+      "notes": "Report saved to Data\\chain_vulnerability_experiment\\reports\\chain_03_privileged_transaction_access_report.json"
+    },
+    {
+      "chain_id": "chain_04_code_injection_sensitive_operation",
+      "chain_name": "Code Injection Sensitive Operation Chain",
+      "context_profile": "developer_platform",
+      "expected_cwes": "CWE-94; CWE-200",
+      "detected_cwes": "CWE-209; CWE-89; CWE-94",
+      "individual_vulnerabilities_detected": true,
+      "candidate_chain_triggered": true,
+      "chain_detected": false,
+      "attack_path_correct": "",
+      "capec_cwe_evidence_used": true,
+      "repair_plan_generated": false,
+      "repair_plan_breaks_chain": "",
+      "manual_review_status": "pending",
+      "notes": "Report saved to Data\\chain_vulnerability_experiment\\reports\\chain_04_code_injection_sensitive_operation_report.json"
+    }
+  ]
+}

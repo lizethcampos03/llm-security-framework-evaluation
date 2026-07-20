@@ -1,0 +1,58 @@
+{
+  "application_type": "cloud_management_platform",
+  "protected_assets": [
+    "tenant_data",
+    "virtual_machine_metadata",
+    "cloud_credentials",
+    "network_configuration"
+  ],
+  "user_roles": [
+    "tenant_user",
+    "tenant_admin",
+    "cloud_operator",
+    "platform_administrator"
+  ],
+  "authorization_rules": [
+    "tenants may access only their own resources",
+    "tenant administrators manage resources within their tenant",
+    "cloud operators may perform approved operational tasks",
+    "platform administrators manage global infrastructure"
+  ],
+  "security_requirements": [
+    "infrastructure resources must be protected",
+    "administrative operations must require authorization",
+    "configuration information must remain confidential",
+    "access permissions must be enforced consistently",
+    "resource management actions must be validated"
+  ],
+  "threat_concerns": [
+    "unauthorized access to infrastructure resources",
+    "exposure of cloud configuration information",
+    "abuse of management functionality",
+    "improper access to administrative capabilities",
+    "manipulation of resource management operations",
+    "unauthorized control of cloud assets"
+  ],
+  "security_focus_areas": [
+    "tenant_isolation",
+    "network_access_control",
+    "credential_protection",
+    "resource_authorization",
+    "configuration_integrity"
+  ],
+  "deployment_context": "multi_tenant_cloud_environment",
+  "dependencies": [
+    "cloud_api",
+    "metadata_service",
+    "network_service",
+    "authentication_service"
+  ],
+  "expected_security_behavior": [
+    "validate resource management inputs",
+    "enforce tenant authorization",
+    "protect cloud credentials",
+    "restrict access to internal services",
+    "avoid user-controlled infrastructure access"
+  ],
+  "assigned_profile_name": "cloud_management_platform"
+}

@@ -1,0 +1,5 @@
+metric,count,description
+True Positives,66,Vulnerable correctly identified as Vulnerable
+False Negatives,3,Vulnerable incorrectly identified as Safe
+False Positives,13,Safe incorrectly identified as Vulnerable
+True Negatives,56,Safe correctly identified as Safe

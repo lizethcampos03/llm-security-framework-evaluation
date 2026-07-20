@@ -1,0 +1,5 @@
+metric,gpt4_workflow,proposed_workflow
+Final Secure-Output Rate,85.50%,95.65%
+Repair Success Rate,85.50%,100.00%
+CWE Coverage,26,69
+Repair Model,GPT-4-0613,GPT-4-0613

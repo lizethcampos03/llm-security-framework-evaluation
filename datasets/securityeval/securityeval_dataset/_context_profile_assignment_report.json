@@ -1,0 +1,347 @@
+[
+  {
+    "cwe_id": "CWE-113",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-116",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-117",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-1204",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-193",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-20",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-200",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-209",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-215",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-22",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-250",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-252",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-259",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-269",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-283",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-285",
+    "profile_name": "web_ecommerce",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-295",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-306",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-319",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-321",
+    "profile_name": "cloud_management_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-326",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-327",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-329",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-330",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-331",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-339",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-347",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-367",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-377",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-379",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-385",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-400",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-406",
+    "profile_name": "cloud_management_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-414",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-425",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-434",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-454",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-462",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-477",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-502",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-521",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-522",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-595",
+    "profile_name": "financial_application",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-601",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-605",
+    "profile_name": "cloud_management_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-611",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-641",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-643",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-703",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-730",
+    "profile_name": "financial_application",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-732",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-759",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-760",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-776",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-78",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-79",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-798",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-80",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-827",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-835",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-841",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-89",
+    "profile_name": "financial_application",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-90",
+    "profile_name": "enterprise_internal_tool",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-918",
+    "profile_name": "cloud_management_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-94",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-941",
+    "profile_name": "cloud_management_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-943",
+    "profile_name": "authentication_service",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-95",
+    "profile_name": "developer_platform",
+    "status": "assigned"
+  },
+  {
+    "cwe_id": "CWE-99",
+    "profile_name": "web_social_platform",
+    "status": "assigned"
+  }
+]

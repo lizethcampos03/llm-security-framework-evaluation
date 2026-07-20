@@ -1,0 +1,7 @@
+{
+  "sample_id": "SE-CWE798-063",
+  "vulnerability_status": "secure",
+  "generation_method": "Anthropic Claude secure rewrite",
+  "model": "claude-sonnet-4-5",
+  "validation_status": "pending_review"
+}
