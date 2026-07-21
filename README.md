@@ -1,6 +1,6 @@
 # LangGraph Workflow Evaluation
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)]((https://colab.research.google.com/drive/1NnY-xuhucQHbLLFIrBo8sPJtP1ZlPpxB?usp=sharing))
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lizethcampos03/llm-security-framework-evaluation/blob/main/notebooks/paper_reproduction.ipynb)
 
 Official experimental artifact accompanying the research paper:
 
