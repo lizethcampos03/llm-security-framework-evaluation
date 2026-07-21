@@ -28,10 +28,11 @@ The workflow calibration establishes the final architecture used throughout the 
 ```
 experiments/
 
-├── workflow_calibration.py
-├── experiment1_detection_and_comparative_analysis.py
-├── experiment2_end_to_end_secure_remediation.py
-├── experiment3_chained_vulnerability_evaluation.py
+├── calibration/
+├── experiment1/
+├── experiment2/
+├── experiment3/
+├── README.md
 └── methodology.md
 ```
 
