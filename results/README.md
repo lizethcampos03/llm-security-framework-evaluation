@@ -26,7 +26,7 @@ These files represent the official outputs used to generate the reported evaluat
 - summary statistics
 - evaluation logs
 - workflow outputs
-- publication figures
+- figures
 
 The contents of this directory should remain unchanged, as they provide the reference results associated with the published evaluation.
 
@@ -64,23 +64,6 @@ Typical outputs include:
 - validated component findings
 - generated repair plans
 - experimental summaries
-
----
-
-# File Organization
-
-Within each directory, outputs are organized according to the experiment that generated them.
-
-A typical structure is:
-
-```
-reported/
-
-├── calibration/
-├── experiment1/
-├── experiment2/
-└── experiment3/
-```
 
 ---
 

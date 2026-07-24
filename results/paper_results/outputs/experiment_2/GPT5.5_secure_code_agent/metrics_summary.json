@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.1",
+  "stage": "metrics",
+  "generated_at_utc": "2026-07-24T05:37:46+00:00",
+  "experiment": "experiment2_secure_code_agent_baseline",
+  "configuration": {
+    "configuration_name": "secure_code_agent_baseline",
+    "experiment_root": "D:/vuln-tool/experiments/experiment2",
+    "protocol": "single_pass_repair",
+    "successful_repair_status": "SECURE",
+    "configured_detection_model": "gpt-4-0613",
+    "configured_repair_model": "gpt-5.5",
+    "repair_output_name": "repair_gpt55",
+    "repair_evaluation_output_name": "repair_evaluation_gpt55",
+    "metrics_output_name": "metrics_gpt55",
+    "config_path": "D:/vuln-tool/experiments/experiment2/scripts/config.py",
+    "config_loaded": true,
+    "observed_detection_models": [
+      "gpt-4-0613"
+    ],
+    "observed_repair_models": [
+      "gpt-5.5"
+    ],
+    "detection_run_ids": [
+      "20260723T170530Z_cdbd14c5",
+      "20260723T171922Z_cf0dd8b9"
+    ],
+    "repair_run_ids": [
+      "20260724T005516Z_b49019c6"
+    ],
+    "repair_evaluation_run_ids": [
+      "20260724T014803Z_64bf1b9a"
+    ]
+  },
+  "inputs": {
+    "detection_directory": "D:/vuln-tool/experiments/experiment2/outputs/detection",
+    "repair_records_directory": "D:/vuln-tool/experiments/experiment2/outputs/repair_gpt55/records",
+    "repair_evaluation_records_directory": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation_gpt55/records",
+    "repair_evaluation_summary": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation_gpt55/evaluation_summary.json",
+    "manual_review_decisions": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation_gpt55/manual_review_decisions.json"
+  },
+  "manual_review": {
+    "evaluation_case_count": 56,
+    "manual_review_entry_count": 56,
+    "manual_review_required_count": 51,
+    "completed_manual_decisions_used": 51,
+    "automated_final_cases_retained": 5,
+    "blank_manual_entries_for_automated_cases": 5,
+    "unresolved_case_count": 0,
+    "manual_review_case_ids": [
+      "cwe-113_vulnerable_repair",
+      "cwe-116_vulnerable_repair",
+      "cwe-117_vulnerable_repair",
+      "cwe-1204_vulnerable_repair",
+      "cwe-193_vulnerable_repair",
+      "cwe-200_vulnerable_repair",
+      "cwe-209_vulnerable_repair",
+      "cwe-20_vulnerable_repair",
+      "cwe-215_vulnerable_repair",
+      "cwe-22_vulnerable_repair",
+      "cwe-250_vulnerable_repair",
+      "cwe-283_vulnerable_repair",
+      "cwe-285_vulnerable_repair",
+      "cwe-295_vulnerable_repair",
+      "cwe-306_vulnerable_repair",
+      "cwe-319_vulnerable_repair",
+      "cwe-321_vulnerable_repair",
+      "cwe-326_vulnerable_repair",
+      "cwe-329_vulnerable_repair",
+      "cwe-330_vulnerable_repair",
+      "cwe-347_vulnerable_repair",
+      "cwe-367_vulnerable_repair",
+      "cwe-377_vulnerable_repair",
+      "cwe-379_vulnerable_repair",
+      "cwe-385_vulnerable_repair",
+      "cwe-400_vulnerable_repair",
+      "cwe-406_vulnerable_repair",
+      "cwe-425_vulnerable_repair",
+      "cwe-434_vulnerable_repair",
+      "cwe-454_vulnerable_repair",
+      "cwe-477_vulnerable_repair",
+      "cwe-502_vulnerable_repair",
+      "cwe-522_vulnerable_repair",
+      "cwe-595_vulnerable_repair",
+      "cwe-611_vulnerable_repair",
+      "cwe-641_vulnerable_repair",
+      "cwe-643_vulnerable_repair",
+      "cwe-732_vulnerable_repair",
+      "cwe-759_vulnerable_repair",
+      "cwe-760_vulnerable_repair",
+      "cwe-776_vulnerable_repair",
+      "cwe-798_vulnerable_repair",
+      "cwe-79_vulnerable_repair",
+      "cwe-80_vulnerable_repair",
+      "cwe-835_vulnerable_repair",
+      "cwe-841_vulnerable_repair",
+      "cwe-89_vulnerable_repair",
+      "cwe-90_vulnerable_repair",
+      "cwe-918_vulnerable_repair",
+      "cwe-94_vulnerable_repair",
+      "cwe-95_vulnerable_repair"
+    ],
+    "automated_final_case_ids": [
+      "cwe-259_vulnerable_repair",
+      "cwe-327_vulnerable_repair",
+      "cwe-601_vulnerable_repair",
+      "cwe-78_vulnerable_repair",
+      "cwe-99_vulnerable_repair"
+    ],
+    "blank_automated_case_ids": [
+      "cwe-259_vulnerable_repair",
+      "cwe-327_vulnerable_repair",
+      "cwe-601_vulnerable_repair",
+      "cwe-78_vulnerable_repair",
+      "cwe-99_vulnerable_repair"
+    ],
+    "reviewers": [
+      "author"
+    ],
+    "decision_file": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation_gpt55/manual_review_decisions.json",
+    "merge_policy": "Manual decisions are applied only to evaluation cases whose automated status is MANUAL_REVIEW_REQUIRED. Existing automated SECURE, INSECURE, or INVALID_REPAIR statuses are retained."
+  },
+  "evaluation_summary_check": {
+    "available": true,
+    "case_count_checked": true,
+    "status_counts_treated_as_pre_manual_review": true
+  },
+  "expected_result_checks": {
+    "enabled": true,
+    "expected_detection_sample_count": 138,
+    "expected_repair_attempt_count": 56,
+    "expected_manual_review_count": 51,
+    "expected_final_repair_status_counts": {
+      "SECURE": 46,
+      "INSECURE": 9,
+      "INVALID_REPAIR": 1
+    }
+  },
+  "detection": {
+    "sample_counts": {
+      "total": 138,
+      "vulnerable": 69,
+      "safe": 69
+    },
+    "confusion_matrix": {
+      "true_positive": 56,
+      "true_negative": 59,
+      "false_positive": 10,
+      "false_negative": 13
+    },
+    "metrics": {
+      "accuracy": 0.833333,
+      "accuracy_percent": 83.3333,
+      "precision": 0.848485,
+      "precision_percent": 84.8485,
+      "recall": 0.811594,
+      "recall_percent": 81.1594,
+      "f1_score": 0.82963,
+      "f1_score_percent": 82.963,
+      "detection_coverage": 0.811594,
+      "detection_coverage_percent": 81.1594
+    },
+    "coverage_counts": {
+      "detected_vulnerable_cwes": 56,
+      "total_vulnerable_cwes": 69
+    },
+    "definitions": {
+      "positive_class": "The benchmark sample contains its predefined target CWE.",
+      "detection_coverage": "Unique target CWEs correctly detected in vulnerable samples divided by all unique target CWEs represented by vulnerable samples."
+    }
+  },
+  "repair": {
+    "input_counts": {
+      "vulnerable_samples": 69,
+      "target_cwes": 69
+    },
+    "pipeline_counts": {
+      "repair_attempts": 56,
+      "evaluated_repairs": 56,
+      "skipped_due_to_detection_false_negative": 13
+    },
+    "final_status_counts": {
+      "SECURE": 46,
+      "INSECURE": 9,
+      "INVALID_REPAIR": 1,
+      "MANUAL_REVIEW_REQUIRED": 0
+    },
+    "metrics": {
+      "repair_success_rate": 0.821429,
+      "repair_success_rate_percent": 82.1429,
+      "evaluated_repair_success_rate": 0.821429,
+      "evaluated_repair_success_rate_percent": 82.1429,
+      "final_secure_output_rate": 0.666667,
+      "final_secure_output_rate_percent": 66.6667,
+      "repair_attempt_coverage": 0.811594,
+      "repair_attempt_coverage_percent": 81.1594,
+      "cwe_coverage": 0.666667,
+      "cwe_coverage_percent": 66.6667
+    },
+    "coverage_counts": {
+      "attempted_cwes": 56,
+      "successfully_repaired_cwes": 46,
+      "total_vulnerable_cwes": 69
+    },
+    "definitions": {
+      "repair_success_rate": "Final SECURE repairs divided by repair attempts.",
+      "evaluated_repair_success_rate": "Final SECURE repairs divided by finalized repair evaluations.",
+      "final_secure_output_rate": "Final SECURE repairs divided by all vulnerable benchmark inputs, including detector false negatives that never reached repair.",
+      "repair_attempt_coverage": "Unique target CWEs sent to repair divided by all vulnerable target CWEs represented in the benchmark.",
+      "cwe_coverage": "Unique target CWEs with a final SECURE repair divided by all vulnerable target CWEs represented in the benchmark.",
+      "successful_repair_status": "Only final status SECURE is successful."
+    }
+  }
+}

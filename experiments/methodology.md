@@ -74,10 +74,9 @@ The experiments used cloud-hosted language models together with locally executed
 | Repair Model | GPT-5.5* |
 | Workflow | LangGraph |
 | Static Analysis | CodeQL, Bandit |
+| LLM Analysis (comparison method) | EASE 2025 end-to-end secure code agent |
 | Knowledge Sources | CWE knowledge, security code examples |
 | Retrieval Strategy | Full Hybrid Evidence Reranker |
-
-\*Experiment 2 retained GPT-4-0613 as the repair model to provide a fair comparison with the published EASE 2025 workflow.
 
 ---
 
@@ -174,7 +173,7 @@ The experiments build upon one another.
 |--------|---------|
 | Calibration | Finalize and freeze the workflow configuration. |
 | Experiment 1 | Evaluate vulnerability detection and compare against existing approaches. |
-| Experiment 2 | Evaluate end-to-end repair performance using the structured LangGraph security report. |
+| Experiment 2 | Evaluate repair performance within an end-to-end secure code agent using the structured LangGraph security report. |
 | Experiment 3 | Evaluate preliminary chained-vulnerability reasoning across representative multi-component scenarios. |
 
 Each experiment reused the finalized workflow produced during calibration.

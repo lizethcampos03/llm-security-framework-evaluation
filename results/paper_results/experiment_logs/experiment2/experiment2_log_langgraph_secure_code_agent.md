@@ -1,6 +1,6 @@
-# **Experiment 2 Benchmark Log**
+# **Experiment 2 Log**
 
-## **LangGraph-Augmented End-to-End Secure Code Workflow Evaluation**
+## **LangGraph-Augmented End-to-End Secure Code Agent Evaluation**
 
 ---
 

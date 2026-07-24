@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "stage": "metrics",
+  "generated_at_utc": "2026-07-24T00:04:09+00:00",
+  "experiment": "experiment2_secure_code_agent_baseline",
+  "configuration": {
+    "experiment_root": "D:/vuln-tool/experiments/experiment2",
+    "protocol": "single_pass_repair",
+    "successful_repair_status": "SECURE",
+    "detection_models": [
+      "gpt-4-0613"
+    ],
+    "repair_models": [
+      "gpt-4-0613"
+    ],
+    "detection_run_ids": [
+      "20260723T170530Z_cdbd14c5",
+      "20260723T171922Z_cf0dd8b9"
+    ],
+    "repair_run_ids": [
+      "20260723T184539Z_98111ac5"
+    ],
+    "repair_evaluation_run_ids": [
+      "20260723T234509Z_8e1a769c"
+    ]
+  },
+  "inputs": {
+    "detection_directory": "D:/vuln-tool/experiments/experiment2/outputs/detection",
+    "repair_records_directory": "D:/vuln-tool/experiments/experiment2/outputs/repair/records",
+    "repair_evaluation_records_directory": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation/records",
+    "repair_evaluation_summary": "D:/vuln-tool/experiments/experiment2/outputs/repair_evaluation/evaluation_summary.json"
+  },
+  "detection": {
+    "sample_counts": {
+      "total": 138,
+      "vulnerable": 69,
+      "safe": 69
+    },
+    "confusion_matrix": {
+      "true_positive": 56,
+      "true_negative": 59,
+      "false_positive": 10,
+      "false_negative": 13
+    },
+    "metrics": {
+      "accuracy": 0.833333,
+      "accuracy_percent": 83.3333,
+      "precision": 0.848485,
+      "precision_percent": 84.8485,
+      "recall": 0.811594,
+      "recall_percent": 81.1594,
+      "f1_score": 0.82963,
+      "f1_score_percent": 82.963,
+      "detection_coverage": 0.811594,
+      "detection_coverage_percent": 81.1594
+    },
+    "coverage_counts": {
+      "detected_vulnerable_cwes": 56,
+      "total_vulnerable_cwes": 69
+    },
+    "definitions": {
+      "positive_class": "The benchmark sample contains its predefined target CWE.",
+      "detection_coverage": "Unique target CWEs correctly detected in vulnerable samples divided by all unique target CWEs represented by vulnerable samples."
+    }
+  },
+  "repair": {
+    "input_counts": {
+      "vulnerable_samples": 69,
+      "target_cwes": 69
+    },
+    "pipeline_counts": {
+      "repair_attempts": 56,
+      "evaluated_repairs": 56,
+      "skipped_due_to_detection_false_negative": 13
+    },
+    "final_status_counts": {
+      "SECURE": 31,
+      "INSECURE": 15,
+      "INVALID_REPAIR": 10,
+      "MANUAL_REVIEW_REQUIRED": 0
+    },
+    "metrics": {
+      "repair_success_rate": 0.553571,
+      "repair_success_rate_percent": 55.3571,
+      "evaluated_repair_success_rate": 0.553571,
+      "evaluated_repair_success_rate_percent": 55.3571,
+      "final_secure_output_rate": 0.449275,
+      "final_secure_output_rate_percent": 44.9275,
+      "repair_attempt_coverage": 0.811594,
+      "repair_attempt_coverage_percent": 81.1594,
+      "cwe_coverage": 0.449275,
+      "cwe_coverage_percent": 44.9275
+    },
+    "coverage_counts": {
+      "attempted_cwes": 56,
+      "successfully_repaired_cwes": 31,
+      "total_vulnerable_cwes": 69
+    },
+    "definitions": {
+      "repair_success_rate": "Final SECURE repairs divided by repair attempts.",
+      "final_secure_output_rate": "Final SECURE repairs divided by all vulnerable benchmark inputs, including detector false negatives that never reached repair.",
+      "repair_attempt_coverage": "Unique target CWEs sent to repair divided by all vulnerable target CWEs represented in the benchmark.",
+      "cwe_coverage": "Unique target CWEs with a final SECURE repair divided by all vulnerable target CWEs represented in the benchmark.",
+      "successful_repair_status": "Only final status SECURE is successful."
+    }
+  }
+}

@@ -80,14 +80,16 @@ The framework is compared against:
 # Experiment 2
 ## End-to-End Secure Remediation
 
-Evaluates the complete secure-code workflow after successful vulnerability detection.
+Evaluates the repair performance of the end-to-end secure-code  agent when the Langgraph Workflow is integrated.
 
 Primary metrics include:
 
 - Repair Success Rate
 - Final Secure-Output Rate
 
-This experiment measures the effectiveness of the generated structured security report for supporting downstream remediation.
+This experiment measures the effectiveness of the generated structured security report for supporting downstream remediation within the end-to-end secure-code  agent.
+
+Aditionally, the end-to-end secure code agent baseline is reproduced in order to fairly compare the proposed method with the original method. Moreover, in another configuration, the original agent is also modified to have GPT-5.5 rather than GPT4-0613 (original LLM) as the repair model. Upgrading the repair model of the original configuration allows a more rigorous evaluation  on the impact of the langgraph integration to repair performance because comparison of all repair metrics will help prove the impact of the proposed workflow.
 
 ---
 
