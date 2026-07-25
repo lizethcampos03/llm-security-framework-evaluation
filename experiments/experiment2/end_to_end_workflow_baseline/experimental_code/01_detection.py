@@ -1,4 +1,4 @@
-"""Run the Secure Code Agent baseline vulnerability-detection experiment.
+"""Run the end-to-end workflow baseline vulnerability-detection experiment.
 
 Usage from the repository root:
 

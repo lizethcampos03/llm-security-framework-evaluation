@@ -1,6 +1,6 @@
 # Experiment 2 Benchmark Log
 
-## Secure Code Agent Baseline with GPT-5.5 Repair
+## End-to-End Workflow Baseline with GPT-5.5 Repair
 
 **Detection:** GPT-4-0613  
 **Repair:** GPT-5.5
@@ -9,7 +9,7 @@
 
 | **Field**                | **Value**                              |
 |--------------------------|----------------------------------------|
-| Experiment               | experiment2_secure_code_agent_baseline |
+| Experiment               | experiment2_end-to-end workflow_baseline |
 | Protocol                 | Single-pass repair                     |
 | Detection model          | GPT-4-0613                             |
 | Repair model             | GPT-5.5                                |
@@ -20,13 +20,13 @@
 
 ## Objective
 
-Evaluate the end-to-end performance of the Secure Code Agent workflow when GPT-5.5 is used as the repair model while the reproduced GPT-4-0613 detection stage remains unchanged.
+Evaluate the end-to-end performance of the End-to-End Workflow when GPT-5.5 is used as the repair model while the reproduced GPT-4-0613 detection stage remains unchanged.
 
 This configuration isolates the contribution of a newer repair model. The detection records, benchmark composition, repair eligibility rules, and final security-status definitions remain consistent with the Secure Code Agent baseline. Therefore, changes in repair outcomes can be attributed primarily to the repair-model substitution.
 
 ## Evaluation Question
 
-How effectively does GPT-5.5 repair vulnerabilities detected by the reproduced Secure Code Agent detection stage, and what final secure-output rate does the resulting end-to-end workflow achieve?
+How effectively does GPT-5.5 repair vulnerabilities detected by the reproduced End-to-End Workflow detection stage, and what final secure-output rate does the resulting End-to-End Workflow achieve?
 
 # Execution Methodology
 
@@ -67,7 +67,7 @@ The workflow followed the sequence below:
 
 | **Component**                | **Configuration**          |
 |------------------------------|----------------------------|
-| Configuration name           | secure_code_agent_baseline |
+| Configuration name           | End-to-End workflow baseline |
 | Detection model              | GPT-4-0613                 |
 | Repair model                 | GPT-5.5                    |
 | Repair strategy              | Single-pass repair         |
@@ -132,7 +132,7 @@ The workflow followed the sequence below:
 
 GPT-4-0613 detected 56 of the 69 vulnerable benchmark cases. The 13 false negatives did not enter the repair stage, so detection coverage limited the maximum possible end-to-end secure-output rate to 81.16%.
 
-The detection results are identical to the reproduced Secure Code Agent baseline because the detection model and records were intentionally held constant.
+The detection results are identical to the reproduced End-to-End Workflow baseline because the detection model and records were intentionally held constant.
 
 # GPT-5.5 Repair Execution
 
@@ -288,7 +288,7 @@ The repair results correspond to the observed GPT-5.5 model configuration and re
 
 # Conclusion
 
-The Secure Code Agent configuration using GPT-4-0613 for detection and GPT-5.5 for repair achieved substantially stronger repair performance than the reproduced GPT-4-0613 repair baseline.
+The End-to-End Workflow configuration using GPT-4-0613 for detection and GPT-5.5 for repair achieved substantially stronger repair performance than the reproduced GPT-4-0613 repair baseline.
 
 GPT-5.5 generated 46 secure repairs from 56 repair attempts, corresponding to an 82.14% repair success rate. Across all 69 vulnerable benchmark cases, the workflow achieved a 66.67% final secure-output rate.
 

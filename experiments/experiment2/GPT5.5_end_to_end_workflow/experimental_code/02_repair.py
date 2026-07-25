@@ -1,5 +1,5 @@
 """
-Secure Code Agent baseline: configurable single-pass repair stage.
+End-to-End Workflow baseline: configurable single-pass repair stage.
 
 Run from the repository root:
 

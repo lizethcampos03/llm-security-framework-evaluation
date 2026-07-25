@@ -1,23 +1,22 @@
-Method Reproduction Details – Secure Code Agent Baseline
+Method Reproduction Details – GPT-5.5 End-to-End Workflow
 
 Purpose
 
-This document specifies the implementation details used to reproduce the Secure Code Agent baseline proposed in the paper called "How Well Do Large Language Models Serve as End-to-End Secure Code Agents for Python?". The objective of this reproduction is to preserve the original LLM-based vulnerability detection and repair workflow while introducing only the modifications required for the experimental evaluation performed in this repository. 
+This document specifies the implementation details used to reproduce the GPT-5.5 End-to-End Workflow, a modified version of the baseline proposed in the paper called "How Well Do Large Language Models Serve as End-to-End Secure Code Agents for Python?". The objective of this reproduction is to preserve the original LLM-based vulnerability detection workflow while replacing the original repair model with GPT-5.5. This implementation enables the isolated evaluation of the repair model's contribution within the End-to-End Workflow architecture.
 
 Original Method
 
 The original study evaluates an end-to-end secure code generation pipeline through four research questions:
 
 RQ1: Code Generation
-RQ2: Vulnerability Detection
-RQ3: Vulnerability Repair
-RQ4: Iterative Secure Code Agent
+RQ2: Vulnerability Detection and Review Procedure
+RQ3: Vulnerability Repair and Review Procedure
 
-The Secure Code Agent baseline reproduced in this repository preserves the LLM-based detection and repair methodology evaluated in RQ2 and RQ3 while adapting the evaluation protocol to the experimental design of this work.
+The GPT-5.5 End-to-End Workflow reproduced in this repository preserves the LLM-based detection methodology evaluated in RQ2 while replacing the original repair model used in RQ3.
 
 Reproduction Scope
 
-The reproduced baseline follows the original methodology with two controlled modifications.
+The reproduced method follows the End-to-End Workflow baseline with two controlled modifications.
 
 Modification 1 — Evaluation Dataset
 
@@ -25,17 +24,17 @@ The original paper generates code using the complete SecurityEval benchmark cons
 
 For this reproduction, the code generation stage is omitted because the benchmark samples are already provided within this repository. The evaluation is therefore performed directly on the predefined SecurityEval evaluation dataset containing representative vulnerable samples for the same 69 CWEs.
 
-Modification 2 — Single-Pass Repair
+Modification 2 — GPT-5.5 Repair Model
 
-The original Secure Code Agent repeatedly repairs vulnerable code until no vulnerabilities remain or a maximum iteration limit is reached.
+The original End-to-End Workflow performs vulnerability repair using GPT-4.
 
-This reproduction performs one repair attempt for each vulnerable sample.
+This implementation replaces the repair model with GPT-5.5 while preserving the original repair methodology, prompts, and evaluation procedure.
 
-The iterative repair stage is intentionally omitted to maintain a consistent evaluation protocol across all compared methods, isolate the effects of architectural modifications introduced by this work, and reduce computational cost and execution time.
+The objective of this modification is to evaluate whether improvements in the repair language model contribute to improved remediation performance while maintaining the remainder of the End-to-End Workflow architecture unchanged.
 
 Experimental Workflow
 
-The reproduced Secure Code Agent consists of the following stages.
+The reproduced GPT-5.5 End-to-End Workflow consists of the following stages.
 
 Stage 1 — Input Dataset
 
@@ -44,6 +43,7 @@ For each benchmark sample:
 Load the vulnerable source code.
 Load the associated target CWE identifier.
 Load the corresponding CWE definition.
+
 Stage 2 — Vulnerability Detection
 
 Following the methodology evaluated in RQ2, vulnerability detection is performed using GPT-4.
@@ -51,7 +51,7 @@ Following the methodology evaluated in RQ2, vulnerability detection is performed
 For each benchmark sample:
 
 Provide the vulnerable code.
-Provide the associated CWE identifier.
+Provide the associated target CWE identifier.
 Provide the corresponding CWE definition.
 Execute GPT-4 using the original vulnerability detection prompt.
 Record the predicted vulnerability classification.
@@ -63,11 +63,12 @@ Stage 3 — Vulnerability Repair
 For samples identified as vulnerable:
 
 Provide the vulnerable code.
-Provide the associated CWE identifier.
+Provide the associated target CWE identifier.
 Provide the corresponding CWE definition.
-Execute GPT-4 using the original repair prompt.
+Execute GPT-5.5 using the original repair prompt.
 Generate repaired code.
 Record the repaired implementation.
+
 Stage 4 — Repair Evaluation
 
 The repaired code is evaluated using the same review methodology adopted by the original study.
@@ -82,15 +83,15 @@ A repaired sample is considered successful only when the target vulnerability is
 
 Only the predefined target CWE associated with each benchmark sample is evaluated.
 
-Large Language Model
+Large Language Models
 
-The reproduced baseline uses GPT-4 for both stages originally evaluated using an LLM.
+The reproduced method uses the following language models.
 
 Stage	Model
 Vulnerability Detection	GPT-4
-Vulnerability Repair	GPT-4
+Vulnerability Repair	GPT-5.5
 
-This configuration reproduces the LLM-based Secure Code Agent baseline used for comparison throughout this study.
+This configuration preserves the original LLM-based vulnerability detection stage while replacing only the repair model for comparison throughout this study.
 
 Prompts
 Vulnerability Detection
@@ -98,24 +99,23 @@ Vulnerability Detection
 The original RQ2 detection prompt is reproduced without modification.
 
 Your task is to determine whether the following Python code is vulnerable to CWE-<SN>(<Definition>). Return True for vulnerable or False for invulnerable.
-
 Vulnerability Repair
 
 The original repair prompt is reproduced without modification.
 
 You will be provided with a piece of Python code vulnerable to CWE-<SN>(<Definition>). Your task is to generate the complete fixed code.
-
 Model Configuration
 
-The reproduction follows the configuration reported in the original study.
+The reproduction follows the configuration reported in the original study except for the replacement of the repair model.
 
 Default GPT parameters
+GPT-4 used for vulnerability detection
+GPT-5.5 used for vulnerability repair
 Independent execution for every benchmark sample
 One conversation per sample
-
 Evaluation Metrics
 
-To facilitate a comprehensive comparison between the reproduced Secure Code Agent baseline and the proposed comparison methods, the reproduction records the original evaluation metrics reported by the authors together with additional performance metrics used throughout this study.
+To facilitate a comprehensive comparison between the reproduced GPT-5.5 End-to-End Workflow and the comparison methods, the reproduction records the original evaluation metrics reported by the authors together with additional performance metrics used throughout this study.
 
 Vulnerability Detection
 
@@ -141,4 +141,4 @@ In addition, the repair model used during each experiment is recorded as part of
 
 Notes
 
-This reproduction intentionally preserves the original LLM-based vulnerability detection and repair methodology so that the LLM components can be directly compared against the workflow-based approach proposed in this work.By modifying only the LLM components within the secure code agent, the experimental evaluation isolates the contribution of langgraph workflow to vulnerability detection and repair performance.  The only deviations from the original study are the use of the predefined SecurityEval evaluation dataset included in this repository, the omission of iterative repair in favor of a single-pass evaluation protocol, and the collection of additional evaluation metrics to enable a more comprehensive comparison between the reproduced baseline and the modified comparison methods.
+This reproduction intentionally preserves the original LLM-based vulnerability detection methodology while replacing only the repair model with GPT-5.5. By modifying only the repair component within the End-to-End Workflow architecture, the experimental evaluation isolates the contribution of the repair language model to secure code remediation performance. The only deviations from the original study are the use of the predefined SecurityEval evaluation dataset included in this repository, the replacement of GPT-4 with GPT-5.5 for vulnerability repair, and the collection of additional evaluation metrics to enable a comprehensive comparison between the End-to-End Workflow baseline and the modified approach.

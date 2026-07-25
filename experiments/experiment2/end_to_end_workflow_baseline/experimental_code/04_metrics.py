@@ -3,7 +3,7 @@
 
 
 Aggregate Experiment 2 detection and repair-evaluation outputs into final
-metrics for the reproduced Secure Code Agent baseline.
+metrics for the reproduced end-to-end workflow baseline.
 
 
 Expected experiment layout:

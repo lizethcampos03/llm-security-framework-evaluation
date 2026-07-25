@@ -1,6 +1,6 @@
 # **Experiment 2 Log**
 
-## **LangGraph-Augmented End-to-End Secure Code Agent Evaluation**
+## **LangGraph-Augmented End-to-End Workflow Evaluation**
 
 ---
 
@@ -99,10 +99,8 @@ Instead, it is a workflow-enhancement study that compares against the strongest 
 | Component | Baseline |
 | ----- | ----- |
 | Generation Model | GPT-4-0613 |
-| Detection Method | CodeQL \+ Bandit |
+| Detection Method | GPT-4-0613 |
 | Repair Model | GPT-4-0613 |
-| Repair Strategy | Iterative repair |
-| Published Final Secure Output Rate | 85.5% |
 
 ---
 
@@ -240,8 +238,6 @@ The report included:
 | ----- | ----- |
 | Model | GPT-4-0613 |
 | Repair Strategy | Single-pass repair |
-| Iterative Repair | Not used |
-| Average Repair Iterations | 1.0 |
 
 ---
 
@@ -340,54 +336,6 @@ The workflow successfully repaired every vulnerability that LangGraph detected. 
 
 ---
 
-# **Direct Comparison With EASE-GPT4-BEST**
-
-## **Detection Comparison**
-
-| Metric | EASE GPT-4 | LangGraph Workflow |
-| ----- | ----- | ----- |
-| Detection Accuracy | 74.60% | 88.41% |
-| Recall | Not fully reported | 95.65% |
-| False Positive Rate | 3.10% | 18.84% |
-| Vulnerable Cases Detected | Not directly reported | 66 / 69 |
-
-## **Repair Comparison**
-
-| Metric | EASE GPT-4 Best | LangGraph Workflow |
-| ----- | ----- | ----- |
-| Single-pass repair success | 59.60% | 100.00% |
-| Final repair success | 85.50% | 100.00% |
-| Average repair iterations | Iterative, up to 5 | 1.0 |
-
-## **End-to-End Comparison**
-
-| Metric | EASE GPT-4 Best | LangGraph Workflow |
-| ----- | ----- | ----- |
-| Final secure output rate | 85.50% | 95.65% |
-| Remaining vulnerable output rate | 14.50% | 4.35% |
-| Vulnerability coverage | 26 CodeQL-supported CWEs | 69 CWE families |
-| Repair model | GPT-4-0613 | GPT-4-0613 |
-| Repair guidance | CWE ID \+ definition | Complete LangGraph security report |
-
----
-
-# **Coverage and Practical Deployment Analysis**
-
-The proposed workflow evaluated a broader vulnerability set than the EASE RQ4 workflow.
-
-| Property | EASE Workflow | LangGraph Workflow |
-| ----- | ----- | ----- |
-| Primary Detection Mechanism | CodeQL \+ Bandit | LangGraph Security Framework |
-| Repair Model | GPT-4-0613 | GPT-4-0613 |
-| Repair Guidance | CWE ID \+ definition | Full security report |
-| CWE Coverage | 26 CodeQL-supported CWEs | 69 CWE families |
-| Repair Scope | CodeQL-supported subset | Detected vulnerable cases across the 69-CWE benchmark |
-| Verification | CodeQL \+ Bandit | CodeQL \+ Bandit \+ Manual Review |
-
-This difference is important because the EASE workflow was constrained by static-analysis coverage. The LangGraph workflow demonstrated broader vulnerability coverage while still using CodeQL and Bandit as verification tools.
-
----
-
 # **Main Findings**
 
 ## **Finding 1 — LangGraph Improved Detection Coverage**
@@ -414,14 +362,6 @@ The final remaining vulnerable outputs were the three cases missed by the detect
 
 # **Threats to Validity**
 
-## **Published Baseline Comparison**
-
-The comparison against EASE 2025 uses published results rather than a locally reproduced EASE implementation. Therefore, the comparison should be interpreted as an external baseline comparison rather than a strict replication.
-
-## **Benchmark Scope Difference**
-
-The proposed workflow evaluated 69 CWE families, while EASE RQ4 used a smaller CodeQL-supported subset. This difference is intentional and supports the coverage analysis, but it should be stated transparently.
-
 ## **Manual Review Dependence**
 
 Final repair success depends on manual review. Automated verification alone produced an 84.85% clean rate, while manual review raised the confirmed repair success rate to 100%.
@@ -442,7 +382,7 @@ Experiment 2 demonstrates that the LangGraph Security Framework can function as 
 
 The workflow detected 66 of 69 vulnerable benchmark cases and successfully repaired all 66 detected vulnerabilities using GPT-4-0613 guided by the complete LangGraph security report. Automated verification initially classified 56 of 66 repairs as clean, but manual review confirmed that the remaining 10 automated findings did not represent persistence of the original vulnerabilities. Therefore, the final repair success rate among repair-eligible cases was 100.00%.
 
-At the full workflow level, the final secure output rate was 95.65%, with the only remaining vulnerable outputs corresponding to the three detection-stage false negatives. This result compares favorably with the strongest EASE 2025 reported final secure output rate of 85.5%, while also evaluating a broader 69-CWE benchmark scope.
+At the full workflow level, the final secure output rate was 95.65%, with the only remaining vulnerable outputs corresponding to the three detection-stage false negatives. 
 
 The strongest conclusion is that structured, retrieval-enhanced security reporting provides meaningful downstream value for repair. The repair LLM was not improved by switching to a newer model; instead, GPT-4-0613 was used to keep the repair model aligned with the EASE baseline. This supports the claim that the observed repair improvement is primarily attributable to the LangGraph workflow’s richer vulnerability analysis, evidence, and remediation guidance.
 

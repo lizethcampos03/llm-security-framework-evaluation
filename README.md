@@ -93,7 +93,7 @@ Performance is compared against:
 
 - CodeQL
 - Bandit
-- GPT-4 secure-code-agent baseline (EASE 2025)
+- GPT-4 End-to-End Workflow baseline (EASE 2025)
 
 Reported metrics include:
 

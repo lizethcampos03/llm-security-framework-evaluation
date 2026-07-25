@@ -1,8 +1,8 @@
-Method Reproduction Details – LangGraph Secure Code Agent
+Method Reproduction Details – LangGraph End-to-End Workflow
 
 Purpose
 
-This document specifies the implementation details used to reproduce the LangGraph Secure Code Agent, a modified version of the Secure Code Agent baseline presented in How Well Do Large Language Models Serve as End-to-End Secure Code Agents for Python? The objective of this modified implementation is to replace the original LLM-based vulnerability detection stage with the proposed LangGraph security workflow and redesigning the repair prompt while preserving the remainder of the end-to-end remediation pipeline. This implementation serves as the primary experimental method for evaluating the contribution of workflow-based vulnerability detection within an existing LLM-based secure remediation architecture.
+This document specifies the implementation details used to reproduce the LangGraph End-to-End Workflow, a modified version of the baseline presented in How Well Do Large Language Models Serve as End-to-End Secure Code Agents for Python? The objective of this modified implementation is to replace the original LLM-based vulnerability detection stage with the proposed LangGraph security workflow and redesigning the repair prompt while preserving the remainder of the end-to-end remediation pipeline. This implementation serves as the primary experimental method for evaluating the contribution of workflow-based vulnerability detection within an existing LLM-based secure remediation architecture.
 
 Architecture Diagram
 
@@ -13,15 +13,14 @@ Original Method
 The original study evaluates an end-to-end secure code generation pipeline through four research questions:
 
 RQ1: Code Generation
-RQ2: Vulnerability Detection
-RQ3: Vulnerability Repair
-RQ4: Iterative Secure Code Agent
+RQ2: Vulnerability Detection and Review Procedure
+RQ3: Vulnerability Repair and Review Procedure
 
-The LangGraph Secure Code Agent preserves the overall Secure Code Agent architecture while modifying two components. First, the vulnerability detection methodology evaluated in RQ2 is replaced with the LangGraph workflow proposed in this work. Second, the prompt for the LLM in RQ3 is redesigned in order to support the implementation of the security report for the repair phase.
+The LangGraph End-to-End Workflow preserves the overall End-to-End Workflow architecture while modifying two components. First, the vulnerability detection methodology evaluated in RQ2 is replaced with the LangGraph workflow proposed in this work. Second, the prompt for the LLM in RQ3 is redesigned in order to support the implementation of the security report for the repair phase.
 
 Reproduction Scope
 
-The reproduced method follows the Secure Code Agent baseline with four controlled modifications.
+The reproduced method follows the End-to-End Workflow baseline with three controlled modifications.
 
 Modification 1 — Evaluation Dataset
 
@@ -31,8 +30,6 @@ For this reproduction, the code generation stage is omitted because the benchmar
 
 Modification 2 — LangGraph Vulnerability Detection
 
-The original Secure Code Agent performs vulnerability detection using a single GPT-4 prompt.
-
 This implementation replaces the single LLM detector with the LangGraph security workflow developed in this work.
 
 The workflow performs structured vulnerability analysis through multiple specialized processing stages before producing a validated security report used by the repair stage.
@@ -41,17 +38,9 @@ Modification 3 — Structured Repair Prompt
 
 The prompt for the repair stage is redesigned in order to support the implementation of the security report for the repair phase. 
 
-Modification 4 — Single-Pass Repair
-
-The original Secure Code Agent repeatedly repairs vulnerable code until no vulnerabilities remain or a maximum iteration limit is reached.
-
-This reproduction performs one repair attempt for each vulnerable sample.
-
-The iterative repair stage is intentionally omitted to maintain a consistent evaluation protocol across all compared methods, isolate the effects of the proposed workflow architecture, and reduce computational cost and execution time.
-
 Experimental Workflow
 
-The reproduced LangGraph Secure Code Agent consists of the following stages.
+The reproduced LangGraph End-to-End Workflow consists of the following stages.
 
 Stage 1 — Input Dataset
 
@@ -81,14 +70,11 @@ For samples identified as vulnerable:
 
 Provide the vulnerable source code.
 Provide the LangGraph Security Report.
-Execute GPT-4 using the LangGraph Secure Code Agent Repair Prompt.
+Execute GPT-4 using the LangGraph End-to-End Workflow Repair Prompt.
 Generate repaired code.
 Record the repaired implementation.
 
-The repair prompt used in this stage is provided separately under:
 
-Prompts/
-LangGraph Secure Code Agent Repair Prompt.md
 Stage 4 — Repair Evaluation
 
 The repaired code is evaluated using the same review methodology adopted by the original study.
@@ -123,16 +109,16 @@ No standalone vulnerability detection prompt is used.
 
 Vulnerability Repair
 
-The repair stage uses the dedicated repair prompt developed for the LangGraph Secure Code Agent.
+The repair stage uses the dedicated repair prompt developed for the LangGraph End-to-End Workflow.
 
 The prompt is provided separately under:
 
 Prompts/
-langgraph_secure_code_agent_repair_prompt.md
+langgraph_end_to_end_workflow_repair_prompt.md
 
 Model Configuration
 
-The reproduction follows the Secure Code Agent baseline configuration except for the modified vulnerability detection stage and the redesign of the repair prompt.
+The reproduction follows the End-to_End Workflow baseline configuration except for the modified vulnerability detection stage and the redesign of the repair prompt.
 
 LangGraph workflow used for vulnerability detection
 Repair prompt redesigned
@@ -141,7 +127,7 @@ Independent execution for every benchmark sample
 One execution per sample
 Evaluation Metrics
 
-To facilitate a comprehensive comparison between the reproduced LangGraph Secure Code Agent and the comparison methods, the following evaluation metrics are collected.
+To facilitate a comprehensive comparison between the reproduced LangGraph End-to-End Workflow and the comparison methods, the following evaluation metrics are collected.
 
 Vulnerability Detection
 Accuracy
@@ -164,4 +150,4 @@ In addition, the repair model used during each experiment is recorded as part of
 
 Notes
 
-This reproduction preserves the overall Secure Code Agent architecture while replacing the original single LLM vulnerability detector with the LangGraph workflow proposed in this work and redesigning the repair prompt. The validated security report generated by the workflow is supplied as the primary input to the repair stage, allowing the repair model to operate on structured vulnerability findings rather than the original detection prompt. The only deviations from the Secure Code Agent baseline are the replacement of the vulnerability detection component with the LangGraph workflow, the redesign of the repair prompt, the use of the LangGraph Security Report as input to the LLM for repair, the use of the predefined SecurityEval evaluation dataset included in this repository, the omission of iterative repair in favor of a single-pass evaluation protocol, and the collection of additional evaluation metrics to enable a comprehensive comparison between the methods.
+This reproduction preserves the overall End-to-End Workflow architecture while replacing the original single LLM vulnerability detector with the LangGraph Framework proposed in this work and redesigning the repair prompt. The validated security report generated by the framework is supplied as the primary input to the repair stage, allowing the repair model to operate on structured vulnerability findings rather than the original detection prompt. The only deviations from the End-to-End Workflow baseline are the replacement of the vulnerability detection component with the LangGraph Framework, the redesign of the repair prompt, the use of the LangGraph Security Report as input to the LLM for repair, the use of the predefined SecurityEval evaluation dataset included in this repository, and the collection of additional evaluation metrics to enable a comprehensive comparison between the methods.

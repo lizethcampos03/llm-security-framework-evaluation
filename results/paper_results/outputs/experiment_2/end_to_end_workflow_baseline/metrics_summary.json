@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "stage": "metrics",
   "generated_at_utc": "2026-07-24T00:04:09+00:00",
-  "experiment": "experiment2_secure_code_agent_baseline",
+  "experiment": "experiment2_secure_code_agent_baseline",  
   "configuration": {
     "experiment_root": "D:/vuln-tool/experiments/experiment2",
     "protocol": "single_pass_repair",

@@ -1,13 +1,13 @@
 Experiment Overview
 Objective
 
-Evaluate the end-to-end performance of the Secure Code Agent baseline described in the EASE 2025 study using the SecurityEval benchmark. The experiment reproduces the published workflow configuration while measuring vulnerability detection, repair effectiveness, and overall secure-code generation performance under the same experimental protocol.
+Evaluate the end-to-end performance of the End-to-End Workflow baseline described in the EASE 2025 study using the SecurityEval benchmark. The experiment reproduces the published workflow configuration while measuring vulnerability detection, repair effectiveness, and overall secure-code generation performance under the same experimental protocol.
 
 Unlike the LangGraph workflow evaluated separately, this experiment serves as the reference baseline against which workflow enhancements are compared. Its purpose is to establish reproducible baseline metrics for end-to-end secure code generation using GPT-4-0613 as both the detection and repair model.
 
 Execution Methodology
 
-The experiment followed the original Secure Code Agent workflow:
+The experiment followed the original End-to-End Workflow (RQ1-RQ2):
 
 Code Generation
         ↓
@@ -25,11 +25,11 @@ Manual Review (when required)
         ↓
 Final Security Status
 
-The workflow operated in a single-pass repair configuration. Vulnerable samples that were not detected during the detection stage did not proceed to repair and were counted as end-to-end workflow failures.
+The workflow operated in a single-pass repair configuration. Vulnerable samples that were not detected during the detection stage did not proceed to repair and were counted as End-to-End Workflow failures.
 
 Baseline Configuration
 Component	Configuration
-Baseline	Secure Code Agent (EASE 2025)
+Baseline	End-to-End Workflow (EASE 2025)
 Detection Model	GPT-4-0613
 Repair Model	GPT-4-0613
 Repair Strategy	Single-pass repair
@@ -64,7 +64,7 @@ F1 Score	82.96%
 Detection Coverage	81.16%
 Detection Interpretation
 
-The Secure Code Agent baseline correctly identified 56 of the 69 vulnerable benchmark cases. Thirteen vulnerable samples were classified as safe and therefore did not enter the repair stage. These detection misses established the upper bound on the workflow's achievable end-to-end repair performance.
+The End-to-End Workflow baseline correctly identified 56 of the 69 vulnerable benchmark cases. Thirteen vulnerable samples were classified as safe and therefore did not enter the repair stage. These detection misses established the upper bound on the workflow's achievable end-to-end repair performance.
 
 Detection Confusion Matrix
 	Predicted Vulnerable	Predicted Safe
@@ -126,7 +126,7 @@ Repair Success Among Detected Vulnerabilities	55.36%
 Detection-to-Repair Conversion Rate	55.36%
 Interpretation
 
-The Secure Code Agent baseline repaired 31 of the 56 vulnerabilities that successfully reached the repair stage, corresponding to a repair success rate of 55.36%. Detection performance limited repair coverage because thirteen vulnerable benchmark cases were not identified and therefore never entered the repair pipeline.
+The End-to-End Workflow baseline repaired 31 of the 56 vulnerabilities that successfully reached the repair stage, corresponding to a repair success rate of 55.36%. Detection performance limited repair coverage because thirteen vulnerable benchmark cases were not identified and therefore never entered the repair pipeline.
 
 Across the complete benchmark of 69 vulnerable cases, the workflow produced 31 final secure outputs, yielding an end-to-end secure output rate of 44.93%. The remaining 38 vulnerable outputs consisted of thirteen detection-stage false negatives, fifteen repairs that remained insecure after repair, and ten repairs classified as invalid because the intended functionality was not preserved.
 
@@ -145,7 +145,7 @@ The evaluation was conducted on the SecurityEval benchmark containing 69 vulnera
 
 Conclusion
 
-The Secure Code Agent baseline established the reference end-to-end performance for Experiment 2. Using GPT-4-0613 for both vulnerability detection and repair, the workflow detected 56 of the 69 vulnerable benchmark cases and successfully repaired 31 of those detected vulnerabilities.
+The End-to-End Workflow baseline established the reference end-to-end performance for Experiment 2. Using GPT-4-0613 for both vulnerability detection and repair, the workflow detected 56 of the 69 vulnerable benchmark cases and successfully repaired 31 of those detected vulnerabilities.
 
 The experiment achieved a repair success rate of 55.36% among repair attempts and a final secure output rate of 44.93% across the complete benchmark. These results provide the baseline against which the proposed LangGraph-enhanced workflow is evaluated in subsequent analyses.
 

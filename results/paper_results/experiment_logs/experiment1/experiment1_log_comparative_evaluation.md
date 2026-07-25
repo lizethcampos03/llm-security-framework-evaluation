@@ -6,7 +6,7 @@
 
 Evaluate the detection performance of the proposed LangGraph Security Framework against:
 
-1. State-of-the-art LLM-based secure code agent methodology from EASE 2025  
+1. State-of-the-art LLM-based End-to-End Workflow methodology from EASE 2025  
 2. CodeQL static analysis engine  
 3. Bandit static analysis engine
 
@@ -16,7 +16,7 @@ The goal of this experiment is to determine whether the proposed retrieval-enhan
 
 # **Research Question**
 
-How does the proposed LangGraph Security Framework compare against traditional static-analysis tools and state-of-the-art LLM-based security agents when detecting vulnerabilities in Python code?
+How does the proposed LangGraph Security Framework compare against traditional static-analysis tools and state-of-the-art LLM-based security workflows when detecting vulnerabilities in Python code?
 
 ---
 
@@ -45,7 +45,7 @@ How does the proposed LangGraph Security Framework compare against traditional s
 
 ---
 
-## **Method B — GPT-4 Secure Code Agent (EASE 2025\)**
+## **Method B — GPT-4 End-to-End Workflow baseline (EASE 2025\)**
 
 ### **Reference**
 
@@ -139,12 +139,12 @@ Python Security Static Analysis
 
 ## **Detection Performance**
 
-| Metric | LangGraph Framework | GPT-4 Secure Agent (EASE 2025\) | CodeQL | Bandit |
+| Metric | LangGraph Framework | GPT-4 End-to-End Workflow baseline (EASE 2025\) | CodeQL | Bandit |
 | ----- | ----- | ----- | ----- | ----- |
-| Accuracy | 88.41% | 74.60% | 65.22% | 61.59% |
-| Precision | 83.54% | TBD | 86.21% | 73.53% |
-| Recall | 95.65% | TBD | 36.23% | 36.23% |
-| F1 Score | 89.19% | TBD | 51.02% | 48.54% |
+| Accuracy | 88.41% | 83.33% | 65.22% | 61.59% |
+| Precision | 83.54% | 84.85% | 86.21% | 73.53% |
+| Recall | 95.65% | 81.16% | 36.23% | 36.23% |
+| F1 Score | 89.19% | 82.96% | 51.02% | 48.54% |
 
 ---
 
@@ -161,16 +161,14 @@ Python Security Static Analysis
 
 ---
 
-## **GPT-4 Secure Agent (EASE 2025\)**
+## **GPT-4 End-to-End Workflow baseline (EASE 2025\)**
 
 | Metric | Value |
 | ----- | ----- |
-| Accuracy | 74.60% |
-| False Positive Rate | 3.10% |
-
-Additional metrics were not reported by the authors.
-
-Source: EASE 2025\.
+| True Positives | 56 |
+| True Negatives | 59 |
+| False Positives | 10 |
+| False Negatives | 13 |
 
 ---
 
@@ -209,19 +207,18 @@ Source: EASE 2025\.
 
 # **Repair Performance**
 
-| Metric | LangGraph Framework | GPT-4 Secure Agent |
+| Metric | LangGraph Framework | End-to-End Workflow baseline | GPT-5.5 End-to-End Workflow
 | ----- | ----- | ----- |
 | Repair Model | GPT-5.5 | GPT-4 |
 | Single-Pass Repair Success | TBD | 59.6% |
 | Iterative Repair Success | Future Experiment 3 | 85.5% |
 
-Source: EASE 2025\.
 
 ---
 
 # **Architectural Comparison**
 
-| Capability | LangGraph Framework | GPT-4 Secure Agent |
+| Capability | LangGraph Framework | GPT-4 End-to-End Workflow baseline |
 | ----- | ----- | ----- |
 | Context Profiles | Yes | No |
 | Hybrid Retrieval | Yes | No |
@@ -239,11 +236,11 @@ Source: EASE 2025\.
 
 The proposed LangGraph Security Framework achieved 88.41% detection accuracy on the SecurityEval benchmark.
 
-The GPT-4-based secure code agent reported in EASE 2025 achieved 74.60% detection accuracy.
+The reproduced GPT-4-based End-to_End Workflow achieved 83.33% detection accuracy.
 
 This represents an absolute improvement of:
 
-88.41 − 74.60 \= 13.81 percentage points
+88.41 − 83.33 \= 5.08 percentage points
 
 over a contemporary LLM-based security analysis approach.
 
