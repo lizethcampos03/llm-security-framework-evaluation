@@ -73,23 +73,23 @@ The framework is compared against:
 
 - CodeQL
 - Bandit
-- GPT-4 secure-code-agent baseline (EASE 2025)
+- GPT-4 End-to-End Workflow baseline (EASE 2025)
 
 ---
 
 # Experiment 2
 ## End-to-End Secure Remediation
 
-Evaluates the repair performance of the end-to-end secure-code  agent when the Langgraph Workflow is integrated.
+Evaluates the repair performance of the End-to-End Workflow when the Langgraph Workflow is integrated.
 
 Primary metrics include:
 
 - Repair Success Rate
 - Final Secure-Output Rate
 
-This experiment measures the effectiveness of the generated structured security report for supporting downstream remediation within the end-to-end secure-code  agent.
+This experiment measures the effectiveness of the generated structured security report for supporting downstream remediation within the End-to-End Workflow.
 
-Aditionally, the end-to-end secure code agent baseline is reproduced in order to fairly compare the proposed method with the original method. Moreover, in another configuration, the original agent is also modified to have GPT-5.5 rather than GPT4-0613 (original LLM) as the repair model. Upgrading the repair model of the original configuration allows a more rigorous evaluation  on the impact of the langgraph integration to repair performance because comparison of all repair metrics will help prove the impact of the proposed workflow.
+Aditionally, the End-to-End Workflow baseline is reproduced in order to fairly compare the proposed method with the original method. Both the baseline and the proposed workflows are reproduced with the original GPT-4-0613 repair model as well as with GPT-5.5 as the repair model. Upgrading the repair model of the original configuration allows a more rigorous evaluation on the impact of the langgraph integration to repair performance because comparison of all repair metrics will help prove the impact of the proposed workflow.
 
 ---
 

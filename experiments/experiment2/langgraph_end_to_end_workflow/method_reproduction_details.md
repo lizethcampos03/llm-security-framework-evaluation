@@ -6,7 +6,7 @@ This document specifies the implementation details used to reproduce the LangGra
 
 Architecture Diagram
 
-A visual representation of the LangGraph Secure Code Agent is provided in figures/langgraph_secure_code_agent.png.
+A visual representation of the LangGraph End-to-End Workflow is provided in figures/langgraph_end_to_end_workflow.png.
 
 Original Method
 

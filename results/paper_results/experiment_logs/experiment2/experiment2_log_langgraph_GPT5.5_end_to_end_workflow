@@ -1,0 +1,96 @@
+# Experiment 2 Benchmark Log
+
+## LangGraph + GPT-5.5 End-to-End Workflow
+
+**Detection:** LangGraph Workflow  
+**Repair:** GPT-5.5
+
+> **Purpose:** Evaluate the end-to-end workflow using the finalized LangGraph detection pipeline and GPT-5.5 as the repair model.
+
+| **Field** | **Value** |
+|---|---|
+| Experiment | experiment2_langgraph_gpt55_end_to_end |
+| Protocol | Single-pass repair |
+| Detection workflow | LangGraph |
+| Repair model | GPT-5.5 |
+| Successful repair status | SECURE |
+
+# Experiment Overview
+
+## Objective
+
+Evaluate the end-to-end workflow using the finalized LangGraph detection stage followed by GPT-5.5 repair and finalized repair evaluation.
+
+## Workflow
+
+1. Evaluate the benchmark using the finalized LangGraph detection workflow.
+2. Route detected vulnerable samples to GPT-5.5.
+3. Produce one repair attempt per eligible sample.
+4. Evaluate repairs using syntax validation, Bandit, CodeQL, and author manual review.
+5. Assign a final status of **SECURE**, **INSECURE**, or **INVALID_REPAIR**.
+
+# Benchmark Scope
+
+| **Component** | **Count** |
+|---|---:|
+| Total benchmark samples | 138 |
+| Vulnerable samples | 69 |
+| Verified safe samples | 69 |
+| Repair attempts | 66 |
+| Evaluated repairs | 66 |
+
+# Repair Evaluation
+
+## Manual Review
+
+| **Metric** | **Result** |
+|---|---:|
+| Completed repair evaluations | 66 |
+| Reviewer | author |
+| Scanner findings validated | Yes |
+
+## Final Status Distribution
+
+| **Status** | **Count** | **Share** |
+|---|---:|---:|
+| SECURE | 60 | 90.91% |
+| INSECURE | 4 | 6.06% |
+| INVALID_REPAIR | 2 | 3.03% |
+
+## Repair Metrics
+
+| **Metric** | **Result** |
+|---|---:|
+| Repair success rate | 90.91% |
+| Evaluated repair success rate | 90.91% |
+| Final secure output rate | 86.96% |
+| Repair-attempt coverage | 95.65% |
+| CWE repair coverage | 86.96% |
+
+# Interpretation
+
+GPT-5.5 successfully produced **60 secure repairs** from **66 evaluated repair attempts**, yielding a **90.91% repair success rate**. Across the complete benchmark of **69 vulnerable samples**, the workflow achieved a **final secure output rate of 86.96%**. Four repairs remained insecure after evaluation, and two were classified as invalid because meaningful intended functionality was not securely preserved.
+
+All finalized repair decisions were validated through syntax checking, static analysis (Bandit and CodeQL), and author manual review.
+
+# Threats to Validity
+
+- Repair performance reflects a single-pass repair protocol.
+- Final repair outcomes depend on author review for semantic security judgments.
+- Results correspond to the evaluated GPT-5.5 model configuration.
+- Detection metrics are maintained in the separate detection experiment; this log summarizes the finalized repair stage.
+
+# Final Metrics Summary
+
+| **Metric** | **Result** |
+|---|---:|
+| Vulnerable benchmark cases | 69 |
+| Repair attempts | 66 |
+| Secure repairs | 60 |
+| Insecure repairs | 4 |
+| Invalid repairs | 2 |
+| Repair success rate | 90.91% |
+| Final secure output rate | 86.96% |
+| Repair-attempt coverage | 95.65% |
+| CWE repair coverage | 86.96% |
+| Manual-review decisions | 66 |

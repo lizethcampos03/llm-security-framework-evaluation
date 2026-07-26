@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-26T21:44:08+00:00",
+  "stage": "final_repair_metrics",
+  "method": "LangGraph End-to-End Workflow",
+  "configuration": {
+    "detection_method": "LangGraph security workflow",
+    "detection_metrics_source": "previously generated detection evaluation outputs",
+    "repair_models_observed": [
+      "gpt-5.5"
+    ],
+    "successful_repair_status": "SECURE"
+  },
+  "benchmark_counts": {
+    "vulnerable_samples": 69,
+    "total_vulnerable_cwes": 69
+  },
+  "repair": {
+    "pipeline_counts": {
+      "repair_attempts": 66,
+      "evaluated_repairs": 66,
+      "vulnerable_samples_not_reaching_repair": 3
+    },
+    "final_status_counts": {
+      "SECURE": 60,
+      "INSECURE": 4,
+      "INVALID_REPAIR": 2
+    },
+    "coverage_counts": {
+      "attempted_cwes": 66,
+      "secure_repair_cwes": 60,
+      "total_vulnerable_cwes": 69
+    },
+    "metrics": {
+      "repair_success_rate": 0.909091,
+      "repair_success_rate_percent": 90.9091,
+      "evaluated_repair_success_rate": 0.909091,
+      "evaluated_repair_success_rate_percent": 90.9091,
+      "final_secure_output_rate": 0.869565,
+      "final_secure_output_rate_percent": 86.9565,
+      "repair_attempt_coverage": 0.956522,
+      "repair_attempt_coverage_percent": 95.6522,
+      "cwe_repair_coverage": 0.869565,
+      "cwe_repair_coverage_percent": 86.9565
+    },
+    "definitions": {
+      "repair_success_rate": "Final SECURE repairs divided by repair attempts.",
+      "evaluated_repair_success_rate": "Final SECURE repairs divided by finalized repair evaluations.",
+      "final_secure_output_rate": "Final SECURE repairs divided by all vulnerable benchmark inputs.",
+      "repair_attempt_coverage": "Unique target CWEs reaching repair divided by all vulnerable benchmark CWEs.",
+      "cwe_repair_coverage": "Unique target CWEs with a final SECURE repair divided by all vulnerable benchmark CWEs."
+    }
+  },
+  "manual_review": {
+    "completed_case_count": 66,
+    "reviewer_counts": {
+      "author": 66
+    },
+    "all_scanner_findings_validated": true
+  },
+  "validation": {
+    "validation_status": "PASS",
+    "errors": [],
+    "warnings": [],
+    "expected_checks_enabled": true
+  }
+}
